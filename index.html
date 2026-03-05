@@ -4,502 +4,598 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Practice Champions 🏆</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --sky: #0ea5e9;
-    --sun: #f59e0b;
     --mint: #10b981;
     --coral: #f43f5e;
+    --sun: #f59e0b;
     --lavender: #8b5cf6;
-    --cream: #fffbeb;
-    --card-bg: #ffffff;
-    --text-dark: #1e293b;
-    --text-mid: #475569;
-    --text-light: #94a3b8;
-    --shadow: 0 4px 24px rgba(0,0,0,0.08);
-    --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+    --cream: #fdfcf7;
+    --white: #ffffff;
+    --text-dark: #1a1a2e;
+    --text-mid: #4a5568;
+    --text-light: #a0aec0;
+    --border: #e8edf2;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+    --radius: 20px;
+    --radius-sm: 12px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Nunito', sans-serif; background: var(--cream); min-height: 100vh; color: var(--text-dark); overflow-x: hidden; }
 
-  .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-  .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18; animation: floatBlob 12s ease-in-out infinite alternate; }
-  .blob-1 { width: 500px; height: 500px; background: var(--sky); top: -100px; left: -100px; }
-  .blob-2 { width: 400px; height: 400px; background: var(--lavender); bottom: -80px; right: -80px; animation-delay: -4s; }
-  .blob-3 { width: 300px; height: 300px; background: var(--mint); top: 40%; left: 40%; animation-delay: -8s; }
-  @keyframes floatBlob { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.08); } }
-
-  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
-
-  header { text-align: center; margin-bottom: 40px; animation: fadeDown 0.6s ease both; }
-  .logo-emoji { font-size: 4rem; display: block; animation: bounce 2s ease-in-out infinite; }
-  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-  header h1 { font-family: 'Fredoka One', cursive; font-size: clamp(2rem,6vw,3.5rem); color: var(--sky); line-height: 1.1; margin-top: 8px; text-shadow: 3px 3px 0 rgba(14,165,233,0.15); }
-  header p { font-size: 1.1rem; color: var(--text-mid); margin-top: 8px; font-weight: 600; }
-  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
-
-  #setup-banner {
-    background: linear-gradient(135deg, #fef3c7, #fffbeb);
-    border: 2.5px solid #fde68a;
-    border-radius: 20px;
-    padding: 24px 28px;
-    margin-bottom: 28px;
-    animation: fadeUp 0.4s ease both;
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    color: var(--text-dark);
+    overflow-x: hidden;
   }
-  #setup-banner h3 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: #92400e; margin-bottom: 8px; }
-  #setup-banner p { font-size: 0.9rem; color: #78350f; font-weight: 600; margin-bottom: 16px; line-height: 1.6; }
-  .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media(max-width:600px){ .setup-grid { grid-template-columns: 1fr; } }
 
-  .card { background: var(--card-bg); border-radius: 24px; padding: 32px; box-shadow: var(--shadow); margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-  .card h2 { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--text-dark); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  /* ── Background ── */
+  .bg {
+    position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    background: linear-gradient(160deg, #f0f9ff 0%, #fdfcf7 50%, #fdf4ff 100%);
+  }
+  .bg-circle {
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.22;
+    animation: drift 15s ease-in-out infinite alternate;
+  }
+  .bc1 { width:600px;height:600px;background:#bae6fd;top:-150px;left:-150px;animation-delay:0s; }
+  .bc2 { width:450px;height:450px;background:#ddd6fe;bottom:-100px;right:-100px;animation-delay:-5s; }
+  .bc3 { width:350px;height:350px;background:#a7f3d0;top:45%;left:35%;animation-delay:-10s; }
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(35px,25px) scale(1.06); }
+  }
 
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: end; }
-  @media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
-  .field label { display: block; font-size: 0.85rem; font-weight: 800; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
-  .field input { width: 100%; padding: 12px 16px; border: 2.5px solid #e2e8f0; border-radius: 14px; font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-dark); background: #f8fafc; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
-  .field input:focus { border-color: var(--sky); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); background: #fff; }
+  /* ── Layout ── */
+  .page { position:relative;z-index:1;max-width:960px;margin:0 auto;padding:36px 20px 80px; }
 
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border: none; border-radius: 14px; font-family: 'Fredoka One', cursive; font-size: 1.1rem; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; white-space: nowrap; }
-  .btn:active { transform: scale(0.96); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .btn-primary { background: linear-gradient(135deg, var(--sky), #3b82f6); color: white; box-shadow: 0 4px 14px rgba(14,165,233,0.4); }
-  .btn-primary:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(14,165,233,0.5); transform: translateY(-1px); }
-  .btn-warning { background: linear-gradient(135deg, #f59e0b, #f97316); color: white; box-shadow: 0 4px 14px rgba(245,158,11,0.4); }
-  .btn-sm { padding: 6px 14px; font-size: 0.9rem; border-radius: 10px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800; }
-  .btn-remove { background: #fff1f2; color: var(--coral); transition: background 0.15s; }
-  .btn-remove:hover { background: #ffe4e6; }
-  .btn-delete { background: none; border: none; color: var(--text-light); font-size: 1rem; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: color 0.15s, background 0.15s; }
-  .btn-delete:hover { color: var(--coral); background: #fff1f2; }
+  /* ── Header ── */
+  header { text-align:center; margin-bottom:44px; animation: fadeDown .7s cubic-bezier(.34,1.56,.64,1) both; }
+  .header-icon { font-size:4.5rem; display:block; animation: trophyBounce 2.5s ease-in-out infinite; }
+  @keyframes trophyBounce {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-12px) rotate(3deg); }
+  }
+  header h1 {
+    font-family:'Fredoka One',cursive;
+    font-size: clamp(2.2rem, 7vw, 4rem);
+    color: var(--text-dark);
+    margin-top: 10px;
+    letter-spacing: -0.5px;
+  }
+  header h1 span { color: var(--sky); }
+  header p { font-size:1.05rem; color:var(--text-mid); margin-top:6px; font-weight:700; }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-24px)} to{opacity:1;transform:translateY(0)} }
 
-  .child-select-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
-  .child-chip { padding: 8px 18px; border-radius: 50px; border: 2.5px solid #e2e8f0; background: #f8fafc; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; color: var(--text-mid); }
-  .child-chip:hover { border-color: var(--sky); color: var(--sky); }
-  .child-chip.active { background: linear-gradient(135deg, var(--sky), #3b82f6); border-color: transparent; color: white; box-shadow: 0 3px 12px rgba(14,165,233,0.35); }
-  .child-chip.c1.active { background: linear-gradient(135deg,#f43f5e,#ec4899); box-shadow: 0 3px 12px rgba(244,63,94,0.35); }
-  .child-chip.c2.active { background: linear-gradient(135deg,#10b981,#06b6d4); box-shadow: 0 3px 12px rgba(16,185,129,0.35); }
-  .child-chip.c3.active { background: linear-gradient(135deg,#f59e0b,#f97316); box-shadow: 0 3px 12px rgba(245,158,11,0.35); }
-  .child-chip.c4.active { background: linear-gradient(135deg,#8b5cf6,#6366f1); box-shadow: 0 3px 12px rgba(139,92,246,0.35); }
+  /* ── Firebase Setup Modal ── */
+  #setup-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(15,20,40,0.6);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn .3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  #setup-overlay.hidden { display: none; }
+  .setup-modal {
+    background: var(--white);
+    border-radius: 28px;
+    padding: 40px;
+    max-width: 540px; width: 100%;
+    box-shadow: var(--shadow-lg);
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
+  .setup-modal h2 { font-family:'Fredoka One',cursive; font-size:1.8rem; color:var(--text-dark); margin-bottom:8px; }
+  .setup-modal .sub { font-size:.9rem; color:var(--text-mid); font-weight:600; margin-bottom:24px; line-height:1.6; }
+  .step-list { counter-reset: steps; margin-bottom: 24px; }
+  .step-item {
+    display:flex; gap:14px; align-items:flex-start;
+    margin-bottom:14px; font-size:.88rem; color:var(--text-mid); font-weight:700; line-height:1.5;
+  }
+  .step-num {
+    background: linear-gradient(135deg,var(--sky),var(--lavender));
+    color: white; border-radius: 50%;
+    width:26px;height:26px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fredoka One',cursive; font-size:.9rem;
+  }
+  .step-item code {
+    background:#f1f5f9; padding:1px 6px; border-radius:5px;
+    font-family:monospace; font-size:.82rem; color:var(--sky);
+  }
+  .cfg-fields { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
+  .cfg-field label { display:block; font-size:.78rem; font-weight:900; text-transform:uppercase; letter-spacing:.07em; color:var(--text-light); margin-bottom:5px; }
+  .cfg-field input {
+    width:100%; padding:11px 15px;
+    border:2.5px solid var(--border); border-radius:var(--radius-sm);
+    font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:700;
+    color:var(--text-dark); background:#f8fafc; outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .cfg-field input:focus { border-color:var(--sky); box-shadow:0 0 0 3px rgba(14,165,233,.15); background:#fff; }
+  .cfg-hint { font-size:.78rem; color:var(--text-light); font-weight:700; margin-top:4px; }
 
-  .log-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: end; }
-  @media(max-width:600px){ .log-form { grid-template-columns: 1fr; } }
+  /* ── Cards ── */
+  .card {
+    background:var(--white); border-radius:var(--radius);
+    padding:28px 32px; box-shadow:var(--shadow); margin-bottom:24px;
+    animation: riseUp .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes riseUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+  .card-title {
+    font-family:'Fredoka One',cursive; font-size:1.35rem;
+    color:var(--text-dark); margin-bottom:20px;
+    display:flex; align-items:center; gap:10px;
+  }
 
-  .sessions-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  .sessions-table th { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-light); padding: 8px 12px; text-align: left; border-bottom: 2px solid #f1f5f9; }
-  .sessions-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: var(--text-dark); font-size: 0.95rem; }
-  .sessions-table tr:last-child td { border-bottom: none; }
-  .sessions-table tr:hover td { background: #f8fafc; }
-  .minutes-badge { display: inline-block; padding: 2px 10px; border-radius: 50px; font-weight: 800; font-size: 0.85rem; background: #f0f9ff; color: var(--sky); }
+  /* ── Buttons ── */
+  .btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    padding:11px 22px; border:none; border-radius:var(--radius-sm);
+    font-family:'Fredoka One',cursive; font-size:1.05rem;
+    cursor:pointer; transition:transform .15s, box-shadow .15s, opacity .15s;
+    white-space:nowrap; text-decoration:none;
+  }
+  .btn:active { transform:scale(.96)!important; }
+  .btn:disabled { opacity:.45; cursor:not-allowed; }
+  .btn-sky { background:linear-gradient(135deg,var(--sky),#3b82f6); color:#fff; box-shadow:0 4px 14px rgba(14,165,233,.38); }
+  .btn-sky:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 7px 20px rgba(14,165,233,.45); }
+  .btn-sun { background:linear-gradient(135deg,var(--sun),#f97316); color:#fff; box-shadow:0 4px 14px rgba(245,158,11,.38); }
+  .btn-sun:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 7px 20px rgba(245,158,11,.45); }
+  .btn-ghost { background:#f1f5f9; color:var(--text-mid); }
+  .btn-ghost:hover { background:#e2e8f0; }
+  .btn-danger { background:#fff1f2; color:var(--coral); border:none; border-radius:8px; padding:5px 10px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:800; font-size:.85rem; transition:background .15s; }
+  .btn-danger:hover { background:#ffe4e6; }
+  .btn-coral { background:linear-gradient(135deg,var(--coral),#ec4899); color:#fff; box-shadow:0 4px 14px rgba(244,63,94,.35); }
 
-  .empty-state { text-align: center; padding: 32px; color: var(--text-light); font-size: 1rem; font-weight: 700; }
-  .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+  /* ── Form fields ── */
+  .fields { display:grid; gap:13px; }
+  .fields-2 { grid-template-columns:1fr 1fr; }
+  .fields-3 { grid-template-columns:1fr 1fr auto; }
+  .fields-3b { grid-template-columns:1fr 1fr auto; }
+  @media(max-width:620px) {
+    .fields-2, .fields-3, .fields-3b { grid-template-columns:1fr; }
+  }
+  .f label { display:block; font-size:.78rem; font-weight:900; text-transform:uppercase; letter-spacing:.07em; color:var(--text-light); margin-bottom:5px; }
+  .f input {
+    width:100%; padding:11px 15px;
+    border:2.5px solid var(--border); border-radius:var(--radius-sm);
+    font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:700;
+    color:var(--text-dark); background:#f8fafc; outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .f input:focus { border-color:var(--sky); box-shadow:0 0 0 3px rgba(14,165,233,.15); background:#fff; }
+  .f-end { display:flex; align-items:flex-end; }
 
-  .leaderboard { display: flex; flex-direction: column; gap: 12px; }
-  .lb-row { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #f8fafc; border-radius: 16px; transition: transform 0.2s, box-shadow 0.2s; }
-  .lb-row:hover { transform: translateX(4px); box-shadow: var(--shadow); }
-  .lb-row.rank-1 { background: linear-gradient(135deg,#fffbeb,#fef3c7); border: 2px solid #fde68a; }
-  .lb-row.rank-2 { background: linear-gradient(135deg,#f8fafc,#f1f5f9); border: 2px solid #e2e8f0; }
-  .lb-row.rank-3 { background: linear-gradient(135deg,#fff7ed,#ffedd5); border: 2px solid #fed7aa; }
-  .lb-rank { font-family: 'Fredoka One', cursive; font-size: 1.6rem; min-width: 40px; text-align: center; }
-  .lb-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: white; flex-shrink: 0; }
-  .av-0{background:linear-gradient(135deg,var(--sky),#3b82f6)} .av-1{background:linear-gradient(135deg,#f43f5e,#ec4899)} .av-2{background:linear-gradient(135deg,#10b981,#06b6d4)} .av-3{background:linear-gradient(135deg,#f59e0b,#f97316)} .av-4{background:linear-gradient(135deg,#8b5cf6,#6366f1)} .av-5{background:linear-gradient(135deg,#06b6d4,#0ea5e9)}
-  .progress-wrap { flex: 1; }
-  .progress-bar-bg { height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 4px; }
-  .progress-bar-fill { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); }
-  .lb-total { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--sky); }
-  .lb-total small { font-family: 'Nunito', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--text-light); display: block; text-align: right; }
+  /* ── Stats strip ── */
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
+  @media(max-width:480px) { .stats { grid-template-columns:1fr; } }
+  .stat-card {
+    background:var(--white); border-radius:18px; padding:20px;
+    text-align:center; box-shadow:var(--shadow-sm);
+    animation: riseUp .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .stat-card:nth-child(1){animation-delay:.05s}
+  .stat-card:nth-child(2){animation-delay:.1s}
+  .stat-card:nth-child(3){animation-delay:.15s}
+  .stat-n {
+    font-family:'Fredoka One',cursive; font-size:2.4rem; line-height:1;
+    background:linear-gradient(135deg,var(--sky),var(--lavender));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .stat-l { font-size:.75rem; font-weight:900; text-transform:uppercase; letter-spacing:.07em; color:var(--text-light); margin-top:4px; }
 
-  .stats-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
-  @media(max-width:500px){ .stats-strip { grid-template-columns: 1fr; } }
-  .stat-card { background: var(--card-bg); border-radius: 20px; padding: 20px; text-align: center; box-shadow: var(--shadow); }
-  .stat-num { font-family: 'Fredoka One', cursive; font-size: 2.2rem; line-height: 1; background: linear-gradient(135deg,var(--sky),var(--lavender)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .stat-label { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-light); margin-top: 4px; }
+  /* ── Tabs ── */
+  .tabs { display:flex; gap:8px; margin-bottom:26px; flex-wrap:wrap; }
+  .tab {
+    padding:9px 20px; border-radius:50px;
+    border:2.5px solid var(--border); background:#f8fafc;
+    font-family:'Fredoka One',cursive; font-size:.95rem;
+    cursor:pointer; transition:all .2s; color:var(--text-mid);
+  }
+  .tab.on { background:var(--text-dark); border-color:var(--text-dark); color:#fff; }
+  .panel { display:none; }
+  .panel.on { display:block; }
 
-  .tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-  .tab { padding: 10px 22px; border-radius: 50px; border: 2.5px solid #e2e8f0; background: #f8fafc; font-family: 'Fredoka One', cursive; font-size: 1rem; cursor: pointer; transition: all 0.2s; color: var(--text-mid); }
-  .tab.active { background: var(--text-dark); border-color: var(--text-dark); color: white; }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+  /* ── Child chips ── */
+  .chips { display:flex; gap:9px; flex-wrap:wrap; margin-bottom:18px; }
+  .chip {
+    padding:7px 17px; border-radius:50px;
+    border:2.5px solid var(--border); background:#f8fafc;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:.9rem;
+    cursor:pointer; transition:all .2s; color:var(--text-mid);
+  }
+  .chip:hover { border-color:var(--sky); color:var(--sky); }
+  .chip.on { border-color:transparent; color:#fff; }
+  .chip.col0.on{background:linear-gradient(135deg,#0ea5e9,#3b82f6);box-shadow:0 3px 12px rgba(14,165,233,.35)}
+  .chip.col1.on{background:linear-gradient(135deg,#f43f5e,#ec4899);box-shadow:0 3px 12px rgba(244,63,94,.35)}
+  .chip.col2.on{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 3px 12px rgba(16,185,129,.35)}
+  .chip.col3.on{background:linear-gradient(135deg,#f59e0b,#f97316);box-shadow:0 3px 12px rgba(245,158,11,.35)}
+  .chip.col4.on{background:linear-gradient(135deg,#8b5cf6,#6366f1);box-shadow:0 3px 12px rgba(139,92,246,.35)}
+  .chip.col5.on{background:linear-gradient(135deg,#06b6d4,#0ea5e9);box-shadow:0 3px 12px rgba(6,182,212,.35)}
 
-  #toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 0.95rem; box-shadow: var(--shadow-lg); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 1000; white-space: nowrap; }
-  #toast.show { transform: translateX(-50%) translateY(0); }
-  #toast.err { background: var(--coral); }
+  /* ── Sessions table ── */
+  .tbl { width:100%; border-collapse:collapse; margin-top:18px; }
+  .tbl th { font-size:.75rem; font-weight:900; text-transform:uppercase; letter-spacing:.07em; color:var(--text-light); padding:8px 12px; text-align:left; border-bottom:2px solid #f1f5f9; }
+  .tbl td { padding:11px 12px; border-bottom:1px solid #f1f5f9; font-weight:600; font-size:.93rem; }
+  .tbl tr:last-child td { border-bottom:none; }
+  .tbl tr:hover td { background:#f8fafc; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:50px; font-weight:800; font-size:.82rem; background:#f0f9ff; color:var(--sky); }
 
-  .sync-bar { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--text-light); margin-bottom: 20px; }
-  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-light); flex-shrink: 0; }
-  .sync-dot.synced { background: var(--mint); }
-  .sync-dot.syncing { background: var(--sun); animation: pulse 1s infinite; }
-  .sync-dot.error { background: var(--coral); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  /* ── Leaderboard ── */
+  .lb { display:flex; flex-direction:column; gap:11px; }
+  .lb-row {
+    display:flex; align-items:center; gap:14px;
+    padding:14px 18px; border-radius:16px;
+    background:#f8fafc; transition:transform .2s, box-shadow .2s;
+    animation: riseUp .4s ease both;
+  }
+  .lb-row:hover { transform:translateX(5px); box-shadow:var(--shadow); }
+  .lb-row.r1 { background:linear-gradient(135deg,#fffbeb,#fef3c7); border:2px solid #fde68a; }
+  .lb-row.r2 { background:linear-gradient(135deg,#f8fafc,#f1f5f9); border:2px solid #e2e8f0; }
+  .lb-row.r3 { background:linear-gradient(135deg,#fff7ed,#ffedd5); border:2px solid #fed7aa; }
+  .lb-medal { font-family:'Fredoka One',cursive; font-size:1.55rem; min-width:38px; text-align:center; }
+  .av {
+    width:42px;height:42px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;
+  }
+  .av0{background:linear-gradient(135deg,#0ea5e9,#3b82f6)}
+  .av1{background:linear-gradient(135deg,#f43f5e,#ec4899)}
+  .av2{background:linear-gradient(135deg,#10b981,#06b6d4)}
+  .av3{background:linear-gradient(135deg,#f59e0b,#f97316)}
+  .av4{background:linear-gradient(135deg,#8b5cf6,#6366f1)}
+  .av5{background:linear-gradient(135deg,#06b6d4,#0ea5e9)}
+  .lb-info { flex:1; min-width:0; }
+  .lb-name { font-weight:800; font-size:1rem; }
+  .lb-sub { font-size:.78rem; color:var(--text-light); font-weight:700; }
+  .bar-bg { height:7px; background:#e2e8f0; border-radius:10px; overflow:hidden; margin-top:5px; }
+  .bar-fill { height:100%; border-radius:10px; transition:width .9s cubic-bezier(.34,1.56,.64,1); }
+  .lb-mins { font-family:'Fredoka One',cursive; font-size:1.25rem; color:var(--sky); text-align:right; }
+  .lb-mins small { display:block; font-family:'Nunito',sans-serif; font-size:.7rem; font-weight:700; color:var(--text-light); }
 
-  .children-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-  .child-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f8fafc; border-radius: 14px; }
-  .child-item-info { display: flex; align-items: center; gap: 12px; font-weight: 700; }
-  .child-sub { font-size: 0.85rem; color: var(--text-light); font-weight: 700; }
-  .config-saved { background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 14px; padding: 14px 18px; font-weight: 700; color: #15803d; margin-bottom: 16px; font-size: 0.95rem; }
+  /* ── Manage list ── */
+  .manage-list { display:flex; flex-direction:column; gap:9px; margin-top:14px; }
+  .manage-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; background:#f8fafc; border-radius:var(--radius-sm);
+  }
+  .manage-info { display:flex; align-items:center; gap:11px; font-weight:700; }
+  .manage-sub { font-size:.82rem; color:var(--text-light); font-weight:700; }
+
+  /* ── Empty state ── */
+  .empty { text-align:center; padding:36px 20px; color:var(--text-light); font-size:.95rem; font-weight:700; }
+  .empty .ei { font-size:2.8rem; display:block; margin-bottom:10px; }
+
+  /* ── Sync bar ── */
+  .sync-bar { display:flex; align-items:center; gap:8px; font-size:.83rem; font-weight:700; color:var(--text-light); margin-bottom:22px; }
+  .dot { width:8px;height:8px;border-radius:50%;background:var(--text-light);flex-shrink:0; }
+  .dot.ok { background:var(--mint); }
+  .dot.busy { background:var(--sun); animation:pulse 1s infinite; }
+  .dot.bad { background:var(--coral); }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.25} }
+
+  /* ── Toast ── */
+  #toast {
+    position:fixed; bottom:30px; left:50%;
+    transform:translateX(-50%) translateY(90px);
+    background:var(--text-dark); color:#fff;
+    padding:11px 22px; border-radius:50px;
+    font-weight:800; font-size:.9rem;
+    box-shadow:var(--shadow-lg); z-index:200;
+    transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+    white-space:nowrap;
+  }
+  #toast.show { transform:translateX(-50%) translateY(0); }
+  #toast.bad { background:var(--coral); }
+
+  /* ── Spinner ── */
+  .spinner-wrap { display:flex; align-items:center; justify-content:center; padding:48px; }
+  .spinner { width:40px;height:40px;border:4px solid #e2e8f0; border-top-color:var(--sky); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* ── Danger zone ── */
+  .danger-card { border:2.5px solid #fee2e2!important; }
 </style>
 </head>
 <body>
-<div class="bg-blobs">
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+
+<div class="bg">
+  <div class="bg-circle bc1"></div>
+  <div class="bg-circle bc2"></div>
+  <div class="bg-circle bc3"></div>
 </div>
 
-<div class="wrapper">
-  <header>
-    <span class="logo-emoji">🏆</span>
-    <h1>Practice Champions</h1>
-    <p>Track every minute. Celebrate every win!</p>
-  </header>
+<!-- ── Firebase Setup Modal ── -->
+<div id="setup-overlay">
+  <div class="setup-modal">
+    <h2>🔥 Connect Firebase</h2>
+    <p class="sub">This is a one-time setup done by the site owner. Once saved, all visitors will share the same live database — no setup needed for parents.</p>
 
-  <!-- Setup Banner -->
-  <div id="setup-banner">
-    <h3>⚙️ One-Time Setup</h3>
-    <p>Enter your GitHub details so practice data saves to your repo and syncs across all devices. Your token is stored only in this browser (never sent anywhere except GitHub).</p>
-    <div class="setup-grid">
-      <div class="field">
-        <label>GitHub Username</label>
-        <input type="text" id="cfg-owner" placeholder="e.g. johndoe">
+    <div class="step-list">
+      <div class="step-item"><div class="step-num">1</div><div>Go to <strong>console.firebase.google.com</strong> → click <strong>Add project</strong> → name it (e.g. <em>practice-champions</em>) → click through to create it.</div></div>
+      <div class="step-item"><div class="step-num">2</div><div>In the left sidebar click <strong>Build → Firestore Database</strong> → <strong>Create database</strong> → choose <strong>Start in test mode</strong> → pick any region → Done.</div></div>
+      <div class="step-item"><div class="step-num">3</div><div>Click the ⚙️ gear → <strong>Project settings</strong> → scroll to <em>Your apps</em> → click the <strong>&lt;/&gt;</strong> (Web) icon → register app → copy the <code>firebaseConfig</code> values below.</div></div>
+    </div>
+
+    <div class="cfg-fields">
+      <div class="cfg-field">
+        <label>API Key</label>
+        <input type="text" id="cfg-apiKey" placeholder="AIzaSy...">
       </div>
-      <div class="field">
-        <label>Repository Name</label>
-        <input type="text" id="cfg-repo" placeholder="e.g. practice-champions">
+      <div class="cfg-field">
+        <label>Auth Domain</label>
+        <input type="text" id="cfg-authDomain" placeholder="your-project.firebaseapp.com">
       </div>
-      <div class="field">
-        <label>Personal Access Token</label>
-        <input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx">
+      <div class="cfg-field">
+        <label>Project ID</label>
+        <input type="text" id="cfg-projectId" placeholder="your-project-id">
+        <div class="cfg-hint">This is the most important one — it's in your Firebase URL</div>
       </div>
-      <div class="field" style="display:flex;align-items:flex-end">
-        <button class="btn btn-warning" style="width:100%" onclick="saveConfig()">Save &amp; Connect 🔗</button>
+      <div class="cfg-field">
+        <label>App ID</label>
+        <input type="text" id="cfg-appId" placeholder="1:123456:web:abc123">
       </div>
     </div>
-    <p style="margin-top:14px;font-size:0.8rem;color:#92400e;line-height:1.7">
-      💡 <strong>How to get a token:</strong> GitHub.com → your profile photo → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → Generate new token → check the <strong>repo</strong> scope → copy &amp; paste above.
+
+    <button class="btn btn-sun" style="width:100%;font-size:1.1rem" onclick="saveFirebaseConfig()">
+      Save &amp; Launch 🚀
+    </button>
+
+    <p style="font-size:.75rem;color:var(--text-light);font-weight:700;margin-top:14px;text-align:center">
+      These values are safe to embed in a public site — Firebase security rules control access, not these keys.
     </p>
   </div>
+</div>
 
-  <!-- Stats Strip -->
-  <div class="stats-strip">
-    <div class="stat-card"><div class="stat-num" id="stat-children">0</div><div class="stat-label">Champions</div></div>
-    <div class="stat-card"><div class="stat-num" id="stat-sessions">0</div><div class="stat-label">Sessions</div></div>
-    <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Minutes</div></div>
-  </div>
+<!-- ── Main App ── -->
+<div class="page">
+  <header>
+    <span class="header-icon">🏆</span>
+    <h1>Practice <span>Champions</span></h1>
+    <p>Track every minute · Celebrate every win!</p>
+  </header>
 
-  <!-- Sync Bar -->
-  <div class="sync-bar">
-    <div class="sync-dot" id="sync-dot"></div>
-    <span id="sync-label">Not connected</span>
-    <button id="refresh-btn" onclick="loadFromGitHub()" style="margin-left:auto;background:#f1f5f9;border:none;border-radius:8px;padding:4px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.8rem;cursor:pointer;color:var(--text-mid)">↻ Refresh</button>
-  </div>
+  <div id="app-loading" class="spinner-wrap"><div class="spinner"></div></div>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('log',event)">📝 Log Practice</button>
-    <button class="tab" onclick="switchTab('leaderboard',event)">🏆 Leaderboard</button>
-    <button class="tab" onclick="switchTab('manage',event)">⚙️ Manage</button>
-  </div>
+  <div id="app-body" style="display:none">
 
-  <!-- LOG TAB -->
-  <div class="tab-panel active" id="tab-log">
-    <div class="card" style="animation-delay:0.1s">
-      <h2>➕ Add a New Champion</h2>
-      <div class="form-grid">
-        <div class="field"><label>Child's Name</label><input type="text" id="new-child-name" placeholder="e.g. Emma" maxlength="30"></div>
-        <div class="field"><label>Instrument / Subject</label><input type="text" id="new-child-subject" placeholder="e.g. Piano" maxlength="30"></div>
-        <button class="btn btn-primary" onclick="addChild()">Add 🎉</button>
-      </div>
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card"><div class="stat-n" id="s-kids">0</div><div class="stat-l">Champions</div></div>
+      <div class="stat-card"><div class="stat-n" id="s-sess">0</div><div class="stat-l">Sessions</div></div>
+      <div class="stat-card"><div class="stat-n" id="s-mins">0</div><div class="stat-l">Total Minutes</div></div>
     </div>
-    <div class="card" style="animation-delay:0.2s">
-      <h2>⏱️ Log Practice Minutes</h2>
-      <div id="no-children-msg" class="empty-state"><span>👆</span>Add a champion above to get started!</div>
-      <div id="log-section" style="display:none">
-        <p style="font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-light);margin-bottom:10px;">Select Champion</p>
-        <div class="child-select-row" id="child-chips"></div>
-        <div class="log-form">
-          <div class="field"><label>Minutes Practiced</label><input type="number" id="log-minutes" placeholder="e.g. 30" min="1" max="999"></div>
-          <div class="field"><label>Date</label><input type="date" id="log-date"></div>
-          <button class="btn btn-primary" onclick="logSession()">Log It! ✅</button>
+
+    <!-- Sync bar -->
+    <div class="sync-bar">
+      <div class="dot" id="sync-dot"></div>
+      <span id="sync-lbl">Connecting…</span>
+      <button onclick="showSetup()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:.78rem;font-weight:800;color:var(--text-light);padding:2px 8px;border-radius:6px" title="Firebase settings">⚙️ Settings</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab on" onclick="goTab('log',this)">📝 Log Practice</button>
+      <button class="tab" onclick="goTab('board',this)">🏆 Leaderboard</button>
+      <button class="tab" onclick="goTab('manage',this)">⚙️ Manage</button>
+    </div>
+
+    <!-- LOG TAB -->
+    <div class="panel on" id="tab-log">
+      <!-- Add champion -->
+      <div class="card" style="animation-delay:.05s">
+        <div class="card-title">➕ Add a New Champion</div>
+        <div class="fields fields-3">
+          <div class="f"><label>Child's Name</label><input type="text" id="add-name" placeholder="e.g. Emma" maxlength="30"></div>
+          <div class="f"><label>Subject / Instrument</label><input type="text" id="add-subject" placeholder="e.g. Piano" maxlength="30"></div>
+          <div class="f-end"><button class="btn btn-sky" onclick="addChild()">Add 🎉</button></div>
         </div>
       </div>
-    </div>
-    <div class="card" id="sessions-card" style="animation-delay:0.3s;display:none">
-      <h2>📋 Sessions — <span id="sessions-child-name" style="color:var(--sky)"></span></h2>
-      <div id="sessions-body"></div>
-    </div>
-  </div>
 
-  <!-- LEADERBOARD TAB -->
-  <div class="tab-panel" id="tab-leaderboard">
-    <div class="card">
-      <h2>🏆 Champion Leaderboard</h2>
-      <div id="leaderboard-body"><div class="empty-state"><span>🌟</span>No champions yet!</div></div>
-    </div>
-  </div>
+      <!-- Log minutes -->
+      <div class="card" style="animation-delay:.1s">
+        <div class="card-title">⏱️ Log Practice Minutes</div>
+        <div id="no-kids" class="empty"><span class="ei">👆</span>Add a champion above first!</div>
+        <div id="log-section" style="display:none">
+          <p style="font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--text-light);margin-bottom:10px">Select Champion</p>
+          <div class="chips" id="chips"></div>
+          <div class="fields fields-3b">
+            <div class="f"><label>Minutes Practiced</label><input type="number" id="log-mins" placeholder="e.g. 30" min="1" max="999"></div>
+            <div class="f"><label>Date</label><input type="date" id="log-date"></div>
+            <div class="f-end"><button class="btn btn-sky" onclick="logSession()">Log It! ✅</button></div>
+          </div>
+        </div>
+      </div>
 
-  <!-- MANAGE TAB -->
-  <div class="tab-panel" id="tab-manage">
-    <div class="card">
-      <h2>⚙️ Manage Champions</h2>
-      <div class="children-list" id="manage-list"><div class="empty-state"><span>👶</span>No champions yet.</div></div>
+      <!-- Session history -->
+      <div class="card" id="hist-card" style="animation-delay:.15s;display:none">
+        <div class="card-title">📋 Sessions — <span id="hist-name" style="color:var(--sky)"></span></div>
+        <div id="hist-body"></div>
+      </div>
     </div>
-    <div class="card">
-      <h2>🔗 GitHub Connection</h2>
-      <div id="config-display"></div>
-      <button class="btn" style="background:#f1f5f9;color:var(--text-dark);font-size:1rem" onclick="showSetup()">Update Settings ✏️</button>
+
+    <!-- LEADERBOARD TAB -->
+    <div class="panel" id="tab-board">
+      <div class="card">
+        <div class="card-title">🏆 Champion Leaderboard</div>
+        <div id="lb-body"><div class="empty"><span class="ei">🌟</span>No champions yet!</div></div>
+      </div>
     </div>
-    <div class="card" style="border:2.5px solid #fee2e2">
-      <h2 style="color:var(--coral)">🗑️ Reset All Data</h2>
-      <p style="color:var(--text-mid);font-size:0.95rem;margin-bottom:16px;">Permanently delete all champions and sessions from the repo file.</p>
-      <button class="btn" style="background:var(--coral);color:white;box-shadow:0 4px 14px rgba(244,63,94,0.35)" onclick="resetAll()">Reset Everything</button>
+
+    <!-- MANAGE TAB -->
+    <div class="panel" id="tab-manage">
+      <div class="card">
+        <div class="card-title">⚙️ Manage Champions</div>
+        <div class="manage-list" id="mgr-list"><div class="empty"><span class="ei">👶</span>No champions yet.</div></div>
+      </div>
+      <div class="card danger-card">
+        <div class="card-title" style="color:var(--coral)">🗑️ Reset All Data</div>
+        <p style="color:var(--text-mid);font-size:.93rem;margin-bottom:16px">Permanently deletes all champions and every practice session.</p>
+        <button class="btn btn-coral" onclick="resetAll()">Reset Everything</button>
+      </div>
     </div>
-  </div>
-</div>
+
+  </div><!-- /app-body -->
+</div><!-- /page -->
 
 <div id="toast"></div>
 
-<script>
-// ── Config ──────────────────────────────────────────────────
-const DATA_FILE = 'data.json';
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp }          from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc,
+         onSnapshot, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-function getConfig() {
-  return {
-    owner: localStorage.getItem('pc_owner') || '',
-    repo:  localStorage.getItem('pc_repo')  || '',
-    token: localStorage.getItem('pc_token') || '',
-  };
+// ── Config storage ────────────────────────────────────────
+const CFG_KEY = 'pc_firebase_cfg';
+
+function loadCfg() {
+  try { return JSON.parse(localStorage.getItem(CFG_KEY)); } catch(e) { return null; }
 }
 
-function saveConfig() {
-  const owner = document.getElementById('cfg-owner').value.trim();
-  const repo  = document.getElementById('cfg-repo').value.trim();
-  const token = document.getElementById('cfg-token').value.trim();
-  if (!owner || !repo || !token) { showToast('Fill in all three fields!', true); return; }
-  localStorage.setItem('pc_owner', owner);
-  localStorage.setItem('pc_repo', repo);
-  localStorage.setItem('pc_token', token);
-  document.getElementById('setup-banner').style.display = 'none';
-  loadFromGitHub();
-}
+window.saveFirebaseConfig = function() {
+  const apiKey      = document.getElementById('cfg-apiKey').value.trim();
+  const authDomain  = document.getElementById('cfg-authDomain').value.trim();
+  const projectId   = document.getElementById('cfg-projectId').value.trim();
+  const appId       = document.getElementById('cfg-appId').value.trim();
+  if (!apiKey || !projectId || !appId) { toast('Fill in at least API Key, Project ID and App ID', true); return; }
+  const cfg = { apiKey, authDomain, projectId, appId };
+  localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+  document.getElementById('setup-overlay').classList.add('hidden');
+  boot(cfg);
+};
 
-function showSetup() {
-  const cfg = getConfig();
-  document.getElementById('cfg-owner').value = cfg.owner;
-  document.getElementById('cfg-repo').value  = cfg.repo;
-  document.getElementById('cfg-token').value  = cfg.token;
-  document.getElementById('setup-banner').style.display = 'block';
-  document.getElementById('setup-banner').scrollIntoView({ behavior: 'smooth' });
-}
+window.showSetup = function() {
+  const cfg = loadCfg() || {};
+  document.getElementById('cfg-apiKey').value     = cfg.apiKey     || '';
+  document.getElementById('cfg-authDomain').value = cfg.authDomain || '';
+  document.getElementById('cfg-projectId').value  = cfg.projectId  || '';
+  document.getElementById('cfg-appId').value      = cfg.appId      || '';
+  document.getElementById('setup-overlay').classList.remove('hidden');
+};
 
-// ── State ───────────────────────────────────────────────────
-let appData = { children: [], sessions: [] };
-let fileSha = null;
-let selectedChildId = null;
+// ── State ─────────────────────────────────────────────────
+let db, children = [], sessions = [], selId = null;
+let unsubKids, unsubSess;
 
-// ── GitHub API ──────────────────────────────────────────────
-async function ghRequest(method, path, body) {
-  const cfg = getConfig();
-  const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
-  const opts = {
-    method,
-    headers: {
-      'Authorization': `token ${cfg.token}`,
-      'Content-Type': 'application/json',
-      'Accept': 'application/vnd.github.v3+json'
-    }
-  };
-  if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(url, opts);
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || `HTTP ${res.status}`);
-  }
-  return res.json();
-}
+// ── Boot ──────────────────────────────────────────────────
+function boot(cfg) {
+  setSync('busy','Connecting…');
+  document.getElementById('app-loading').style.display = 'flex';
+  document.getElementById('app-body').style.display    = 'none';
 
-async function loadFromGitHub() {
-  const cfg = getConfig();
-  if (!cfg.owner || !cfg.repo || !cfg.token) return;
-  setSync('syncing', 'Loading…');
+  let app;
   try {
-    const file = await ghRequest('GET', DATA_FILE);
-    appData = JSON.parse(atob(file.content.replace(/\n/g, '')));
-    fileSha = file.sha;
-    setSync('synced', `Synced · ${cfg.owner}/${cfg.repo}`);
+    app = initializeApp(cfg, cfg.projectId); // named instance to allow re-init
   } catch(e) {
-    if (e.message.includes('404') || e.message === 'Not Found') {
-      appData = { children: [], sessions: [] };
-      fileSha = null;
-      await pushToGitHub('Create data file');
-      setSync('synced', `Connected · ${cfg.owner}/${cfg.repo}`);
-    } else {
-      setSync('error', 'Connection error — check settings');
-      showToast('Could not connect: ' + e.message, true);
-    }
+    // already initialized
+    app = initializeApp(cfg);
   }
-  renderAll();
-  if (appData.children.length > 0 && !selectedChildId) {
-    selectedChildId = appData.children[0].id;
-  }
+  db = getFirestore(app);
+
+  // unsub old listeners
+  if (unsubKids) unsubKids();
+  if (unsubSess) unsubSess();
+
+  // listen to children
+  const kidsQ = query(collection(db,'children'), orderBy('createdAt'));
+  unsubKids = onSnapshot(kidsQ, snap => {
+    children = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderAll();
+  }, err => { setSync('bad','Firestore error — check Project ID'); toast(err.message,true); });
+
+  // listen to sessions
+  const sessQ = query(collection(db,'sessions'), orderBy('date'));
+  unsubSess = onSnapshot(sessQ, snap => {
+    sessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderAll();
+    setSync('ok', `Live · ${cfg.projectId}`);
+    document.getElementById('app-loading').style.display = 'none';
+    document.getElementById('app-body').style.display    = 'block';
+  }, err => { setSync('bad','Firestore error'); toast(err.message,true); });
+}
+
+// ── Render helpers ────────────────────────────────────────
+function renderAll() {
+  renderStats();
   renderChips();
   renderSessions();
-  updateConfigDisplay();
+  // refresh visible tab
+  if (document.getElementById('tab-board').classList.contains('on')) renderLeaderboard();
+  if (document.getElementById('tab-manage').classList.contains('on')) renderManage();
 }
 
-async function pushToGitHub(msg) {
-  setSync('syncing', 'Saving…');
-  const cfg = getConfig();
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
-  const body = { message: msg, content };
-  if (fileSha) body.sha = fileSha;
-  try {
-    const res = await ghRequest('PUT', DATA_FILE, body);
-    fileSha = res.content.sha;
-    setSync('synced', `Synced · ${cfg.owner}/${cfg.repo}`);
-  } catch(e) {
-    setSync('error', 'Save failed');
-    showToast('Save failed: ' + e.message, true);
-    throw e;
-  }
+function renderStats() {
+  document.getElementById('s-kids').textContent = children.length;
+  document.getElementById('s-sess').textContent = sessions.length;
+  document.getElementById('s-mins').textContent = sessions.reduce((a,s)=>a+s.minutes,0);
 }
 
-// ── Sync UI ─────────────────────────────────────────────────
-function setSync(state, label) {
-  const dot = document.getElementById('sync-dot');
-  dot.className = 'sync-dot ' + state;
-  document.getElementById('sync-label').textContent = label;
-}
-
-function updateConfigDisplay() {
-  const cfg = getConfig();
-  const el = document.getElementById('config-display');
-  el.innerHTML = cfg.owner && cfg.repo
-    ? `<div class="config-saved">✅ Connected to <strong>${cfg.owner}/${cfg.repo}</strong></div>`
-    : '';
-}
-
-// ── Tabs ────────────────────────────────────────────────────
-function switchTab(name, e) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  if (e) e.currentTarget.classList.add('active');
-  if (name === 'leaderboard') renderLeaderboard();
-  if (name === 'manage') { renderManage(); updateConfigDisplay(); }
-}
-
-// ── Add Child ───────────────────────────────────────────────
-async function addChild() {
-  const ni = document.getElementById('new-child-name');
-  const si = document.getElementById('new-child-subject');
-  const name = ni.value.trim();
-  const subject = si.value.trim();
-  if (!name) { showToast('Please enter a name! 👀', true); return; }
-  if (appData.children.find(c => c.name.toLowerCase() === name.toLowerCase())) {
-    showToast('That name already exists! 🙈', true); return;
-  }
-  const child = {
-    id: Date.now().toString(),
-    name,
-    subject: subject || 'Practice',
-    colorIdx: appData.children.length % 6,
-    createdAt: new Date().toISOString()
-  };
-  appData.children.push(child);
-  ni.value = ''; si.value = '';
-  selectedChildId = child.id;
-  renderAll();
-  renderChips();
-  renderSessions();
-  showToast(`${name} added! 🎉`);
-  await pushToGitHub(`Add champion: ${name}`);
-}
-
-// ── Log Session ─────────────────────────────────────────────
-async function logSession() {
-  if (!selectedChildId) { showToast('Select a champion first! 👆', true); return; }
-  const mi = document.getElementById('log-minutes');
-  const di = document.getElementById('log-date');
-  const mins = parseInt(mi.value);
-  if (!mins || mins < 1) { showToast('Enter valid minutes! ⏱️', true); return; }
-  const date = di.value || new Date().toISOString().slice(0,10);
-  appData.sessions.push({ id: Date.now().toString(), childId: selectedChildId, minutes: mins, date, loggedAt: new Date().toISOString() });
-  mi.value = '';
-  renderAll();
-  renderSessions();
-  const child = appData.children.find(c => c.id === selectedChildId);
-  showToast(`${mins} mins logged for ${child.name}! 🌟`);
-  await pushToGitHub(`Log ${mins} min for ${child.name}`);
-}
-
-// ── Render ──────────────────────────────────────────────────
 function renderChips() {
-  const container = document.getElementById('child-chips');
-  const noMsg = document.getElementById('no-children-msg');
-  const logSection = document.getElementById('log-section');
-  if (!appData.children.length) {
-    noMsg.style.display = 'block';
-    logSection.style.display = 'none';
-    document.getElementById('sessions-card').style.display = 'none';
-    return;
-  }
-  noMsg.style.display = 'none';
-  logSection.style.display = 'block';
-  const cc = ['','c1','c2','c3','c4',''];
-  container.innerHTML = appData.children.map(c =>
-    `<button class="child-chip ${cc[c.colorIdx]||''} ${selectedChildId===c.id?'active':''}" onclick="selectChild('${c.id}')">${c.name}</button>`
+  const wrap = document.getElementById('chips');
+  const noKids = document.getElementById('no-kids');
+  const logSec = document.getElementById('log-section');
+  if (!children.length) { noKids.style.display='block'; logSec.style.display='none'; document.getElementById('hist-card').style.display='none'; return; }
+  noKids.style.display='none'; logSec.style.display='block';
+  // keep selId valid
+  if (selId && !children.find(c=>c.id===selId)) selId = children[0].id;
+  if (!selId) selId = children[0].id;
+  wrap.innerHTML = children.map(c =>
+    `<button class="chip col${c.colorIdx} ${selId===c.id?'on':''}" onclick="window.selChild('${c.id}')">${c.name}</button>`
   ).join('');
 }
 
-function selectChild(id) { selectedChildId = id; renderChips(); renderSessions(); }
-
 function renderSessions() {
-  const card = document.getElementById('sessions-card');
-  const nameEl = document.getElementById('sessions-child-name');
-  const body = document.getElementById('sessions-body');
-  if (!selectedChildId) { card.style.display = 'none'; return; }
-  const child = appData.children.find(c => c.id === selectedChildId);
-  if (!child) { card.style.display = 'none'; return; }
-  card.style.display = 'block';
+  const card  = document.getElementById('hist-card');
+  const nameEl= document.getElementById('hist-name');
+  const body  = document.getElementById('hist-body');
+  if (!selId || !children.length) { card.style.display='none'; return; }
+  const child = children.find(c=>c.id===selId);
+  if (!child) { card.style.display='none'; return; }
+  card.style.display='block';
   nameEl.textContent = child.name;
-  const sessions = appData.sessions.filter(s => s.childId === selectedChildId).sort((a,b) => b.date.localeCompare(a.date));
-  if (!sessions.length) {
-    body.innerHTML = `<div class="empty-state"><span>📅</span>No sessions yet for ${child.name}.</div>`;
-    return;
-  }
-  const total = sessions.reduce((s,x) => s+x.minutes, 0);
-  body.innerHTML = `<p style="font-weight:800;color:var(--text-mid);margin-bottom:12px;">
-    Total: <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.2rem">${total}</span> mins
-    across <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.2rem">${sessions.length}</span> sessions</p>
-    <table class="sessions-table">
+  const childSess = sessions.filter(s=>s.childId===selId).sort((a,b)=>b.date.localeCompare(a.date));
+  if (!childSess.length) { body.innerHTML=`<div class="empty"><span class="ei">📅</span>No sessions logged yet.</div>`; return; }
+  const total = childSess.reduce((a,s)=>a+s.minutes,0);
+  body.innerHTML = `
+    <p style="font-weight:800;color:var(--text-mid);margin-bottom:12px">
+      Total: <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.15rem">${total}</span> mins
+      across <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.15rem">${childSess.length}</span> sessions
+    </p>
+    <table class="tbl">
       <thead><tr><th>Date</th><th>Minutes</th><th>Subject</th><th></th></tr></thead>
-      <tbody>${sessions.map(s =>
-        `<tr>
+      <tbody>${childSess.map(s=>`
+        <tr>
           <td>${fmtDate(s.date)}</td>
-          <td><span class="minutes-badge">${s.minutes} min</span></td>
+          <td><span class="badge">${s.minutes} min</span></td>
           <td>${child.subject}</td>
-          <td><button class="btn-delete" onclick="deleteSession('${s.id}')">✕</button></td>
+          <td><button class="btn-danger" onclick="window.delSession('${s.id}')">✕ Remove</button></td>
         </tr>`).join('')}
       </tbody>
     </table>`;
 }
 
 function renderLeaderboard() {
-  const body = document.getElementById('leaderboard-body');
-  if (!appData.children.length) {
-    body.innerHTML = `<div class="empty-state"><span>🌟</span>No champions yet!</div>`;
-    return;
-  }
-  const ranked = appData.children.map(c => ({
+  const body = document.getElementById('lb-body');
+  if (!children.length) { body.innerHTML=`<div class="empty"><span class="ei">🌟</span>No champions yet!</div>`; return; }
+  const ranked = children.map(c => ({
     ...c,
-    total: appData.sessions.filter(s => s.childId===c.id).reduce((s,x)=>s+x.minutes,0),
-    count: appData.sessions.filter(s => s.childId===c.id).length
-  })).sort((a,b) => b.total - a.total);
-  const maxTotal = Math.max(ranked[0]?.total || 1, 1);
+    total: sessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0),
+    count: sessions.filter(s=>s.childId===c.id).length
+  })).sort((a,b)=>b.total-a.total);
+  const max = Math.max(ranked[0]?.total||1, 1);
   const medals = ['🥇','🥈','🥉'];
-  const grads = [
+  const fills = [
     'linear-gradient(90deg,#f59e0b,#fbbf24)',
     'linear-gradient(90deg,#94a3b8,#cbd5e1)',
     'linear-gradient(90deg,#f97316,#fb923c)',
@@ -507,105 +603,136 @@ function renderLeaderboard() {
     'linear-gradient(90deg,#8b5cf6,#a78bfa)',
     'linear-gradient(90deg,#10b981,#34d399)'
   ];
-  body.innerHTML = `<div class="leaderboard">${ranked.map((c,i) => `
-    <div class="lb-row rank-${i+1}">
-      <div class="lb-rank">${medals[i]||`#${i+1}`}</div>
-      <div class="lb-avatar av-${c.colorIdx}">${c.name[0].toUpperCase()}</div>
-      <div class="progress-wrap">
-        <div style="font-weight:800;font-size:1.05rem">${c.name}
-          <span style="font-weight:600;font-size:0.85rem;color:var(--text-light)">${c.subject}</span>
-        </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width:${Math.round((c.total/maxTotal)*100)}%;background:${grads[c.colorIdx%grads.length]}"></div>
-        </div>
-        <div style="font-size:0.78rem;color:var(--text-light);font-weight:700;margin-top:3px">${c.count} session${c.count!==1?'s':''}</div>
+  body.innerHTML = `<div class="lb">${ranked.map((c,i)=>`
+    <div class="lb-row r${i+1}" style="animation-delay:${i*.06}s">
+      <div class="lb-medal">${medals[i]||`#${i+1}`}</div>
+      <div class="av av${c.colorIdx}">${c.name[0].toUpperCase()}</div>
+      <div class="lb-info">
+        <div class="lb-name">${c.name} <span class="lb-sub">${c.subject}</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.total/max*100)}%;background:${fills[c.colorIdx%fills.length]}"></div></div>
+        <div style="font-size:.72rem;color:var(--text-light);font-weight:700;margin-top:3px">${c.count} session${c.count!==1?'s':''}</div>
       </div>
-      <div class="lb-total">${c.total}<small>minutes</small></div>
+      <div class="lb-mins">${c.total}<small>minutes</small></div>
     </div>`).join('')}</div>`;
 }
 
 function renderManage() {
-  const list = document.getElementById('manage-list');
-  if (!appData.children.length) {
-    list.innerHTML = `<div class="empty-state"><span>👶</span>No champions yet.</div>`;
-    return;
-  }
-  list.innerHTML = appData.children.map(c => {
-    const total = appData.sessions.filter(s=>s.childId===c.id).reduce((s,x)=>s+x.minutes,0);
-    const count = appData.sessions.filter(s=>s.childId===c.id).length;
-    return `<div class="child-item">
-      <div class="child-item-info">
-        <div class="lb-avatar av-${c.colorIdx}" style="width:38px;height:38px;font-size:1rem">${c.name[0].toUpperCase()}</div>
+  const list = document.getElementById('mgr-list');
+  if (!children.length) { list.innerHTML=`<div class="empty"><span class="ei">👶</span>No champions yet.</div>`; return; }
+  list.innerHTML = children.map(c => {
+    const total = sessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0);
+    const count = sessions.filter(s=>s.childId===c.id).length;
+    return `<div class="manage-row">
+      <div class="manage-info">
+        <div class="av av${c.colorIdx}" style="width:38px;height:38px;font-size:1rem">${c.name[0].toUpperCase()}</div>
         <div>
           <div>${c.name}</div>
-          <div class="child-sub">${c.subject} · ${total} mins · ${count} session${count!==1?'s':''}</div>
+          <div class="manage-sub">${c.subject} · ${total} mins · ${count} session${count!==1?'s':''}</div>
         </div>
       </div>
-      <button class="btn-sm btn-remove" onclick="removeChild('${c.id}')">Remove ✕</button>
+      <button class="btn-danger" onclick="window.removeChild('${c.id}')">✕ Remove</button>
     </div>`;
   }).join('');
 }
 
-function renderStats() {
-  document.getElementById('stat-children').textContent = appData.children.length;
-  document.getElementById('stat-sessions').textContent = appData.sessions.length;
-  document.getElementById('stat-total').textContent = appData.sessions.reduce((s,x)=>s+x.minutes, 0);
-}
+// ── Actions ───────────────────────────────────────────────
+window.selChild = function(id) { selId = id; renderChips(); renderSessions(); };
 
-function renderAll() { renderStats(); renderChips(); }
+window.addChild = async function() {
+  const name    = document.getElementById('add-name').value.trim();
+  const subject = document.getElementById('add-subject').value.trim();
+  if (!name) { toast('Please enter a name! 👀', true); return; }
+  if (children.find(c=>c.name.toLowerCase()===name.toLowerCase())) { toast('That name already exists! 🙈', true); return; }
+  await addDoc(collection(db,'children'), {
+    name, subject: subject||'Practice',
+    colorIdx: children.length % 6,
+    createdAt: new Date().toISOString()
+  });
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-subject').value = '';
+  toast(`${name} added! 🎉`);
+};
 
-// ── Delete / Reset ──────────────────────────────────────────
-async function deleteSession(id) {
-  appData.sessions = appData.sessions.filter(s => s.id !== id);
-  renderAll(); renderSessions();
-  showToast('Session removed');
-  await pushToGitHub('Delete session');
-}
+window.logSession = async function() {
+  if (!selId) { toast('Select a champion first! 👆', true); return; }
+  const mins = parseInt(document.getElementById('log-mins').value);
+  const date = document.getElementById('log-date').value || new Date().toISOString().slice(0,10);
+  if (!mins || mins < 1) { toast('Enter valid minutes! ⏱️', true); return; }
+  await addDoc(collection(db,'sessions'), {
+    childId: selId, minutes: mins, date,
+    loggedAt: new Date().toISOString()
+  });
+  document.getElementById('log-mins').value = '';
+  const child = children.find(c=>c.id===selId);
+  toast(`${mins} mins logged for ${child?.name}! 🌟`);
+};
 
-async function removeChild(id) {
-  const child = appData.children.find(c => c.id === id);
-  if (!confirm(`Remove ${child?.name} and all their sessions? This cannot be undone.`)) return;
-  appData.children = appData.children.filter(c => c.id !== id);
-  appData.sessions = appData.sessions.filter(s => s.childId !== id);
-  if (selectedChildId === id) selectedChildId = appData.children[0]?.id || null;
-  renderAll(); renderChips(); renderSessions(); renderManage();
-  showToast(`${child?.name} removed`);
-  await pushToGitHub(`Remove champion: ${child?.name}`);
-}
+window.delSession = async function(id) {
+  await deleteDoc(doc(db,'sessions',id));
+  toast('Session removed');
+};
 
-async function resetAll() {
-  if (!confirm('Reset ALL data? This will permanently delete everything.')) return;
-  appData = { children: [], sessions: [] };
-  fileSha = null;
-  selectedChildId = null;
-  renderAll(); renderManage();
-  showToast('All data cleared');
-  await pushToGitHub('Reset all data');
-}
+window.removeChild = async function(id) {
+  const child = children.find(c=>c.id===id);
+  if (!confirm(`Remove ${child?.name} and ALL their sessions? This cannot be undone.`)) return;
+  // delete all sessions for this child
+  const toDelete = sessions.filter(s=>s.childId===id);
+  await Promise.all(toDelete.map(s=>deleteDoc(doc(db,'sessions',s.id))));
+  await deleteDoc(doc(db,'children',id));
+  if (selId===id) selId = null;
+  toast(`${child?.name} removed`);
+};
 
-// ── Helpers ─────────────────────────────────────────────────
+window.resetAll = async function() {
+  if (!confirm('Delete ALL champions and sessions? This cannot be undone.')) return;
+  await Promise.all(sessions.map(s=>deleteDoc(doc(db,'sessions',s.id))));
+  await Promise.all(children.map(c=>deleteDoc(doc(db,'children',c.id))));
+  selId = null;
+  toast('All data cleared');
+};
+
+// ── Tabs ──────────────────────────────────────────────────
+window.goTab = function(name, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  btn.classList.add('on');
+  if (name==='board')  renderLeaderboard();
+  if (name==='manage') renderManage();
+};
+
+// ── Helpers ───────────────────────────────────────────────
 function fmtDate(d) {
-  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
 
-let toastTimer;
-function showToast(msg, isErr = false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = isErr ? 'err show' : 'show';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+function setSync(state, label) {
+  document.getElementById('sync-dot').className = 'dot '+state;
+  document.getElementById('sync-lbl').textContent = label;
 }
 
-// ── Init ────────────────────────────────────────────────────
+let toastT;
+window.toast = function(msg, bad=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = bad ? 'bad show' : 'show';
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>el.classList.remove('show'), 3200);
+};
+
+// ── Init ──────────────────────────────────────────────────
 document.getElementById('log-date').valueAsDate = new Date();
-const cfg = getConfig();
-if (cfg.owner && cfg.repo && cfg.token) {
-  document.getElementById('setup-banner').style.display = 'none';
-  document.getElementById('cfg-owner').value = cfg.owner;
-  document.getElementById('cfg-repo').value  = cfg.repo;
-  document.getElementById('cfg-token').value  = cfg.token;
-  loadFromGitHub();
+
+const cfg = loadCfg();
+if (cfg && cfg.projectId) {
+  document.getElementById('setup-overlay').classList.add('hidden');
+  document.getElementById('cfg-apiKey').value     = cfg.apiKey     || '';
+  document.getElementById('cfg-authDomain').value = cfg.authDomain || '';
+  document.getElementById('cfg-projectId').value  = cfg.projectId  || '';
+  document.getElementById('cfg-appId').value      = cfg.appId      || '';
+  boot(cfg);
+} else {
+  document.getElementById('app-loading').style.display = 'none';
 }
 </script>
 </body>
