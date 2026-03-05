@@ -3,264 +3,404 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Practice Champions 🏆</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<title>Lax Practice Tracker 🥍</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,800&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sky: #0ea5e9;
-    --mint: #10b981;
-    --coral: #f43f5e;
-    --sun: #f59e0b;
-    --lavender: #8b5cf6;
-    --cream: #fdfcf7;
-    --white: #ffffff;
-    --text-dark: #1a1a2e;
-    --text-mid: #4a5568;
-    --text-light: #a0aec0;
-    --border: #e8edf2;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-    --shadow: 0 4px 20px rgba(0,0,0,0.08);
-    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
-    --radius: 20px;
-    --radius-sm: 12px;
+    --grass:   #1a7a3a;
+    --grass-lt:#22a04d;
+    --grass-dk:#0f4d24;
+    --field:   #e8f5ee;
+    --white:   #ffffff;
+    --chalk:   #f0f7f2;
+    --gold:    #f5b800;
+    --gold-dk: #d49a00;
+    --red:     #d63030;
+    --sky:     #2196c4;
+    --text:    #0d1f13;
+    --text-md: #3a5244;
+    --text-lt: #7a9e8a;
+    --border:  #cde3d4;
+    --shadow:  0 4px 24px rgba(10,50,20,0.10);
+    --shadow-lg: 0 12px 48px rgba(10,50,20,0.16);
+    --r: 16px;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
+  * { box-sizing:border-box; margin:0; padding:0; }
   body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--cream);
-    min-height: 100vh;
-    color: var(--text-dark);
-    overflow-x: hidden;
+    font-family:'Barlow',sans-serif;
+    background: var(--chalk);
+    color: var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
   }
 
-  .bg {
-    position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-    background: linear-gradient(160deg, #f0f9ff 0%, #fdfcf7 50%, #fdf4ff 100%);
-  }
-  .bg-circle {
-    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.22;
-    animation: drift 15s ease-in-out infinite alternate;
-  }
-  .bc1 { width:600px;height:600px;background:#bae6fd;top:-150px;left:-150px;animation-delay:0s; }
-  .bc2 { width:450px;height:450px;background:#ddd6fe;bottom:-100px;right:-100px;animation-delay:-5s; }
-  .bc3 { width:350px;height:350px;background:#a7f3d0;top:45%;left:35%;animation-delay:-10s; }
-  @keyframes drift {
-    from { transform: translate(0,0) scale(1); }
-    to   { transform: translate(35px,25px) scale(1.06); }
+  /* ── Field stripe background ── */
+  .field-bg {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background: repeating-linear-gradient(
+      180deg,
+      rgba(26,122,58,0.045) 0px,
+      rgba(26,122,58,0.045) 60px,
+      rgba(26,122,58,0.02) 60px,
+      rgba(26,122,58,0.02) 120px
+    );
   }
 
-  .page { position:relative;z-index:1;max-width:960px;margin:0 auto;padding:36px 20px 80px; }
-
-  header { text-align:center; margin-bottom:44px; animation: fadeDown .7s cubic-bezier(.34,1.56,.64,1) both; }
-  .header-icon { font-size:4.5rem; display:block; animation: trophyBounce 2.5s ease-in-out infinite; }
-  @keyframes trophyBounce {
-    0%,100% { transform: translateY(0) rotate(-3deg); }
-    50%      { transform: translateY(-12px) rotate(3deg); }
+  /* ── Header / Hero ── */
+  .hero {
+    position: relative; z-index:1;
+    background: linear-gradient(135deg, var(--grass-dk) 0%, var(--grass) 60%, var(--grass-lt) 100%);
+    padding: 48px 24px 56px;
+    text-align: center;
+    overflow: hidden;
   }
-  header h1 {
-    font-family:'Fredoka One',cursive;
-    font-size: clamp(2.2rem, 7vw, 4rem);
-    color: var(--text-dark);
-    margin-top: 10px;
-    letter-spacing: -0.5px;
+  .hero::before {
+    content:'';
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px,
+      transparent 1px, transparent 80px
+    );
   }
-  header h1 span { color: var(--sky); }
-  header p { font-size:1.05rem; color:var(--text-mid); margin-top:6px; font-weight:700; }
-  @keyframes fadeDown { from{opacity:0;transform:translateY(-24px)} to{opacity:1;transform:translateY(0)} }
+  .hero::after {
+    content:'';
+    position:absolute; bottom:-2px; left:0; right:0; height:32px;
+    background: var(--chalk);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+  .hero-inner { position:relative; z-index:1; }
 
-  .card {
-    background:var(--white); border-radius:var(--radius);
-    padding:28px 32px; box-shadow:var(--shadow); margin-bottom:24px;
+  .lax-icon {
+    font-size:5rem; display:block;
+    animation: spinBounce 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+  }
+  @keyframes spinBounce {
+    0%   { transform: translateY(0) rotate(-8deg); }
+    25%  { transform: translateY(-14px) rotate(8deg); }
+    50%  { transform: translateY(0) rotate(-4deg); }
+    75%  { transform: translateY(-7px) rotate(4deg); }
+    100% { transform: translateY(0) rotate(-8deg); }
+  }
+
+  .hero h1 {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size: clamp(2.6rem, 8vw, 5rem);
+    font-weight:900;
+    color:#fff;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    line-height:1;
+    margin-top:12px;
+    text-shadow: 0 3px 16px rgba(0,0,0,0.3);
+  }
+  .hero h1 em {
+    font-style:italic;
+    color: var(--gold);
+    display:block;
+    font-size:0.85em;
+    letter-spacing:4px;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.75);
+    font-size:1rem; font-weight:600;
+    margin-top:10px; letter-spacing:.5px;
+  }
+
+  /* ── Field lines decoration ── */
+  .field-lines {
+    display:flex; justify-content:center; gap:40px;
+    margin-top:20px; opacity:0.5;
+  }
+  .field-line { width:60px; height:3px; background:#fff; border-radius:2px; }
+
+  /* ── Page wrap ── */
+  .page { position:relative; z-index:1; max-width:960px; margin:0 auto; padding:32px 20px 80px; }
+
+  /* ── Stats strip ── */
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
+  @media(max-width:500px){ .stats{grid-template-columns:1fr;} }
+  .stat-card {
+    background:var(--white); border-radius:var(--r);
+    padding:20px 16px; text-align:center;
+    box-shadow:var(--shadow);
+    border-top: 4px solid var(--grass);
     animation: riseUp .5s cubic-bezier(.34,1.56,.64,1) both;
   }
-  @keyframes riseUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-  .card-title {
-    font-family:'Fredoka One',cursive; font-size:1.35rem;
-    color:var(--text-dark); margin-bottom:20px;
-    display:flex; align-items:center; gap:10px;
+  .stat-card:nth-child(2){ border-top-color:var(--gold); }
+  .stat-card:nth-child(3){ border-top-color:var(--sky); }
+  .stat-n {
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900; font-size:2.8rem; line-height:1;
+    color: var(--grass);
   }
+  .stat-card:nth-child(2) .stat-n { color:var(--gold-dk); }
+  .stat-card:nth-child(3) .stat-n { color:var(--sky); }
+  .stat-l { font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); margin-top:4px; }
 
+  @keyframes riseUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── Sync bar ── */
+  .sync-bar { display:flex; align-items:center; gap:8px; font-size:.8rem; font-weight:700; color:var(--text-lt); margin-bottom:20px; }
+  .dot { width:8px;height:8px;border-radius:50%;background:var(--text-lt);flex-shrink:0; }
+  .dot.ok   { background:#22c55e; }
+  .dot.busy { background:var(--gold); animation:pulse 1s infinite; }
+  .dot.bad  { background:var(--red); }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* ── Tabs ── */
+  .tabs { display:flex; gap:0; margin-bottom:26px; border-radius:var(--r); overflow:hidden; background:var(--white); box-shadow:var(--shadow); border:2px solid var(--border); }
+  .tab {
+    flex:1; padding:12px 10px;
+    border:none; background:transparent;
+    font-family:'Barlow Condensed',sans-serif; font-weight:800;
+    font-size:1rem; text-transform:uppercase; letter-spacing:.08em;
+    cursor:pointer; color:var(--text-lt); transition:all .2s;
+    border-right: 2px solid var(--border);
+  }
+  .tab:last-child { border-right:none; }
+  .tab.on { background:var(--grass); color:#fff; }
+  .panel { display:none; }
+  .panel.on { display:block; }
+
+  /* ── Cards ── */
+  .card {
+    background:var(--white); border-radius:var(--r);
+    padding:26px 28px; box-shadow:var(--shadow); margin-bottom:22px;
+    animation: riseUp .45s cubic-bezier(.34,1.56,.64,1) both;
+    border: 1.5px solid var(--border);
+  }
+  .card-title {
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:900; font-size:1.3rem;
+    text-transform:uppercase; letter-spacing:.08em;
+    color: var(--grass-dk);
+    margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+    border-bottom: 2px dashed var(--border);
+    padding-bottom: 12px;
+  }
+  .card-title .ct-icon { font-size:1.4rem; }
+
+  /* ── Buttons ── */
   .btn {
     display:inline-flex; align-items:center; justify-content:center; gap:7px;
-    padding:11px 22px; border:none; border-radius:var(--radius-sm);
-    font-family:'Fredoka One',cursive; font-size:1.05rem;
+    padding:11px 22px; border:none; border-radius:10px;
+    font-family:'Barlow Condensed',sans-serif; font-weight:800;
+    font-size:1.05rem; text-transform:uppercase; letter-spacing:.06em;
     cursor:pointer; transition:transform .15s, box-shadow .15s, opacity .15s;
     white-space:nowrap;
   }
   .btn:active { transform:scale(.96)!important; }
-  .btn:disabled { opacity:.45; cursor:not-allowed; }
-  .btn-sky { background:linear-gradient(135deg,var(--sky),#3b82f6); color:#fff; box-shadow:0 4px 14px rgba(14,165,233,.38); }
-  .btn-sky:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 7px 20px rgba(14,165,233,.45); }
-  .btn-coral { background:linear-gradient(135deg,var(--coral),#ec4899); color:#fff; box-shadow:0 4px 14px rgba(244,63,94,.35); }
-  .btn-danger { background:#fff1f2; color:var(--coral); border:none; border-radius:8px; padding:5px 10px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:800; font-size:.85rem; transition:background .15s; }
-  .btn-danger:hover { background:#ffe4e6; }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
+  .btn-green {
+    background:linear-gradient(135deg,var(--grass),var(--grass-lt));
+    color:#fff; box-shadow:0 4px 14px rgba(26,122,58,.35);
+  }
+  .btn-green:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 7px 20px rgba(26,122,58,.42); }
+  .btn-gold {
+    background:linear-gradient(135deg,var(--gold),#f97316);
+    color:#fff; box-shadow:0 4px 14px rgba(245,184,0,.35);
+  }
+  .btn-red { background:linear-gradient(135deg,var(--red),#e53e3e); color:#fff; }
+  .btn-sm { background:#f0f7f2; color:var(--red); border:1.5px solid #fecaca; border-radius:8px; padding:5px 12px; cursor:pointer; font-family:'Barlow',sans-serif; font-weight:700; font-size:.82rem; transition:background .15s; }
+  .btn-sm:hover { background:#fee2e2; }
 
+  /* ── Form fields ── */
   .fields { display:grid; gap:13px; }
-  .fields-3 { grid-template-columns:1fr 1fr auto; }
-  @media(max-width:620px) { .fields-3 { grid-template-columns:1fr; } }
-  .f label { display:block; font-size:.78rem; font-weight:900; text-transform:uppercase; letter-spacing:.07em; color:var(--text-light); margin-bottom:5px; }
+  .f3 { grid-template-columns:1fr 1fr auto; }
+  @media(max-width:620px){ .f3{grid-template-columns:1fr;} }
+  .f label {
+    display:block; font-size:.72rem; font-weight:800;
+    text-transform:uppercase; letter-spacing:.09em;
+    color:var(--text-lt); margin-bottom:5px;
+  }
   .f input {
-    width:100%; padding:11px 15px;
-    border:2.5px solid var(--border); border-radius:var(--radius-sm);
-    font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:700;
-    color:var(--text-dark); background:#f8fafc; outline:none;
+    width:100%; padding:11px 14px;
+    border:2px solid var(--border); border-radius:10px;
+    font-family:'Barlow',sans-serif; font-size:.95rem; font-weight:600;
+    color:var(--text); background:var(--chalk); outline:none;
     transition:border-color .2s, box-shadow .2s;
   }
-  .f input:focus { border-color:var(--sky); box-shadow:0 0 0 3px rgba(14,165,233,.15); background:#fff; }
+  .f input:focus { border-color:var(--grass); box-shadow:0 0 0 3px rgba(26,122,58,.12); background:#fff; }
   .f-end { display:flex; align-items:flex-end; }
 
-  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px; }
-  @media(max-width:480px) { .stats { grid-template-columns:1fr; } }
-  .stat-card {
-    background:var(--white); border-radius:18px; padding:20px;
-    text-align:center; box-shadow:var(--shadow-sm);
-    animation: riseUp .5s cubic-bezier(.34,1.56,.64,1) both;
-  }
-  .stat-card:nth-child(1){animation-delay:.05s}
-  .stat-card:nth-child(2){animation-delay:.1s}
-  .stat-card:nth-child(3){animation-delay:.15s}
-  .stat-n {
-    font-family:'Fredoka One',cursive; font-size:2.4rem; line-height:1;
-    background:linear-gradient(135deg,var(--sky),var(--lavender));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  }
-  .stat-l { font-size:.75rem; font-weight:900; text-transform:uppercase; letter-spacing:.07em; color:var(--text-light); margin-top:4px; }
-
-  .tabs { display:flex; gap:8px; margin-bottom:26px; flex-wrap:wrap; }
-  .tab {
-    padding:9px 20px; border-radius:50px;
-    border:2.5px solid var(--border); background:#f8fafc;
-    font-family:'Fredoka One',cursive; font-size:.95rem;
-    cursor:pointer; transition:all .2s; color:var(--text-mid);
-  }
-  .tab.on { background:var(--text-dark); border-color:var(--text-dark); color:#fff; }
-  .panel { display:none; }
-  .panel.on { display:block; }
-
-  .chips { display:flex; gap:9px; flex-wrap:wrap; margin-bottom:18px; }
+  /* ── Player chips ── */
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
   .chip {
-    padding:7px 17px; border-radius:50px;
-    border:2.5px solid var(--border); background:#f8fafc;
-    font-family:'Nunito',sans-serif; font-weight:800; font-size:.9rem;
-    cursor:pointer; transition:all .2s; color:var(--text-mid);
+    padding:7px 16px; border-radius:50px;
+    border:2px solid var(--border); background:var(--chalk);
+    font-family:'Barlow Condensed',sans-serif; font-weight:800;
+    font-size:.95rem; text-transform:uppercase; letter-spacing:.05em;
+    cursor:pointer; transition:all .2s; color:var(--text-lt);
   }
-  .chip:hover { border-color:var(--sky); color:var(--sky); }
+  .chip:hover { border-color:var(--grass); color:var(--grass); }
   .chip.on { border-color:transparent; color:#fff; }
-  .chip.col0.on{background:linear-gradient(135deg,#0ea5e9,#3b82f6);box-shadow:0 3px 12px rgba(14,165,233,.35)}
-  .chip.col1.on{background:linear-gradient(135deg,#f43f5e,#ec4899);box-shadow:0 3px 12px rgba(244,63,94,.35)}
-  .chip.col2.on{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 3px 12px rgba(16,185,129,.35)}
-  .chip.col3.on{background:linear-gradient(135deg,#f59e0b,#f97316);box-shadow:0 3px 12px rgba(245,158,11,.35)}
-  .chip.col4.on{background:linear-gradient(135deg,#8b5cf6,#6366f1);box-shadow:0 3px 12px rgba(139,92,246,.35)}
-  .chip.col5.on{background:linear-gradient(135deg,#06b6d4,#0ea5e9);box-shadow:0 3px 12px rgba(6,182,212,.35)}
+  .chip.c0.on{background:linear-gradient(135deg,#1a7a3a,#22a04d);box-shadow:0 3px 12px rgba(26,122,58,.3)}
+  .chip.c1.on{background:linear-gradient(135deg,#d63030,#f56565);box-shadow:0 3px 12px rgba(214,48,48,.3)}
+  .chip.c2.on{background:linear-gradient(135deg,#2196c4,#38bdf8);box-shadow:0 3px 12px rgba(33,150,196,.3)}
+  .chip.c3.on{background:linear-gradient(135deg,#f5b800,#f97316);box-shadow:0 3px 12px rgba(245,184,0,.3)}
+  .chip.c4.on{background:linear-gradient(135deg,#7c3aed,#a78bfa);box-shadow:0 3px 12px rgba(124,58,237,.3)}
+  .chip.c5.on{background:linear-gradient(135deg,#0f4d24,#1a7a3a);box-shadow:0 3px 12px rgba(15,77,36,.3)}
 
-  .tbl { width:100%; border-collapse:collapse; margin-top:18px; }
-  .tbl th { font-size:.75rem; font-weight:900; text-transform:uppercase; letter-spacing:.07em; color:var(--text-light); padding:8px 12px; text-align:left; border-bottom:2px solid #f1f5f9; }
-  .tbl td { padding:11px 12px; border-bottom:1px solid #f1f5f9; font-weight:600; font-size:.93rem; }
+  /* ── Sessions table ── */
+  .tbl { width:100%; border-collapse:collapse; margin-top:16px; }
+  .tbl th {
+    font-family:'Barlow Condensed',sans-serif; font-size:.75rem; font-weight:800;
+    text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt);
+    padding:8px 12px; text-align:left; border-bottom:2px solid var(--border);
+    background:var(--chalk);
+  }
+  .tbl td { padding:11px 12px; border-bottom:1px solid var(--border); font-weight:600; font-size:.9rem; }
   .tbl tr:last-child td { border-bottom:none; }
-  .tbl tr:hover td { background:#f8fafc; }
-  .badge { display:inline-block; padding:2px 10px; border-radius:50px; font-weight:800; font-size:.82rem; background:#f0f9ff; color:var(--sky); }
+  .tbl tr:hover td { background:var(--field); }
+  .badge {
+    display:inline-block; padding:3px 11px; border-radius:50px;
+    font-weight:800; font-size:.8rem;
+    background:#dcfce7; color:var(--grass-dk);
+    font-family:'Barlow Condensed',sans-serif; letter-spacing:.04em;
+  }
 
-  .lb { display:flex; flex-direction:column; gap:11px; }
+  /* ── Leaderboard ── */
+  .lb { display:flex; flex-direction:column; gap:10px; }
   .lb-row {
     display:flex; align-items:center; gap:14px;
-    padding:14px 18px; border-radius:16px;
-    background:#f8fafc; transition:transform .2s, box-shadow .2s;
+    padding:14px 18px; border-radius:14px;
+    background:var(--chalk); border:1.5px solid var(--border);
+    transition:transform .2s, box-shadow .2s;
     animation: riseUp .4s ease both;
+    position:relative; overflow:hidden;
   }
+  .lb-row::before {
+    content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:var(--grass);
+  }
+  .lb-row.r1::before{background:linear-gradient(180deg,var(--gold),#f97316)}
+  .lb-row.r2::before{background:linear-gradient(180deg,#94a3b8,#64748b)}
+  .lb-row.r3::before{background:linear-gradient(180deg,#cd7c2e,#a55c1e)}
   .lb-row:hover { transform:translateX(5px); box-shadow:var(--shadow); }
-  .lb-row.r1 { background:linear-gradient(135deg,#fffbeb,#fef3c7); border:2px solid #fde68a; }
-  .lb-row.r2 { background:linear-gradient(135deg,#f8fafc,#f1f5f9); border:2px solid #e2e8f0; }
-  .lb-row.r3 { background:linear-gradient(135deg,#fff7ed,#ffedd5); border:2px solid #fed7aa; }
-  .lb-medal { font-family:'Fredoka One',cursive; font-size:1.55rem; min-width:38px; text-align:center; }
-  .av {
-    width:42px;height:42px;border-radius:50%;flex-shrink:0;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;
+  .lb-row.r1 { background:linear-gradient(135deg,#fffbeb,#fef9e7); border-color:#fde68a; }
+  .lb-row.r2 { background:linear-gradient(135deg,#f8fafc,#f1f5f9); border-color:#e2e8f0; }
+  .lb-row.r3 { background:linear-gradient(135deg,#fff7ed,#fef3e8); border-color:#fed7aa; }
+
+  .lb-rank {
+    font-family:'Barlow Condensed',sans-serif; font-weight:900;
+    font-size:1.6rem; min-width:42px; text-align:center; line-height:1;
   }
-  .av0{background:linear-gradient(135deg,#0ea5e9,#3b82f6)}
-  .av1{background:linear-gradient(135deg,#f43f5e,#ec4899)}
-  .av2{background:linear-gradient(135deg,#10b981,#06b6d4)}
-  .av3{background:linear-gradient(135deg,#f59e0b,#f97316)}
-  .av4{background:linear-gradient(135deg,#8b5cf6,#6366f1)}
-  .av5{background:linear-gradient(135deg,#06b6d4,#0ea5e9)}
+  .lb-rank.r1c{color:var(--gold-dk)}
+  .lb-rank.r2c{color:#64748b}
+  .lb-rank.r3c{color:#cd7c2e}
+
+  .lax-av {
+    width:44px; height:44px; border-radius:10px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Barlow Condensed',sans-serif; font-weight:900;
+    font-size:1.1rem; color:#fff; letter-spacing:.02em;
+  }
+  .la0{background:linear-gradient(135deg,#1a7a3a,#22a04d)}
+  .la1{background:linear-gradient(135deg,#d63030,#f56565)}
+  .la2{background:linear-gradient(135deg,#2196c4,#38bdf8)}
+  .la3{background:linear-gradient(135deg,#f5b800,#f97316)}
+  .la4{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+  .la5{background:linear-gradient(135deg,#0f4d24,#1a7a3a)}
+
   .lb-info { flex:1; min-width:0; }
-  .lb-name { font-weight:800; font-size:1rem; }
-  .lb-sub { font-size:.78rem; color:var(--text-light); font-weight:700; }
-  .bar-bg { height:7px; background:#e2e8f0; border-radius:10px; overflow:hidden; margin-top:5px; }
-  .bar-fill { height:100%; border-radius:10px; transition:width .9s cubic-bezier(.34,1.56,.64,1); }
-  .lb-mins { font-family:'Fredoka One',cursive; font-size:1.25rem; color:var(--sky); text-align:right; }
-  .lb-mins small { display:block; font-family:'Nunito',sans-serif; font-size:.7rem; font-weight:700; color:var(--text-light); }
+  .lb-name { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.1rem; text-transform:uppercase; letter-spacing:.04em; }
+  .lb-sub { font-size:.75rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  .bar-bg { height:6px; background:var(--border); border-radius:6px; overflow:hidden; margin-top:6px; }
+  .bar-fill { height:100%; border-radius:6px; transition:width .9s cubic-bezier(.34,1.56,.64,1); }
+  .lb-mins { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.3rem; color:var(--grass); text-align:right; }
+  .lb-mins small { display:block; font-family:'Barlow',sans-serif; font-size:.68rem; font-weight:700; color:var(--text-lt); letter-spacing:.04em; text-transform:uppercase; }
 
-  .manage-list { display:flex; flex-direction:column; gap:9px; margin-top:14px; }
-  .manage-row {
+  /* ── Manage ── */
+  .mgr-list { display:flex; flex-direction:column; gap:9px; margin-top:12px; }
+  .mgr-row {
     display:flex; align-items:center; justify-content:space-between;
-    padding:12px 16px; background:#f8fafc; border-radius:var(--radius-sm);
+    padding:12px 16px; background:var(--chalk); border-radius:10px;
+    border:1.5px solid var(--border);
   }
-  .manage-info { display:flex; align-items:center; gap:11px; font-weight:700; }
-  .manage-sub { font-size:.82rem; color:var(--text-light); font-weight:700; }
+  .mgr-info { display:flex; align-items:center; gap:11px; font-weight:700; }
+  .mgr-sub { font-size:.78rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
 
-  .empty { text-align:center; padding:36px 20px; color:var(--text-light); font-size:.95rem; font-weight:700; }
-  .empty .ei { font-size:2.8rem; display:block; margin-bottom:10px; }
+  /* ── Empty ── */
+  .empty { text-align:center; padding:40px 20px; color:var(--text-lt); font-size:.92rem; font-weight:700; }
+  .empty .ei { font-size:3rem; display:block; margin-bottom:10px; }
 
-  .sync-bar { display:flex; align-items:center; gap:8px; font-size:.83rem; font-weight:700; color:var(--text-light); margin-bottom:22px; }
-  .dot { width:8px;height:8px;border-radius:50%;background:var(--text-light);flex-shrink:0; }
-  .dot.ok { background:var(--mint); }
-  .dot.busy { background:var(--sun); animation:pulse 1s infinite; }
-  .dot.bad { background:var(--coral); }
-  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.25} }
-
+  /* ── Toast ── */
   #toast {
-    position:fixed; bottom:30px; left:50%;
+    position:fixed; bottom:28px; left:50%;
     transform:translateX(-50%) translateY(90px);
-    background:var(--text-dark); color:#fff;
-    padding:11px 22px; border-radius:50px;
-    font-weight:800; font-size:.9rem;
+    background:var(--grass-dk); color:#fff;
+    padding:11px 24px; border-radius:50px;
+    font-family:'Barlow Condensed',sans-serif; font-weight:800;
+    font-size:.95rem; text-transform:uppercase; letter-spacing:.06em;
     box-shadow:var(--shadow-lg); z-index:200;
     transition:transform .35s cubic-bezier(.34,1.56,.64,1);
     white-space:nowrap;
   }
   #toast.show { transform:translateX(-50%) translateY(0); }
-  #toast.bad { background:var(--coral); }
+  #toast.bad { background:var(--red); }
 
-  .spinner-wrap { display:flex; align-items:center; justify-content:center; padding:80px; }
-  .spinner { width:44px;height:44px;border:4px solid #e2e8f0;border-top-color:var(--sky);border-radius:50%;animation:spin .7s linear infinite; }
-  @keyframes spin { to{transform:rotate(360deg)} }
+  /* ── Spinner ── */
+  .spinner-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px; gap:16px; }
+  .spinner { width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--grass);border-radius:50%;animation:spin .7s linear infinite; }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spinner-wrap p { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); }
 
-  .danger-card { border:2.5px solid #fee2e2!important; }
+  .danger-card { border-color:#fecaca!important; }
+
+  /* ── Lax decorations ── */
+  .cross-icon { font-size:1.1rem; }
+  .section-label {
+    font-family:'Barlow Condensed',sans-serif; font-weight:800;
+    font-size:.72rem; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--text-lt); margin-bottom:10px;
+  }
 </style>
 </head>
 <body>
 
-<div class="bg">
-  <div class="bg-circle bc1"></div>
-  <div class="bg-circle bc2"></div>
-  <div class="bg-circle bc3"></div>
+<div class="field-bg"></div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="lax-icon">🥍</span>
+    <h1>Lax<em>Practice Tracker</em></h1>
+    <p>Log your reps · Own the field · Top the board</p>
+    <div class="field-lines">
+      <div class="field-line"></div>
+      <div class="field-line"></div>
+      <div class="field-line"></div>
+    </div>
+  </div>
 </div>
 
 <div class="page">
-  <header>
-    <span class="header-icon">🏆</span>
-    <h1>Practice <span>Champions</span></h1>
-    <p>Track every minute · Celebrate every win!</p>
-  </header>
 
-  <div id="app-loading" class="spinner-wrap"><div class="spinner"></div></div>
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card"><div class="stat-n" id="s-kids">0</div><div class="stat-l">🥍 Players</div></div>
+    <div class="stat-card"><div class="stat-n" id="s-sess">0</div><div class="stat-l">📋 Sessions</div></div>
+    <div class="stat-card"><div class="stat-n" id="s-mins">0</div><div class="stat-l">⏱ Total Mins</div></div>
+  </div>
+
+  <!-- Spinner -->
+  <div id="app-loading" class="spinner-wrap">
+    <div class="spinner"></div>
+    <p>Loading roster...</p>
+  </div>
 
   <div id="app-body" style="display:none">
 
-    <div class="stats">
-      <div class="stat-card"><div class="stat-n" id="s-kids">0</div><div class="stat-l">Champions</div></div>
-      <div class="stat-card"><div class="stat-n" id="s-sess">0</div><div class="stat-l">Sessions</div></div>
-      <div class="stat-card"><div class="stat-n" id="s-mins">0</div><div class="stat-l">Total Minutes</div></div>
-    </div>
-
+    <!-- Sync -->
     <div class="sync-bar">
       <div class="dot" id="sync-dot"></div>
       <span id="sync-lbl">Connecting…</span>
     </div>
 
+    <!-- Tabs -->
     <div class="tabs">
       <button class="tab on" onclick="goTab('log',this)">📝 Log Practice</button>
       <button class="tab" onclick="goTab('board',this)">🏆 Leaderboard</button>
@@ -269,58 +409,60 @@
 
     <!-- LOG TAB -->
     <div class="panel on" id="tab-log">
+
       <div class="card" style="animation-delay:.05s">
-        <div class="card-title">➕ Add a New Champion</div>
-        <div class="fields fields-3">
-          <div class="f"><label>Child's Name</label><input type="text" id="add-name" placeholder="e.g. Emma" maxlength="30"></div>
-          <div class="f"><label>Subject / Instrument</label><input type="text" id="add-subject" placeholder="e.g. Piano" maxlength="30"></div>
-          <div class="f-end"><button class="btn btn-sky" onclick="addChild()">Add 🎉</button></div>
+        <div class="card-title"><span class="ct-icon">🥍</span> Add a Player</div>
+        <div class="fields f3">
+          <div class="f"><label>Player Name</label><input type="text" id="add-name" placeholder="e.g. Jake" maxlength="30"></div>
+          <div class="f"><label>Position / Drill Focus</label><input type="text" id="add-subject" placeholder="e.g. Attack, Wall Ball" maxlength="30"></div>
+          <div class="f-end"><button class="btn btn-green" onclick="addChild()">Add Player ＋</button></div>
         </div>
       </div>
 
       <div class="card" style="animation-delay:.1s">
-        <div class="card-title">⏱️ Log Practice Minutes</div>
-        <div id="no-kids" class="empty"><span class="ei">👆</span>Add a champion above first!</div>
+        <div class="card-title"><span class="ct-icon">⏱️</span> Log Practice Minutes</div>
+        <div id="no-kids" class="empty"><span class="ei">🥍</span>Add a player above to get started!</div>
         <div id="log-section" style="display:none">
-          <p style="font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--text-light);margin-bottom:10px">Select Champion</p>
+          <p class="section-label">Select Player</p>
           <div class="chips" id="chips"></div>
-          <div class="fields fields-3">
-            <div class="f"><label>Minutes Practiced</label><input type="number" id="log-mins" placeholder="e.g. 30" min="1" max="999"></div>
+          <div class="fields f3">
+            <div class="f"><label>Minutes Practiced</label><input type="number" id="log-mins" placeholder="e.g. 45" min="1" max="999"></div>
             <div class="f"><label>Date</label><input type="date" id="log-date"></div>
-            <div class="f-end"><button class="btn btn-sky" onclick="logSession()">Log It! ✅</button></div>
+            <div class="f-end"><button class="btn btn-green" onclick="logSession()">Log It ✓</button></div>
           </div>
         </div>
       </div>
 
       <div class="card" id="hist-card" style="animation-delay:.15s;display:none">
-        <div class="card-title">📋 Sessions — <span id="hist-name" style="color:var(--sky)"></span></div>
+        <div class="card-title"><span class="ct-icon">📋</span> Sessions — <span id="hist-name" style="color:var(--grass)"></span></div>
         <div id="hist-body"></div>
       </div>
+
     </div>
 
     <!-- LEADERBOARD TAB -->
     <div class="panel" id="tab-board">
       <div class="card">
-        <div class="card-title">🏆 Champion Leaderboard</div>
-        <div id="lb-body"><div class="empty"><span class="ei">🌟</span>No champions yet!</div></div>
+        <div class="card-title"><span class="ct-icon">🏆</span> Player Leaderboard</div>
+        <div id="lb-body"><div class="empty"><span class="ei">🥍</span>No players yet — add some!</div></div>
       </div>
     </div>
 
     <!-- MANAGE TAB -->
     <div class="panel" id="tab-manage">
       <div class="card">
-        <div class="card-title">⚙️ Manage Champions</div>
-        <div class="manage-list" id="mgr-list"><div class="empty"><span class="ei">👶</span>No champions yet.</div></div>
+        <div class="card-title"><span class="ct-icon">⚙️</span> Manage Players</div>
+        <div class="mgr-list" id="mgr-list"><div class="empty"><span class="ei">👤</span>No players yet.</div></div>
       </div>
       <div class="card danger-card">
-        <div class="card-title" style="color:var(--coral)">🗑️ Reset All Data</div>
-        <p style="color:var(--text-mid);font-size:.93rem;margin-bottom:16px">Permanently deletes all champions and every practice session.</p>
-        <button class="btn btn-coral" onclick="resetAll()">Reset Everything</button>
+        <div class="card-title" style="color:var(--red)"><span class="ct-icon">🗑️</span> Reset All Data</div>
+        <p style="color:var(--text-md);font-size:.92rem;margin-bottom:16px">Permanently deletes all players and every practice session.</p>
+        <button class="btn btn-red" onclick="resetAll()">Reset Everything</button>
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /app-body -->
+</div><!-- /page -->
 
 <div id="toast"></div>
 
@@ -344,7 +486,6 @@ const db  = getFirestore(app);
 
 let children = [], sessions = [], selId = null;
 
-// ── Live listeners ────────────────────────────────────────
 setSync('busy','Connecting…');
 
 onSnapshot(query(collection(db,'children'), orderBy('createdAt')), snap => {
@@ -355,7 +496,7 @@ onSnapshot(query(collection(db,'children'), orderBy('createdAt')), snap => {
 onSnapshot(query(collection(db,'sessions'), orderBy('date')), snap => {
   sessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderAll();
-  setSync('ok','Live');
+  setSync('ok','Live · Field Ready');
   document.getElementById('app-loading').style.display = 'none';
   document.getElementById('app-body').style.display    = 'block';
 }, err => { setSync('bad','Connection error'); toast(err.message, true); });
@@ -387,7 +528,7 @@ function renderChips() {
   if (selId && !children.find(c=>c.id===selId)) selId = children[0].id;
   if (!selId) selId = children[0].id;
   wrap.innerHTML = children.map(c =>
-    `<button class="chip col${c.colorIdx} ${selId===c.id?'on':''}" onclick="window._sel('${c.id}')">${c.name}</button>`
+    `<button class="chip c${c.colorIdx} ${selId===c.id?'on':''}" onclick="window._sel('${c.id}')">${c.name}</button>`
   ).join('');
 }
 
@@ -399,23 +540,23 @@ function renderSessions() {
   const child = children.find(c=>c.id===selId);
   if (!child) { card.style.display='none'; return; }
   card.style.display='block';
-  nameEl.textContent = child.name;
+  nameEl.textContent = child.name.toUpperCase();
   const cs = sessions.filter(s=>s.childId===selId).sort((a,b)=>b.date.localeCompare(a.date));
-  if (!cs.length) { body.innerHTML=`<div class="empty"><span class="ei">📅</span>No sessions logged yet.</div>`; return; }
+  if (!cs.length) { body.innerHTML=`<div class="empty"><span class="ei">📅</span>No sessions logged yet for ${child.name}.</div>`; return; }
   const total = cs.reduce((a,s)=>a+s.minutes,0);
   body.innerHTML = `
-    <p style="font-weight:800;color:var(--text-mid);margin-bottom:12px">
-      Total: <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.15rem">${total}</span> mins
-      across <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.15rem">${cs.length}</span> sessions
+    <p style="font-family:'Barlow Condensed',sans-serif;font-weight:800;color:var(--text-md);margin-bottom:12px;font-size:1rem;text-transform:uppercase;letter-spacing:.05em">
+      Total: <span style="color:var(--grass);font-size:1.3rem">${total}</span> mins
+      &nbsp;·&nbsp; <span style="color:var(--grass);font-size:1.3rem">${cs.length}</span> session${cs.length!==1?'s':''}
     </p>
     <table class="tbl">
-      <thead><tr><th>Date</th><th>Minutes</th><th>Subject</th><th></th></tr></thead>
+      <thead><tr><th>Date</th><th>Minutes</th><th>Focus</th><th></th></tr></thead>
       <tbody>${cs.map(s=>`
         <tr>
           <td>${fmtDate(s.date)}</td>
           <td><span class="badge">${s.minutes} min</span></td>
-          <td>${child.subject}</td>
-          <td><button class="btn-danger" onclick="window._delSess('${s.id}')">✕ Remove</button></td>
+          <td style="color:var(--text-lt);font-size:.85rem">${child.subject}</td>
+          <td><button class="btn-sm" onclick="window._delSess('${s.id}')">✕ Remove</button></td>
         </tr>`).join('')}
       </tbody>
     </table>`;
@@ -423,7 +564,7 @@ function renderSessions() {
 
 function renderLeaderboard() {
   const body = document.getElementById('lb-body');
-  if (!children.length) { body.innerHTML=`<div class="empty"><span class="ei">🌟</span>No champions yet!</div>`; return; }
+  if (!children.length) { body.innerHTML=`<div class="empty"><span class="ei">🥍</span>No players yet!</div>`; return; }
   const ranked = children.map(c=>({
     ...c,
     total: sessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0),
@@ -431,22 +572,23 @@ function renderLeaderboard() {
   })).sort((a,b)=>b.total-a.total);
   const max = Math.max(ranked[0]?.total||1,1);
   const medals = ['🥇','🥈','🥉'];
-  const fills  = [
-    'linear-gradient(90deg,#f59e0b,#fbbf24)',
-    'linear-gradient(90deg,#94a3b8,#cbd5e1)',
-    'linear-gradient(90deg,#f97316,#fb923c)',
-    'linear-gradient(90deg,#0ea5e9,#38bdf8)',
-    'linear-gradient(90deg,#8b5cf6,#a78bfa)',
-    'linear-gradient(90deg,#10b981,#34d399)'
+  const rankCls = ['r1c','r2c','r3c'];
+  const fills = [
+    'linear-gradient(90deg,#1a7a3a,#22a04d)',
+    'linear-gradient(90deg,#d63030,#f56565)',
+    'linear-gradient(90deg,#2196c4,#38bdf8)',
+    'linear-gradient(90deg,#f5b800,#f97316)',
+    'linear-gradient(90deg,#7c3aed,#a78bfa)',
+    'linear-gradient(90deg,#0f4d24,#1a7a3a)',
   ];
   body.innerHTML = `<div class="lb">${ranked.map((c,i)=>`
     <div class="lb-row r${i+1}" style="animation-delay:${i*.06}s">
-      <div class="lb-medal">${medals[i]||`#${i+1}`}</div>
-      <div class="av av${c.colorIdx}">${c.name[0].toUpperCase()}</div>
+      <div class="lb-rank ${rankCls[i]||''}">${medals[i]||`#${i+1}`}</div>
+      <div class="lax-av la${c.colorIdx}">${c.name.slice(0,2).toUpperCase()}</div>
       <div class="lb-info">
         <div class="lb-name">${c.name} <span class="lb-sub">${c.subject}</span></div>
         <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.total/max*100)}%;background:${fills[c.colorIdx%fills.length]}"></div></div>
-        <div style="font-size:.72rem;color:var(--text-light);font-weight:700;margin-top:3px">${c.count} session${c.count!==1?'s':''}</div>
+        <div style="font-size:.7rem;color:var(--text-lt);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.06em">${c.count} session${c.count!==1?'s':''}</div>
       </div>
       <div class="lb-mins">${c.total}<small>minutes</small></div>
     </div>`).join('')}</div>`;
@@ -454,19 +596,19 @@ function renderLeaderboard() {
 
 function renderManage() {
   const list = document.getElementById('mgr-list');
-  if (!children.length) { list.innerHTML=`<div class="empty"><span class="ei">👶</span>No champions yet.</div>`; return; }
+  if (!children.length) { list.innerHTML=`<div class="empty"><span class="ei">👤</span>No players yet.</div>`; return; }
   list.innerHTML = children.map(c=>{
     const total = sessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0);
     const count = sessions.filter(s=>s.childId===c.id).length;
-    return `<div class="manage-row">
-      <div class="manage-info">
-        <div class="av av${c.colorIdx}" style="width:38px;height:38px;font-size:1rem">${c.name[0].toUpperCase()}</div>
+    return `<div class="mgr-row">
+      <div class="mgr-info">
+        <div class="lax-av la${c.colorIdx}" style="width:38px;height:38px;font-size:.9rem;border-radius:8px">${c.name.slice(0,2).toUpperCase()}</div>
         <div>
-          <div>${c.name}</div>
-          <div class="manage-sub">${c.subject} · ${total} mins · ${count} session${count!==1?'s':''}</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem;text-transform:uppercase;letter-spacing:.04em">${c.name}</div>
+          <div class="mgr-sub">${c.subject} · ${total} mins · ${count} session${count!==1?'s':''}</div>
         </div>
       </div>
-      <button class="btn-danger" onclick="window._removeChild('${c.id}')">✕ Remove</button>
+      <button class="btn-sm" onclick="window._removeChild('${c.id}')">✕ Remove</button>
     </div>`;
   }).join('');
 }
@@ -477,30 +619,30 @@ window._sel = id => { selId=id; renderChips(); renderSessions(); };
 window.addChild = async () => {
   const name    = document.getElementById('add-name').value.trim();
   const subject = document.getElementById('add-subject').value.trim();
-  if (!name) { toast('Please enter a name! 👀', true); return; }
-  if (children.find(c=>c.name.toLowerCase()===name.toLowerCase())) { toast('That name already exists! 🙈', true); return; }
+  if (!name) { toast('Enter a player name!', true); return; }
+  if (children.find(c=>c.name.toLowerCase()===name.toLowerCase())) { toast('Player already on roster!', true); return; }
   await addDoc(collection(db,'children'), {
-    name, subject: subject||'Practice',
+    name, subject: subject||'General Practice',
     colorIdx: children.length % 6,
     createdAt: new Date().toISOString()
   });
   document.getElementById('add-name').value    = '';
   document.getElementById('add-subject').value = '';
-  toast(`${name} added! 🎉`);
+  toast(`${name} added to the roster!`);
 };
 
 window.logSession = async () => {
-  if (!selId) { toast('Select a champion first! 👆', true); return; }
+  if (!selId) { toast('Select a player first!', true); return; }
   const mins = parseInt(document.getElementById('log-mins').value);
   const date = document.getElementById('log-date').value || new Date().toISOString().slice(0,10);
-  if (!mins || mins < 1) { toast('Enter valid minutes! ⏱️', true); return; }
+  if (!mins || mins < 1) { toast('Enter valid minutes!', true); return; }
   await addDoc(collection(db,'sessions'), {
     childId: selId, minutes: mins, date,
     loggedAt: new Date().toISOString()
   });
   document.getElementById('log-mins').value = '';
   const child = children.find(c=>c.id===selId);
-  toast(`${mins} mins logged for ${child?.name}! 🌟`);
+  toast(`${mins} mins logged for ${child?.name}!`);
 };
 
 window._delSess = async id => {
@@ -510,19 +652,19 @@ window._delSess = async id => {
 
 window._removeChild = async id => {
   const child = children.find(c=>c.id===id);
-  if (!confirm(`Remove ${child?.name} and ALL their sessions? This cannot be undone.`)) return;
+  if (!confirm(`Remove ${child?.name} from the roster and delete ALL their sessions?`)) return;
   await Promise.all(sessions.filter(s=>s.childId===id).map(s=>deleteDoc(doc(db,'sessions',s.id))));
   await deleteDoc(doc(db,'children',id));
   if (selId===id) selId = null;
-  toast(`${child?.name} removed`);
+  toast(`${child?.name} removed from roster`);
 };
 
 window.resetAll = async () => {
-  if (!confirm('Delete ALL champions and sessions? This cannot be undone.')) return;
+  if (!confirm('Delete ALL players and sessions? This cannot be undone.')) return;
   await Promise.all(sessions.map(s=>deleteDoc(doc(db,'sessions',s.id))));
   await Promise.all(children.map(c=>deleteDoc(doc(db,'children',c.id))));
   selId = null;
-  toast('All data cleared');
+  toast('Roster cleared');
 };
 
 // ── Tabs ──────────────────────────────────────────────────
