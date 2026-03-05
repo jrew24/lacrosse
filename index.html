@@ -20,371 +20,128 @@
     --shadow: 0 4px 24px rgba(0,0,0,0.08);
     --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--cream); min-height: 100vh; color: var(--text-dark); overflow-x: hidden; }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--cream);
-    min-height: 100vh;
-    color: var(--text-dark);
-    overflow-x: hidden;
-  }
-
-  /* Animated background blobs */
-  .bg-blobs {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
-  }
-  .blob {
-    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18;
-    animation: floatBlob 12s ease-in-out infinite alternate;
-  }
-  .blob-1 { width: 500px; height: 500px; background: var(--sky); top: -100px; left: -100px; animation-delay: 0s; }
+  .bg-blobs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.18; animation: floatBlob 12s ease-in-out infinite alternate; }
+  .blob-1 { width: 500px; height: 500px; background: var(--sky); top: -100px; left: -100px; }
   .blob-2 { width: 400px; height: 400px; background: var(--lavender); bottom: -80px; right: -80px; animation-delay: -4s; }
   .blob-3 { width: 300px; height: 300px; background: var(--mint); top: 40%; left: 40%; animation-delay: -8s; }
+  @keyframes floatBlob { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.08); } }
 
-  @keyframes floatBlob {
-    from { transform: translate(0, 0) scale(1); }
-    to { transform: translate(40px, 30px) scale(1.08); }
-  }
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
 
-  .wrapper {
-    position: relative; z-index: 1;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 32px 20px 60px;
-  }
+  header { text-align: center; margin-bottom: 40px; animation: fadeDown 0.6s ease both; }
+  .logo-emoji { font-size: 4rem; display: block; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  header h1 { font-family: 'Fredoka One', cursive; font-size: clamp(2rem,6vw,3.5rem); color: var(--sky); line-height: 1.1; margin-top: 8px; text-shadow: 3px 3px 0 rgba(14,165,233,0.15); }
+  header p { font-size: 1.1rem; color: var(--text-mid); margin-top: 8px; font-weight: 600; }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
 
-  /* Header */
-  header {
-    text-align: center;
-    margin-bottom: 48px;
-    animation: fadeDown 0.6s ease both;
-  }
-  .logo-emoji {
-    font-size: 4rem;
-    display: block;
-    animation: bounce 2s ease-in-out infinite;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-  header h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    color: var(--sky);
-    line-height: 1.1;
-    margin-top: 8px;
-    text-shadow: 3px 3px 0 rgba(14,165,233,0.15);
-  }
-  header p {
-    font-size: 1.1rem;
-    color: var(--text-mid);
-    margin-top: 8px;
-    font-weight: 600;
-  }
-
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Card */
-  .card {
-    background: var(--card-bg);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: var(--shadow);
+  #setup-banner {
+    background: linear-gradient(135deg, #fef3c7, #fffbeb);
+    border: 2.5px solid #fde68a;
+    border-radius: 20px;
+    padding: 24px 28px;
     margin-bottom: 28px;
-    animation: fadeUp 0.5s ease both;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .card h2 {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.5rem;
-    color: var(--text-dark);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* Form */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 14px;
-    align-items: end;
-  }
-  @media (max-width: 600px) {
-    .form-grid { grid-template-columns: 1fr; }
-  }
-  .field label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: var(--text-mid);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 6px;
-  }
-  .field input, .field select {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2.5px solid #e2e8f0;
-    border-radius: 14px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    background: #f8fafc;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
-  }
-  .field input:focus, .field select:focus {
-    border-color: var(--sky);
-    box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
-    background: #fff;
-  }
-
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 12px 24px;
-    border: none; border-radius: 14px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    white-space: nowrap;
-  }
-  .btn:active { transform: scale(0.96); }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--sky), #3b82f6);
-    color: white;
-    box-shadow: 0 4px 14px rgba(14,165,233,0.4);
-  }
-  .btn-primary:hover { box-shadow: 0 6px 20px rgba(14,165,233,0.5); transform: translateY(-1px); }
-  .btn-danger {
-    background: none; border: none;
-    color: var(--text-light); font-size: 1rem;
-    cursor: pointer; padding: 4px 8px; border-radius: 8px;
-    transition: color 0.15s, background 0.15s;
-  }
-  .btn-danger:hover { color: var(--coral); background: #fff1f2; }
-
-  /* Child selector */
-  .child-select-row {
-    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px;
-  }
-  .child-chip {
-    padding: 8px 18px;
-    border-radius: 50px;
-    border: 2.5px solid #e2e8f0;
-    background: #f8fafc;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text-mid);
-  }
-  .child-chip:hover { border-color: var(--sky); color: var(--sky); }
-  .child-chip.active {
-    background: linear-gradient(135deg, var(--sky), #3b82f6);
-    border-color: transparent;
-    color: white;
-    box-shadow: 0 3px 12px rgba(14,165,233,0.35);
-  }
-  .child-chip.color-1.active { background: linear-gradient(135deg, #f43f5e, #ec4899); box-shadow: 0 3px 12px rgba(244,63,94,0.35); }
-  .child-chip.color-2.active { background: linear-gradient(135deg, #10b981, #06b6d4); box-shadow: 0 3px 12px rgba(16,185,129,0.35); }
-  .child-chip.color-3.active { background: linear-gradient(135deg, #f59e0b, #f97316); box-shadow: 0 3px 12px rgba(245,158,11,0.35); }
-  .child-chip.color-4.active { background: linear-gradient(135deg, #8b5cf6, #6366f1); box-shadow: 0 3px 12px rgba(139,92,246,0.35); }
-
-  /* Log form */
-  .log-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 14px;
-    align-items: end;
-  }
-  @media (max-width: 600px) { .log-form { grid-template-columns: 1fr; } }
-
-  /* Sessions table */
-  .sessions-table {
-    width: 100%; border-collapse: collapse; margin-top: 20px;
-  }
-  .sessions-table th {
-    font-size: 0.78rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-light);
-    padding: 8px 12px;
-    text-align: left;
-    border-bottom: 2px solid #f1f5f9;
-  }
-  .sessions-table td {
-    padding: 12px 12px;
-    border-bottom: 1px solid #f1f5f9;
-    font-weight: 600;
-    color: var(--text-dark);
-    font-size: 0.95rem;
-  }
-  .sessions-table tr:last-child td { border-bottom: none; }
-  .sessions-table tr:hover td { background: #f8fafc; }
-  .minutes-badge {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 50px;
-    font-weight: 800;
-    font-size: 0.85rem;
-    background: #f0f9ff;
-    color: var(--sky);
-  }
-  .empty-state {
-    text-align: center; padding: 32px;
-    color: var(--text-light);
-    font-size: 1rem; font-weight: 700;
-  }
-  .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 8px; }
-
-  /* Leaderboard */
-  .leaderboard { display: flex; flex-direction: column; gap: 12px; }
-  .lb-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    background: #f8fafc;
-    border-radius: 16px;
-    transition: transform 0.2s, box-shadow 0.2s;
     animation: fadeUp 0.4s ease both;
   }
+  #setup-banner h3 { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: #92400e; margin-bottom: 8px; }
+  #setup-banner p { font-size: 0.9rem; color: #78350f; font-weight: 600; margin-bottom: 16px; line-height: 1.6; }
+  .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:600px){ .setup-grid { grid-template-columns: 1fr; } }
+
+  .card { background: var(--card-bg); border-radius: 24px; padding: 32px; box-shadow: var(--shadow); margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .card h2 { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--text-dark); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: end; }
+  @media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
+  .field label { display: block; font-size: 0.85rem; font-weight: 800; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .field input { width: 100%; padding: 12px 16px; border: 2.5px solid #e2e8f0; border-radius: 14px; font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-dark); background: #f8fafc; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+  .field input:focus { border-color: var(--sky); box-shadow: 0 0 0 3px rgba(14,165,233,0.15); background: #fff; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border: none; border-radius: 14px; font-family: 'Fredoka One', cursive; font-size: 1.1rem; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; white-space: nowrap; }
+  .btn:active { transform: scale(0.96); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: linear-gradient(135deg, var(--sky), #3b82f6); color: white; box-shadow: 0 4px 14px rgba(14,165,233,0.4); }
+  .btn-primary:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(14,165,233,0.5); transform: translateY(-1px); }
+  .btn-warning { background: linear-gradient(135deg, #f59e0b, #f97316); color: white; box-shadow: 0 4px 14px rgba(245,158,11,0.4); }
+  .btn-sm { padding: 6px 14px; font-size: 0.9rem; border-radius: 10px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 800; }
+  .btn-remove { background: #fff1f2; color: var(--coral); transition: background 0.15s; }
+  .btn-remove:hover { background: #ffe4e6; }
+  .btn-delete { background: none; border: none; color: var(--text-light); font-size: 1rem; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: color 0.15s, background 0.15s; }
+  .btn-delete:hover { color: var(--coral); background: #fff1f2; }
+
+  .child-select-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .child-chip { padding: 8px 18px; border-radius: 50px; border: 2.5px solid #e2e8f0; background: #f8fafc; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; color: var(--text-mid); }
+  .child-chip:hover { border-color: var(--sky); color: var(--sky); }
+  .child-chip.active { background: linear-gradient(135deg, var(--sky), #3b82f6); border-color: transparent; color: white; box-shadow: 0 3px 12px rgba(14,165,233,0.35); }
+  .child-chip.c1.active { background: linear-gradient(135deg,#f43f5e,#ec4899); box-shadow: 0 3px 12px rgba(244,63,94,0.35); }
+  .child-chip.c2.active { background: linear-gradient(135deg,#10b981,#06b6d4); box-shadow: 0 3px 12px rgba(16,185,129,0.35); }
+  .child-chip.c3.active { background: linear-gradient(135deg,#f59e0b,#f97316); box-shadow: 0 3px 12px rgba(245,158,11,0.35); }
+  .child-chip.c4.active { background: linear-gradient(135deg,#8b5cf6,#6366f1); box-shadow: 0 3px 12px rgba(139,92,246,0.35); }
+
+  .log-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: end; }
+  @media(max-width:600px){ .log-form { grid-template-columns: 1fr; } }
+
+  .sessions-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  .sessions-table th { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-light); padding: 8px 12px; text-align: left; border-bottom: 2px solid #f1f5f9; }
+  .sessions-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: var(--text-dark); font-size: 0.95rem; }
+  .sessions-table tr:last-child td { border-bottom: none; }
+  .sessions-table tr:hover td { background: #f8fafc; }
+  .minutes-badge { display: inline-block; padding: 2px 10px; border-radius: 50px; font-weight: 800; font-size: 0.85rem; background: #f0f9ff; color: var(--sky); }
+
+  .empty-state { text-align: center; padding: 32px; color: var(--text-light); font-size: 1rem; font-weight: 700; }
+  .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+
+  .leaderboard { display: flex; flex-direction: column; gap: 12px; }
+  .lb-row { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #f8fafc; border-radius: 16px; transition: transform 0.2s, box-shadow 0.2s; }
   .lb-row:hover { transform: translateX(4px); box-shadow: var(--shadow); }
-  .lb-row.rank-1 { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 2px solid #fde68a; }
-  .lb-row.rank-2 { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 2px solid #e2e8f0; }
-  .lb-row.rank-3 { background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 2px solid #fed7aa; }
-
-  .lb-rank {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.6rem;
-    min-width: 40px;
-    text-align: center;
-  }
-  .lb-avatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: white;
-    flex-shrink: 0;
-  }
-  .av-0 { background: linear-gradient(135deg, var(--sky), #3b82f6); }
-  .av-1 { background: linear-gradient(135deg, #f43f5e, #ec4899); }
-  .av-2 { background: linear-gradient(135deg, #10b981, #06b6d4); }
-  .av-3 { background: linear-gradient(135deg, #f59e0b, #f97316); }
-  .av-4 { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
-  .av-5 { background: linear-gradient(135deg, #06b6d4, #0ea5e9); }
-
-  .lb-name {
-    flex: 1; font-weight: 800; font-size: 1.05rem;
-  }
-  .lb-total {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.3rem;
-    color: var(--sky);
-  }
+  .lb-row.rank-1 { background: linear-gradient(135deg,#fffbeb,#fef3c7); border: 2px solid #fde68a; }
+  .lb-row.rank-2 { background: linear-gradient(135deg,#f8fafc,#f1f5f9); border: 2px solid #e2e8f0; }
+  .lb-row.rank-3 { background: linear-gradient(135deg,#fff7ed,#ffedd5); border: 2px solid #fed7aa; }
+  .lb-rank { font-family: 'Fredoka One', cursive; font-size: 1.6rem; min-width: 40px; text-align: center; }
+  .lb-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: white; flex-shrink: 0; }
+  .av-0{background:linear-gradient(135deg,var(--sky),#3b82f6)} .av-1{background:linear-gradient(135deg,#f43f5e,#ec4899)} .av-2{background:linear-gradient(135deg,#10b981,#06b6d4)} .av-3{background:linear-gradient(135deg,#f59e0b,#f97316)} .av-4{background:linear-gradient(135deg,#8b5cf6,#6366f1)} .av-5{background:linear-gradient(135deg,#06b6d4,#0ea5e9)}
+  .progress-wrap { flex: 1; }
+  .progress-bar-bg { height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 4px; }
+  .progress-bar-fill { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); }
+  .lb-total { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--sky); }
   .lb-total small { font-family: 'Nunito', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--text-light); display: block; text-align: right; }
 
-  .progress-wrap { flex: 1; }
-  .progress-bar-bg {
-    height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 4px;
-  }
-  .progress-bar-fill {
-    height: 100%; border-radius: 10px;
-    transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
-  }
+  .stats-strip { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
+  @media(max-width:500px){ .stats-strip { grid-template-columns: 1fr; } }
+  .stat-card { background: var(--card-bg); border-radius: 20px; padding: 20px; text-align: center; box-shadow: var(--shadow); }
+  .stat-num { font-family: 'Fredoka One', cursive; font-size: 2.2rem; line-height: 1; background: linear-gradient(135deg,var(--sky),var(--lavender)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stat-label { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-light); margin-top: 4px; }
 
-  /* Stats strip */
-  .stats-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-    animation: fadeUp 0.5s ease 0.1s both;
-  }
-  @media (max-width: 500px) { .stats-strip { grid-template-columns: 1fr; } }
-  .stat-card {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: var(--shadow);
-  }
-  .stat-card .stat-num {
-    font-family: 'Fredoka One', cursive;
-    font-size: 2.2rem;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--sky), var(--lavender));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .stat-card .stat-label {
-    font-size: 0.78rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-light);
-    margin-top: 4px;
-  }
-
-  /* Tabs */
-  .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-  .tab {
-    padding: 10px 22px; border-radius: 50px;
-    border: 2.5px solid #e2e8f0;
-    background: #f8fafc;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text-mid);
-  }
-  .tab.active {
-    background: var(--text-dark);
-    border-color: var(--text-dark);
-    color: white;
-  }
+  .tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab { padding: 10px 22px; border-radius: 50px; border: 2.5px solid #e2e8f0; background: #f8fafc; font-family: 'Fredoka One', cursive; font-size: 1rem; cursor: pointer; transition: all 0.2s; color: var(--text-mid); }
+  .tab.active { background: var(--text-dark); border-color: var(--text-dark); color: white; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* Toast */
-  #toast {
-    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--text-dark); color: white;
-    padding: 12px 24px; border-radius: 50px;
-    font-weight: 800; font-size: 0.95rem;
-    box-shadow: var(--shadow-lg);
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    z-index: 1000; white-space: nowrap;
-  }
+  #toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 0.95rem; box-shadow: var(--shadow-lg); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 1000; white-space: nowrap; }
   #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.err { background: var(--coral); }
 
-  /* Manage children */
+  .sync-bar { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--text-light); margin-bottom: 20px; }
+  .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-light); flex-shrink: 0; }
+  .sync-dot.synced { background: var(--mint); }
+  .sync-dot.syncing { background: var(--sun); animation: pulse 1s infinite; }
+  .sync-dot.error { background: var(--coral); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
   .children-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-  .child-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px; background: #f8fafc; border-radius: 14px;
-  }
+  .child-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f8fafc; border-radius: 14px; }
   .child-item-info { display: flex; align-items: center; gap: 12px; font-weight: 700; }
-  .total-mins { font-size: 0.85rem; color: var(--text-light); font-weight: 700; }
+  .child-sub { font-size: 0.85rem; color: var(--text-light); font-weight: 700; }
+  .config-saved { background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 14px; padding: 14px 18px; font-weight: 700; color: #15803d; margin-bottom: 16px; font-size: 0.95rem; }
 </style>
 </head>
 <body>
-
 <div class="bg-blobs">
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
@@ -398,27 +155,51 @@
     <p>Track every minute. Celebrate every win!</p>
   </header>
 
+  <!-- Setup Banner -->
+  <div id="setup-banner">
+    <h3>⚙️ One-Time Setup</h3>
+    <p>Enter your GitHub details so practice data saves to your repo and syncs across all devices. Your token is stored only in this browser (never sent anywhere except GitHub).</p>
+    <div class="setup-grid">
+      <div class="field">
+        <label>GitHub Username</label>
+        <input type="text" id="cfg-owner" placeholder="e.g. johndoe">
+      </div>
+      <div class="field">
+        <label>Repository Name</label>
+        <input type="text" id="cfg-repo" placeholder="e.g. practice-champions">
+      </div>
+      <div class="field">
+        <label>Personal Access Token</label>
+        <input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx">
+      </div>
+      <div class="field" style="display:flex;align-items:flex-end">
+        <button class="btn btn-warning" style="width:100%" onclick="saveConfig()">Save &amp; Connect 🔗</button>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:0.8rem;color:#92400e;line-height:1.7">
+      💡 <strong>How to get a token:</strong> GitHub.com → your profile photo → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → Generate new token → check the <strong>repo</strong> scope → copy &amp; paste above.
+    </p>
+  </div>
+
   <!-- Stats Strip -->
   <div class="stats-strip">
-    <div class="stat-card">
-      <div class="stat-num" id="stat-children">0</div>
-      <div class="stat-label">Champions</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="stat-sessions">0</div>
-      <div class="stat-label">Sessions</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="stat-total">0</div>
-      <div class="stat-label">Total Minutes</div>
-    </div>
+    <div class="stat-card"><div class="stat-num" id="stat-children">0</div><div class="stat-label">Champions</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-sessions">0</div><div class="stat-label">Sessions</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Minutes</div></div>
+  </div>
+
+  <!-- Sync Bar -->
+  <div class="sync-bar">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span id="sync-label">Not connected</span>
+    <button id="refresh-btn" onclick="loadFromGitHub()" style="margin-left:auto;background:#f1f5f9;border:none;border-radius:8px;padding:4px 12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.8rem;cursor:pointer;color:var(--text-mid)">↻ Refresh</button>
   </div>
 
   <!-- Tabs -->
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('log')">📝 Log Practice</button>
-    <button class="tab" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
-    <button class="tab" onclick="switchTab('manage')">⚙️ Manage</button>
+    <button class="tab active" onclick="switchTab('log',event)">📝 Log Practice</button>
+    <button class="tab" onclick="switchTab('leaderboard',event)">🏆 Leaderboard</button>
+    <button class="tab" onclick="switchTab('manage',event)">⚙️ Manage</button>
   </div>
 
   <!-- LOG TAB -->
@@ -426,69 +207,52 @@
     <div class="card" style="animation-delay:0.1s">
       <h2>➕ Add a New Champion</h2>
       <div class="form-grid">
-        <div class="field">
-          <label>Child's Name</label>
-          <input type="text" id="new-child-name" placeholder="e.g. Emma" maxlength="30">
-        </div>
-        <div class="field">
-          <label>Instrument / Subject</label>
-          <input type="text" id="new-child-subject" placeholder="e.g. Piano" maxlength="30">
-        </div>
+        <div class="field"><label>Child's Name</label><input type="text" id="new-child-name" placeholder="e.g. Emma" maxlength="30"></div>
+        <div class="field"><label>Instrument / Subject</label><input type="text" id="new-child-subject" placeholder="e.g. Piano" maxlength="30"></div>
         <button class="btn btn-primary" onclick="addChild()">Add 🎉</button>
       </div>
     </div>
-
     <div class="card" style="animation-delay:0.2s">
       <h2>⏱️ Log Practice Minutes</h2>
-      <div id="no-children-msg" class="empty-state">
-        <span>👆</span>
-        Add a champion above to get started!
-      </div>
+      <div id="no-children-msg" class="empty-state"><span>👆</span>Add a champion above to get started!</div>
       <div id="log-section" style="display:none">
         <p style="font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-light);margin-bottom:10px;">Select Champion</p>
         <div class="child-select-row" id="child-chips"></div>
         <div class="log-form">
-          <div class="field">
-            <label>Minutes Practiced</label>
-            <input type="number" id="log-minutes" placeholder="e.g. 30" min="1" max="999">
-          </div>
-          <div class="field">
-            <label>Date</label>
-            <input type="date" id="log-date">
-          </div>
+          <div class="field"><label>Minutes Practiced</label><input type="number" id="log-minutes" placeholder="e.g. 30" min="1" max="999"></div>
+          <div class="field"><label>Date</label><input type="date" id="log-date"></div>
           <button class="btn btn-primary" onclick="logSession()">Log It! ✅</button>
         </div>
       </div>
     </div>
-
     <div class="card" id="sessions-card" style="animation-delay:0.3s;display:none">
-      <h2>📋 Recent Sessions — <span id="sessions-child-name" style="color:var(--sky)"></span></h2>
+      <h2>📋 Sessions — <span id="sessions-child-name" style="color:var(--sky)"></span></h2>
       <div id="sessions-body"></div>
     </div>
   </div>
 
   <!-- LEADERBOARD TAB -->
   <div class="tab-panel" id="tab-leaderboard">
-    <div class="card" style="animation-delay:0.1s">
+    <div class="card">
       <h2>🏆 Champion Leaderboard</h2>
-      <div id="leaderboard-body">
-        <div class="empty-state"><span>🌟</span>No champions yet — add some above!</div>
-      </div>
+      <div id="leaderboard-body"><div class="empty-state"><span>🌟</span>No champions yet!</div></div>
     </div>
   </div>
 
   <!-- MANAGE TAB -->
   <div class="tab-panel" id="tab-manage">
-    <div class="card" style="animation-delay:0.1s">
+    <div class="card">
       <h2>⚙️ Manage Champions</h2>
-      <p style="color:var(--text-mid);font-size:0.95rem;margin-bottom:4px;">Remove a champion and all their practice history.</p>
-      <div class="children-list" id="manage-list">
-        <div class="empty-state"><span>👶</span>No champions yet.</div>
-      </div>
+      <div class="children-list" id="manage-list"><div class="empty-state"><span>👶</span>No champions yet.</div></div>
     </div>
-    <div class="card" style="animation-delay:0.2s;border: 2.5px solid #fee2e2;">
+    <div class="card">
+      <h2>🔗 GitHub Connection</h2>
+      <div id="config-display"></div>
+      <button class="btn" style="background:#f1f5f9;color:var(--text-dark);font-size:1rem" onclick="showSetup()">Update Settings ✏️</button>
+    </div>
+    <div class="card" style="border:2.5px solid #fee2e2">
       <h2 style="color:var(--coral)">🗑️ Reset All Data</h2>
-      <p style="color:var(--text-mid);font-size:0.95rem;margin-bottom:16px;">This will permanently delete all champions and their practice sessions.</p>
+      <p style="color:var(--text-mid);font-size:0.95rem;margin-bottom:16px;">Permanently delete all champions and sessions from the repo file.</p>
       <button class="btn" style="background:var(--coral);color:white;box-shadow:0 4px 14px rgba(244,63,94,0.35)" onclick="resetAll()">Reset Everything</button>
     </div>
   </div>
@@ -497,269 +261,351 @@
 <div id="toast"></div>
 
 <script>
-// ── Data Layer ──────────────────────────────────────────────
-const STORAGE_KEY = 'practice_champions_v1';
+// ── Config ──────────────────────────────────────────────────
+const DATA_FILE = 'data.json';
 
-function loadData() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { children: [], sessions: [] }; }
-  catch(e) { return { children: [], sessions: [] }; }
-}
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+function getConfig() {
+  return {
+    owner: localStorage.getItem('pc_owner') || '',
+    repo:  localStorage.getItem('pc_repo')  || '',
+    token: localStorage.getItem('pc_token') || '',
+  };
 }
 
-let data = loadData();
+function saveConfig() {
+  const owner = document.getElementById('cfg-owner').value.trim();
+  const repo  = document.getElementById('cfg-repo').value.trim();
+  const token = document.getElementById('cfg-token').value.trim();
+  if (!owner || !repo || !token) { showToast('Fill in all three fields!', true); return; }
+  localStorage.setItem('pc_owner', owner);
+  localStorage.setItem('pc_repo', repo);
+  localStorage.setItem('pc_token', token);
+  document.getElementById('setup-banner').style.display = 'none';
+  loadFromGitHub();
+}
+
+function showSetup() {
+  const cfg = getConfig();
+  document.getElementById('cfg-owner').value = cfg.owner;
+  document.getElementById('cfg-repo').value  = cfg.repo;
+  document.getElementById('cfg-token').value  = cfg.token;
+  document.getElementById('setup-banner').style.display = 'block';
+  document.getElementById('setup-banner').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── State ───────────────────────────────────────────────────
+let appData = { children: [], sessions: [] };
+let fileSha = null;
 let selectedChildId = null;
 
-// ── Tab Switching ───────────────────────────────────────────
-function switchTab(name) {
+// ── GitHub API ──────────────────────────────────────────────
+async function ghRequest(method, path, body) {
+  const cfg = getConfig();
+  const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
+  const opts = {
+    method,
+    headers: {
+      'Authorization': `token ${cfg.token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.github.v3+json'
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(url, opts);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function loadFromGitHub() {
+  const cfg = getConfig();
+  if (!cfg.owner || !cfg.repo || !cfg.token) return;
+  setSync('syncing', 'Loading…');
+  try {
+    const file = await ghRequest('GET', DATA_FILE);
+    appData = JSON.parse(atob(file.content.replace(/\n/g, '')));
+    fileSha = file.sha;
+    setSync('synced', `Synced · ${cfg.owner}/${cfg.repo}`);
+  } catch(e) {
+    if (e.message.includes('404') || e.message === 'Not Found') {
+      appData = { children: [], sessions: [] };
+      fileSha = null;
+      await pushToGitHub('Create data file');
+      setSync('synced', `Connected · ${cfg.owner}/${cfg.repo}`);
+    } else {
+      setSync('error', 'Connection error — check settings');
+      showToast('Could not connect: ' + e.message, true);
+    }
+  }
+  renderAll();
+  if (appData.children.length > 0 && !selectedChildId) {
+    selectedChildId = appData.children[0].id;
+  }
+  renderChips();
+  renderSessions();
+  updateConfigDisplay();
+}
+
+async function pushToGitHub(msg) {
+  setSync('syncing', 'Saving…');
+  const cfg = getConfig();
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
+  const body = { message: msg, content };
+  if (fileSha) body.sha = fileSha;
+  try {
+    const res = await ghRequest('PUT', DATA_FILE, body);
+    fileSha = res.content.sha;
+    setSync('synced', `Synced · ${cfg.owner}/${cfg.repo}`);
+  } catch(e) {
+    setSync('error', 'Save failed');
+    showToast('Save failed: ' + e.message, true);
+    throw e;
+  }
+}
+
+// ── Sync UI ─────────────────────────────────────────────────
+function setSync(state, label) {
+  const dot = document.getElementById('sync-dot');
+  dot.className = 'sync-dot ' + state;
+  document.getElementById('sync-label').textContent = label;
+}
+
+function updateConfigDisplay() {
+  const cfg = getConfig();
+  const el = document.getElementById('config-display');
+  el.innerHTML = cfg.owner && cfg.repo
+    ? `<div class="config-saved">✅ Connected to <strong>${cfg.owner}/${cfg.repo}</strong></div>`
+    : '';
+}
+
+// ── Tabs ────────────────────────────────────────────────────
+function switchTab(name, e) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if (e) e.currentTarget.classList.add('active');
   if (name === 'leaderboard') renderLeaderboard();
-  if (name === 'manage') renderManage();
+  if (name === 'manage') { renderManage(); updateConfigDisplay(); }
 }
 
 // ── Add Child ───────────────────────────────────────────────
-function addChild() {
-  const nameInput = document.getElementById('new-child-name');
-  const subjectInput = document.getElementById('new-child-subject');
-  const name = nameInput.value.trim();
-  const subject = subjectInput.value.trim();
-  if (!name) { showToast('Please enter a name! 👀'); return; }
-  if (data.children.find(c => c.name.toLowerCase() === name.toLowerCase())) {
-    showToast('That name already exists! 🙈'); return;
+async function addChild() {
+  const ni = document.getElementById('new-child-name');
+  const si = document.getElementById('new-child-subject');
+  const name = ni.value.trim();
+  const subject = si.value.trim();
+  if (!name) { showToast('Please enter a name! 👀', true); return; }
+  if (appData.children.find(c => c.name.toLowerCase() === name.toLowerCase())) {
+    showToast('That name already exists! 🙈', true); return;
   }
   const child = {
     id: Date.now().toString(),
     name,
     subject: subject || 'Practice',
-    colorIdx: data.children.length % 6,
+    colorIdx: appData.children.length % 6,
     createdAt: new Date().toISOString()
   };
-  data.children.push(child);
-  saveData(data);
-  nameInput.value = '';
-  subjectInput.value = '';
-  renderAll();
+  appData.children.push(child);
+  ni.value = ''; si.value = '';
   selectedChildId = child.id;
+  renderAll();
   renderChips();
   renderSessions();
   showToast(`${name} added! 🎉`);
+  await pushToGitHub(`Add champion: ${name}`);
 }
 
 // ── Log Session ─────────────────────────────────────────────
-function logSession() {
-  if (!selectedChildId) { showToast('Select a champion first! 👆'); return; }
-  const minsInput = document.getElementById('log-minutes');
-  const dateInput = document.getElementById('log-date');
-  const mins = parseInt(minsInput.value);
-  if (!mins || mins < 1) { showToast('Enter valid minutes! ⏱️'); return; }
-  const date = dateInput.value || new Date().toISOString().slice(0,10);
-  const session = {
-    id: Date.now().toString(),
-    childId: selectedChildId,
-    minutes: mins,
-    date,
-    loggedAt: new Date().toISOString()
-  };
-  data.sessions.push(session);
-  saveData(data);
-  minsInput.value = '';
+async function logSession() {
+  if (!selectedChildId) { showToast('Select a champion first! 👆', true); return; }
+  const mi = document.getElementById('log-minutes');
+  const di = document.getElementById('log-date');
+  const mins = parseInt(mi.value);
+  if (!mins || mins < 1) { showToast('Enter valid minutes! ⏱️', true); return; }
+  const date = di.value || new Date().toISOString().slice(0,10);
+  appData.sessions.push({ id: Date.now().toString(), childId: selectedChildId, minutes: mins, date, loggedAt: new Date().toISOString() });
+  mi.value = '';
   renderAll();
   renderSessions();
-  const child = data.children.find(c => c.id === selectedChildId);
+  const child = appData.children.find(c => c.id === selectedChildId);
   showToast(`${mins} mins logged for ${child.name}! 🌟`);
+  await pushToGitHub(`Log ${mins} min for ${child.name}`);
 }
 
-// ── Render Chips ────────────────────────────────────────────
+// ── Render ──────────────────────────────────────────────────
 function renderChips() {
   const container = document.getElementById('child-chips');
   const noMsg = document.getElementById('no-children-msg');
   const logSection = document.getElementById('log-section');
-  if (data.children.length === 0) {
-    noMsg.style.display = 'block'; logSection.style.display = 'none';
+  if (!appData.children.length) {
+    noMsg.style.display = 'block';
+    logSection.style.display = 'none';
     document.getElementById('sessions-card').style.display = 'none';
     return;
   }
-  noMsg.style.display = 'none'; logSection.style.display = 'block';
-  const colorClasses = ['', 'color-1', 'color-2', 'color-3', 'color-4', ''];
-  container.innerHTML = data.children.map(c =>
-    `<button class="child-chip ${colorClasses[c.colorIdx] || ''} ${selectedChildId===c.id?'active':''}"
-      onclick="selectChild('${c.id}')">${c.name}</button>`
+  noMsg.style.display = 'none';
+  logSection.style.display = 'block';
+  const cc = ['','c1','c2','c3','c4',''];
+  container.innerHTML = appData.children.map(c =>
+    `<button class="child-chip ${cc[c.colorIdx]||''} ${selectedChildId===c.id?'active':''}" onclick="selectChild('${c.id}')">${c.name}</button>`
   ).join('');
 }
 
-function selectChild(id) {
-  selectedChildId = id;
-  renderChips();
-  renderSessions();
-}
+function selectChild(id) { selectedChildId = id; renderChips(); renderSessions(); }
 
-// ── Render Sessions ─────────────────────────────────────────
 function renderSessions() {
   const card = document.getElementById('sessions-card');
   const nameEl = document.getElementById('sessions-child-name');
   const body = document.getElementById('sessions-body');
   if (!selectedChildId) { card.style.display = 'none'; return; }
-  const child = data.children.find(c => c.id === selectedChildId);
+  const child = appData.children.find(c => c.id === selectedChildId);
   if (!child) { card.style.display = 'none'; return; }
   card.style.display = 'block';
   nameEl.textContent = child.name;
-  const sessions = data.sessions.filter(s => s.childId === selectedChildId)
-    .sort((a,b) => b.date.localeCompare(a.date));
-  if (sessions.length === 0) {
-    body.innerHTML = `<div class="empty-state"><span>📅</span>No sessions logged yet for ${child.name}.</div>`;
+  const sessions = appData.sessions.filter(s => s.childId === selectedChildId).sort((a,b) => b.date.localeCompare(a.date));
+  if (!sessions.length) {
+    body.innerHTML = `<div class="empty-state"><span>📅</span>No sessions yet for ${child.name}.</div>`;
     return;
   }
-  const total = sessions.reduce((sum,s) => sum+s.minutes, 0);
-  body.innerHTML = `
-    <p style="font-weight:800;color:var(--text-mid);margin-bottom:12px;">
-      Total: <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.2rem">${total}</span> mins 
-      across <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.2rem">${sessions.length}</span> sessions
-    </p>
+  const total = sessions.reduce((s,x) => s+x.minutes, 0);
+  body.innerHTML = `<p style="font-weight:800;color:var(--text-mid);margin-bottom:12px;">
+    Total: <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.2rem">${total}</span> mins
+    across <span style="color:var(--sky);font-family:'Fredoka One',cursive;font-size:1.2rem">${sessions.length}</span> sessions</p>
     <table class="sessions-table">
       <thead><tr><th>Date</th><th>Minutes</th><th>Subject</th><th></th></tr></thead>
-      <tbody>
-        ${sessions.map(s => `
-          <tr>
-            <td>${formatDate(s.date)}</td>
-            <td><span class="minutes-badge">${s.minutes} min</span></td>
-            <td>${child.subject}</td>
-            <td><button class="btn-danger" onclick="deleteSession('${s.id}')">✕</button></td>
-          </tr>`).join('')}
+      <tbody>${sessions.map(s =>
+        `<tr>
+          <td>${fmtDate(s.date)}</td>
+          <td><span class="minutes-badge">${s.minutes} min</span></td>
+          <td>${child.subject}</td>
+          <td><button class="btn-delete" onclick="deleteSession('${s.id}')">✕</button></td>
+        </tr>`).join('')}
       </tbody>
     </table>`;
 }
 
-// ── Render Leaderboard ──────────────────────────────────────
 function renderLeaderboard() {
   const body = document.getElementById('leaderboard-body');
-  if (data.children.length === 0) {
-    body.innerHTML = `<div class="empty-state"><span>🌟</span>No champions yet — add some above!</div>`;
+  if (!appData.children.length) {
+    body.innerHTML = `<div class="empty-state"><span>🌟</span>No champions yet!</div>`;
     return;
   }
-  const ranked = data.children.map(c => ({
+  const ranked = appData.children.map(c => ({
     ...c,
-    total: data.sessions.filter(s => s.childId === c.id).reduce((sum,s)=>sum+s.minutes,0),
-    sessions: data.sessions.filter(s => s.childId === c.id).length
+    total: appData.sessions.filter(s => s.childId===c.id).reduce((s,x)=>s+x.minutes,0),
+    count: appData.sessions.filter(s => s.childId===c.id).length
   })).sort((a,b) => b.total - a.total);
-
-  const maxTotal = ranked[0]?.total || 1;
+  const maxTotal = Math.max(ranked[0]?.total || 1, 1);
   const medals = ['🥇','🥈','🥉'];
-  const gradients = [
+  const grads = [
     'linear-gradient(90deg,#f59e0b,#fbbf24)',
     'linear-gradient(90deg,#94a3b8,#cbd5e1)',
     'linear-gradient(90deg,#f97316,#fb923c)',
     'linear-gradient(90deg,#0ea5e9,#38bdf8)',
     'linear-gradient(90deg,#8b5cf6,#a78bfa)',
-    'linear-gradient(90deg,#10b981,#34d399)',
+    'linear-gradient(90deg,#10b981,#34d399)'
   ];
-
-  body.innerHTML = `<div class="leaderboard">` +
-    ranked.map((c, i) => `
-      <div class="lb-row rank-${i+1}" style="animation-delay:${i*0.07}s">
-        <div class="lb-rank">${medals[i] || `#${i+1}`}</div>
-        <div class="lb-avatar av-${c.colorIdx}">${c.name[0].toUpperCase()}</div>
-        <div class="progress-wrap">
-          <div style="font-weight:800;font-size:1.05rem">${c.name} <span style="font-weight:600;font-size:0.85rem;color:var(--text-light)">${c.subject}</span></div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width:${Math.round((c.total/maxTotal)*100)}%;background:${gradients[c.colorIdx%gradients.length]}"></div>
-          </div>
-          <div style="font-size:0.78rem;color:var(--text-light);font-weight:700;margin-top:3px">${c.sessions} session${c.sessions!==1?'s':''}</div>
+  body.innerHTML = `<div class="leaderboard">${ranked.map((c,i) => `
+    <div class="lb-row rank-${i+1}">
+      <div class="lb-rank">${medals[i]||`#${i+1}`}</div>
+      <div class="lb-avatar av-${c.colorIdx}">${c.name[0].toUpperCase()}</div>
+      <div class="progress-wrap">
+        <div style="font-weight:800;font-size:1.05rem">${c.name}
+          <span style="font-weight:600;font-size:0.85rem;color:var(--text-light)">${c.subject}</span>
         </div>
-        <div class="lb-total">${c.total}<small>minutes</small></div>
-      </div>`).join('') +
-    `</div>`;
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width:${Math.round((c.total/maxTotal)*100)}%;background:${grads[c.colorIdx%grads.length]}"></div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-light);font-weight:700;margin-top:3px">${c.count} session${c.count!==1?'s':''}</div>
+      </div>
+      <div class="lb-total">${c.total}<small>minutes</small></div>
+    </div>`).join('')}</div>`;
 }
 
-// ── Render Manage ───────────────────────────────────────────
 function renderManage() {
   const list = document.getElementById('manage-list');
-  if (data.children.length === 0) {
+  if (!appData.children.length) {
     list.innerHTML = `<div class="empty-state"><span>👶</span>No champions yet.</div>`;
     return;
   }
-  list.innerHTML = data.children.map(c => {
-    const total = data.sessions.filter(s=>s.childId===c.id).reduce((s,x)=>s+x.minutes,0);
-    const sessions = data.sessions.filter(s=>s.childId===c.id).length;
+  list.innerHTML = appData.children.map(c => {
+    const total = appData.sessions.filter(s=>s.childId===c.id).reduce((s,x)=>s+x.minutes,0);
+    const count = appData.sessions.filter(s=>s.childId===c.id).length;
     return `<div class="child-item">
       <div class="child-item-info">
-        <div class="lb-avatar av-${c.colorIdx}" style="width:36px;height:36px;font-size:1rem">${c.name[0].toUpperCase()}</div>
+        <div class="lb-avatar av-${c.colorIdx}" style="width:38px;height:38px;font-size:1rem">${c.name[0].toUpperCase()}</div>
         <div>
           <div>${c.name}</div>
-          <div class="total-mins">${c.subject} · ${total} mins · ${sessions} sessions</div>
+          <div class="child-sub">${c.subject} · ${total} mins · ${count} session${count!==1?'s':''}</div>
         </div>
       </div>
-      <button class="btn btn-danger" onclick="removeChild('${c.id}')" style="font-size:0.9rem">Remove ✕</button>
+      <button class="btn-sm btn-remove" onclick="removeChild('${c.id}')">Remove ✕</button>
     </div>`;
   }).join('');
 }
 
-// ── Delete / Reset ──────────────────────────────────────────
-function deleteSession(id) {
-  data.sessions = data.sessions.filter(s => s.id !== id);
-  saveData(data);
-  renderAll();
-  renderSessions();
-  showToast('Session removed');
-}
-
-function removeChild(id) {
-  const child = data.children.find(c => c.id === id);
-  if (!confirm(`Remove ${child?.name} and all their sessions?`)) return;
-  data.children = data.children.filter(c => c.id !== id);
-  data.sessions = data.sessions.filter(s => s.childId !== id);
-  if (selectedChildId === id) selectedChildId = null;
-  saveData(data);
-  renderAll();
-  renderManage();
-  showToast(`${child?.name} removed`);
-}
-
-function resetAll() {
-  if (!confirm('Reset ALL data? This cannot be undone!')) return;
-  data = { children: [], sessions: [] };
-  saveData(data);
-  selectedChildId = null;
-  renderAll();
-  renderManage();
-  showToast('All data cleared');
-}
-
-// ── Stats Strip ─────────────────────────────────────────────
 function renderStats() {
-  document.getElementById('stat-children').textContent = data.children.length;
-  document.getElementById('stat-sessions').textContent = data.sessions.length;
-  document.getElementById('stat-total').textContent = data.sessions.reduce((s,x)=>s+x.minutes,0);
+  document.getElementById('stat-children').textContent = appData.children.length;
+  document.getElementById('stat-sessions').textContent = appData.sessions.length;
+  document.getElementById('stat-total').textContent = appData.sessions.reduce((s,x)=>s+x.minutes, 0);
+}
+
+function renderAll() { renderStats(); renderChips(); }
+
+// ── Delete / Reset ──────────────────────────────────────────
+async function deleteSession(id) {
+  appData.sessions = appData.sessions.filter(s => s.id !== id);
+  renderAll(); renderSessions();
+  showToast('Session removed');
+  await pushToGitHub('Delete session');
+}
+
+async function removeChild(id) {
+  const child = appData.children.find(c => c.id === id);
+  if (!confirm(`Remove ${child?.name} and all their sessions? This cannot be undone.`)) return;
+  appData.children = appData.children.filter(c => c.id !== id);
+  appData.sessions = appData.sessions.filter(s => s.childId !== id);
+  if (selectedChildId === id) selectedChildId = appData.children[0]?.id || null;
+  renderAll(); renderChips(); renderSessions(); renderManage();
+  showToast(`${child?.name} removed`);
+  await pushToGitHub(`Remove champion: ${child?.name}`);
+}
+
+async function resetAll() {
+  if (!confirm('Reset ALL data? This will permanently delete everything.')) return;
+  appData = { children: [], sessions: [] };
+  fileSha = null;
+  selectedChildId = null;
+  renderAll(); renderManage();
+  showToast('All data cleared');
+  await pushToGitHub('Reset all data');
 }
 
 // ── Helpers ─────────────────────────────────────────────────
-function renderAll() {
-  renderStats();
-  renderChips();
+function fmtDate(d) {
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 }
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-}
-
-function showToast(msg) {
+let toastTimer;
+function showToast(msg, isErr = false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  t.className = isErr ? 'err show' : 'show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-// ── Init ─────────────────────────────────────────────────────
+// ── Init ────────────────────────────────────────────────────
 document.getElementById('log-date').valueAsDate = new Date();
-renderAll();
-if (data.children.length > 0) {
-  selectedChildId = data.children[0].id;
-  renderChips();
-  renderSessions();
+const cfg = getConfig();
+if (cfg.owner && cfg.repo && cfg.token) {
+  document.getElementById('setup-banner').style.display = 'none';
+  document.getElementById('cfg-owner').value = cfg.owner;
+  document.getElementById('cfg-repo').value  = cfg.repo;
+  document.getElementById('cfg-token').value  = cfg.token;
+  loadFromGitHub();
 }
 </script>
 </body>
