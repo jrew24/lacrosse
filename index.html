@@ -318,8 +318,8 @@
 
     <div class="stats">
       <div class="stat-card"><div class="stat-n" id="s-kids">0</div><div class="stat-l">🥍 My Players</div></div>
-      <div class="stat-card"><div class="stat-n" id="s-sess">0</div><div class="stat-l">📋 My Sessions</div></div>
-      <div class="stat-card"><div class="stat-n" id="s-mins">0</div><div class="stat-l">⏱ My Minutes</div></div>
+      <div class="stat-card"><div class="stat-n" id="s-sess">0</div><div class="stat-l" id="s-sess-label">📋 My Sessions</div></div>
+      <div class="stat-card"><div class="stat-n" id="s-mins">0</div><div class="stat-l" id="s-mins-label">⏱ My Minutes</div></div>
     </div>
 
     <div class="sync-bar">
@@ -644,8 +644,20 @@ async function runAction(action,id) {
 // ── Render ────────────────────────────────────────────────
 function renderStats() {
   document.getElementById('s-kids').textContent = myChildren.length;
-  document.getElementById('s-sess').textContent = mySessions.length;
-  document.getElementById('s-mins').textContent = mySessions.reduce((a,s)=>a+s.minutes,0);
+  // Show selected player's stats, or account totals if no player selected
+  if (selId && myChildren.find(c=>c.id===selId)) {
+    const playerSess = mySessions.filter(s=>s.childId===selId);
+    const child = myChildren.find(c=>c.id===selId);
+    document.getElementById('s-sess').textContent = playerSess.length;
+    document.getElementById('s-mins').textContent = playerSess.reduce((a,s)=>a+s.minutes,0);
+    document.getElementById('s-sess-label').textContent = child.name + "'s Sessions";
+    document.getElementById('s-mins-label').textContent = child.name + "'s Mins";
+  } else {
+    document.getElementById('s-sess').textContent = mySessions.length;
+    document.getElementById('s-mins').textContent = mySessions.reduce((a,s)=>a+s.minutes,0);
+    document.getElementById('s-sess-label').textContent = '📋 My Sessions';
+    document.getElementById('s-mins-label').textContent = '⏱ My Minutes';
+  }
 }
 
 function renderChips() {
@@ -748,7 +760,7 @@ function renderManage() {
 }
 
 // ── Actions ───────────────────────────────────────────────
-window._sel = id => { selId=id; renderChips(); renderSessions(); };
+window._sel = id => { selId=id; renderChips(); renderSessions(); renderStats(); };
 
 window.addChild = async () => {
   if (!currentUser) return;
@@ -761,7 +773,7 @@ window.addChild = async () => {
     name, position,
     uid: currentUser.uid,
     ownerName: currentUser.displayName || currentUser.email,
-    colorIdx: myChildren.length % 6,
+    colorIdx: allChildren.length % 6,
     createdAt: new Date().toISOString()
   });
   document.getElementById('add-name').value='';
