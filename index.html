@@ -28,50 +28,65 @@
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'Barlow',sans-serif; background:var(--chalk); color:var(--text); min-height:100vh; overflow-x:hidden; }
 
-  .field-bg {
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background:repeating-linear-gradient(180deg,rgba(26,122,58,0.045) 0px,rgba(26,122,58,0.045) 60px,rgba(26,122,58,0.02) 60px,rgba(26,122,58,0.02) 120px);
-  }
+  .field-bg { position:fixed; inset:0; z-index:0; pointer-events:none; background:repeating-linear-gradient(180deg,rgba(26,122,58,0.045) 0px,rgba(26,122,58,0.045) 60px,rgba(26,122,58,0.02) 60px,rgba(26,122,58,0.02) 120px); }
 
   /* ── Hero ── */
-  .hero { position:relative; z-index:1; background:linear-gradient(135deg,var(--grass-dk) 0%,var(--grass) 60%,var(--grass-lt) 100%); padding:48px 24px 56px; text-align:center; overflow:hidden; }
+  .hero { position:relative; z-index:1; background:linear-gradient(135deg,var(--grass-dk) 0%,var(--grass) 60%,var(--grass-lt) 100%); padding:40px 24px 52px; text-align:center; overflow:hidden; }
   .hero::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 80px); }
   .hero::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:32px; background:var(--chalk); clip-path:ellipse(55% 100% at 50% 100%); }
   .hero-inner { position:relative; z-index:1; }
-  .lax-icon { font-size:5rem; display:block; animation:spinBounce 3s ease-in-out infinite; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
-  @keyframes spinBounce { 0%{transform:translateY(0) rotate(-8deg)} 25%{transform:translateY(-14px) rotate(8deg)} 50%{transform:translateY(0) rotate(-4deg)} 75%{transform:translateY(-7px) rotate(4deg)} 100%{transform:translateY(0) rotate(-8deg)} }
-  header h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(2.6rem,8vw,5rem); font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:2px; line-height:1; margin-top:12px; text-shadow:0 3px 16px rgba(0,0,0,0.3); }
-  header h1 em { font-style:italic; color:var(--gold); display:block; font-size:0.85em; letter-spacing:4px; }
-  header p { color:rgba(255,255,255,0.75); font-size:1rem; font-weight:600; margin-top:10px; letter-spacing:.5px; }
-  .field-lines { display:flex; justify-content:center; gap:40px; margin-top:20px; opacity:0.5; }
+  .lax-icon { font-size:4.5rem; display:block; animation:spinBounce 3s ease-in-out infinite; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
+  @keyframes spinBounce { 0%{transform:translateY(0) rotate(-8deg)} 25%{transform:translateY(-12px) rotate(8deg)} 50%{transform:translateY(0) rotate(-4deg)} 75%{transform:translateY(-6px) rotate(4deg)} 100%{transform:translateY(0) rotate(-8deg)} }
+  .hero h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(2.4rem,7vw,4.5rem); font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:2px; line-height:1; margin-top:10px; text-shadow:0 3px 16px rgba(0,0,0,0.3); }
+  .hero h1 em { font-style:italic; color:var(--gold); display:block; font-size:0.85em; letter-spacing:4px; }
+  .hero p { color:rgba(255,255,255,0.75); font-size:.95rem; font-weight:600; margin-top:8px; letter-spacing:.5px; }
+  .field-lines { display:flex; justify-content:center; gap:40px; margin-top:18px; opacity:0.5; }
   .field-line { width:60px; height:3px; background:#fff; border-radius:2px; }
 
+  /* ── Auth bar in hero ── */
+  .hero-auth { position:relative; z-index:1; margin-top:16px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .hero-user { color:rgba(255,255,255,0.85); font-size:.85rem; font-weight:700; letter-spacing:.03em; }
+  .btn-hero { padding:7px 18px; border-radius:50px; border:2px solid rgba(255,255,255,0.4); background:rgba(255,255,255,0.12); color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.88rem; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; transition:all .2s; }
+  .btn-hero:hover { background:rgba(255,255,255,0.22); border-color:rgba(255,255,255,0.7); }
+
   /* ── Page ── */
-  .page { position:relative; z-index:1; max-width:960px; margin:0 auto; padding:32px 20px 80px; }
+  .page { position:relative; z-index:1; max-width:960px; margin:0 auto; padding:28px 20px 80px; }
+
+  /* ── Auth Screen ── */
+  #auth-screen { display:flex; align-items:center; justify-content:center; min-height:60vh; }
+  .auth-card { background:var(--white); border-radius:24px; padding:40px 36px; max-width:420px; width:100%; box-shadow:var(--shadow-lg); border-top:5px solid var(--grass); animation:riseUp .5s cubic-bezier(.34,1.56,.64,1); }
+  .auth-card h2 { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.8rem; text-transform:uppercase; letter-spacing:.06em; color:var(--grass-dk); margin-bottom:4px; }
+  .auth-card .auth-sub { font-size:.85rem; color:var(--text-lt); font-weight:600; margin-bottom:24px; }
+  .auth-fields { display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }
+  .auth-field label { display:block; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--text-lt); margin-bottom:5px; }
+  .auth-field input { width:100%; padding:11px 14px; border:2px solid var(--border); border-radius:10px; font-family:'Barlow',sans-serif; font-size:.95rem; font-weight:600; color:var(--text); background:var(--chalk); outline:none; transition:border-color .2s, box-shadow .2s; }
+  .auth-field input:focus { border-color:var(--grass); box-shadow:0 0 0 3px rgba(26,122,58,.12); background:#fff; }
+  .auth-err { font-size:.82rem; color:var(--red); font-weight:700; min-height:18px; margin-bottom:10px; }
+  .auth-toggle { text-align:center; font-size:.85rem; color:var(--text-lt); font-weight:600; margin-top:14px; }
+  .auth-toggle a { color:var(--grass); font-weight:800; cursor:pointer; text-decoration:underline; }
+  .auth-divider { height:1px; background:var(--border); margin:20px 0; }
 
   /* ── Stats ── */
   .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
   @media(max-width:500px){ .stats{grid-template-columns:1fr;} }
-  .stat-card { background:var(--white); border-radius:var(--r); padding:20px 16px; text-align:center; box-shadow:var(--shadow); border-top:4px solid var(--grass); animation:riseUp .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .stat-card { background:var(--white); border-radius:var(--r); padding:18px 14px; text-align:center; box-shadow:var(--shadow); border-top:4px solid var(--grass); animation:riseUp .5s cubic-bezier(.34,1.56,.64,1) both; }
   .stat-card:nth-child(2){ border-top-color:var(--gold); }
   .stat-card:nth-child(3){ border-top-color:var(--sky); }
-  .stat-n { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:2.8rem; line-height:1; color:var(--grass); }
+  .stat-n { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:2.6rem; line-height:1; color:var(--grass); }
   .stat-card:nth-child(2) .stat-n { color:var(--gold-dk); }
   .stat-card:nth-child(3) .stat-n { color:var(--sky); }
-  .stat-l { font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); margin-top:4px; }
+  .stat-l { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); margin-top:4px; }
   @keyframes riseUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 
   /* ── Sync ── */
   .sync-bar { display:flex; align-items:center; gap:8px; font-size:.8rem; font-weight:700; color:var(--text-lt); margin-bottom:20px; }
   .dot { width:8px;height:8px;border-radius:50%;background:var(--text-lt);flex-shrink:0; }
-  .dot.ok   { background:#22c55e; }
-  .dot.busy { background:var(--gold); animation:pulse 1s infinite; }
-  .dot.bad  { background:var(--red); }
+  .dot.ok{background:#22c55e} .dot.busy{background:var(--gold);animation:pulse 1s infinite} .dot.bad{background:var(--red)}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
 
   /* ── Main Tabs ── */
   .tabs { display:flex; gap:0; margin-bottom:26px; border-radius:var(--r); overflow:hidden; background:var(--white); box-shadow:var(--shadow); border:2px solid var(--border); }
-  .tab { flex:1; padding:12px 10px; border:none; background:transparent; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1rem; text-transform:uppercase; letter-spacing:.08em; cursor:pointer; color:var(--text-lt); transition:all .2s; border-right:2px solid var(--border); }
+  .tab { flex:1; padding:12px 8px; border:none; background:transparent; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.07em; cursor:pointer; color:var(--text-lt); transition:all .2s; border-right:2px solid var(--border); }
   .tab:last-child { border-right:none; }
   .tab.on { background:var(--grass); color:#fff; }
   .panel { display:none; }
@@ -79,28 +94,20 @@
 
   /* ── Leaderboard sub-tabs ── */
   .lb-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
-  .lb-tab {
-    padding:8px 16px; border-radius:50px;
-    border:2px solid var(--border); background:var(--chalk);
-    font-family:'Barlow Condensed',sans-serif; font-weight:800;
-    font-size:.88rem; text-transform:uppercase; letter-spacing:.06em;
-    cursor:pointer; color:var(--text-lt); transition:all .2s;
-    display:flex; align-items:center; gap:6px;
-  }
+  .lb-tab { padding:8px 14px; border-radius:50px; border:2px solid var(--border); background:var(--chalk); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; color:var(--text-lt); transition:all .2s; display:flex; align-items:center; gap:5px; }
   .lb-tab:hover { border-color:var(--grass); color:var(--grass); }
-  .lb-tab.on { background:var(--grass-dk); border-color:var(--grass-dk); color:#fff; }
-  .lb-tab.total.on { background:linear-gradient(135deg,var(--gold-dk),#f97316); border-color:transparent; }
-  .lb-tab.shooting.on   { background:linear-gradient(135deg,#d63030,#f56565); border-color:transparent; }
-  .lb-tab.wallballs.on  { background:linear-gradient(135deg,#2196c4,#38bdf8); border-color:transparent; }
-  .lb-tab.groundballs.on{ background:linear-gradient(135deg,#1a7a3a,#22a04d); border-color:transparent; }
-  .lb-tab.footwork.on   { background:linear-gradient(135deg,#7c3aed,#a78bfa); border-color:transparent; }
-
+  .lb-tab.on { color:#fff; border-color:transparent; }
+  .lb-tab.total.on      { background:linear-gradient(135deg,var(--gold-dk),#f97316); }
+  .lb-tab.shooting.on   { background:linear-gradient(135deg,#d63030,#f56565); }
+  .lb-tab.wallballs.on  { background:linear-gradient(135deg,#2196c4,#38bdf8); }
+  .lb-tab.groundballs.on{ background:linear-gradient(135deg,#1a7a3a,#22a04d); }
+  .lb-tab.footwork.on   { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
   .lb-panel { display:none; }
   .lb-panel.on { display:block; }
 
   /* ── Cards ── */
-  .card { background:var(--white); border-radius:var(--r); padding:26px 28px; box-shadow:var(--shadow); margin-bottom:22px; animation:riseUp .45s cubic-bezier(.34,1.56,.64,1) both; border:1.5px solid var(--border); }
-  .card-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.3rem; text-transform:uppercase; letter-spacing:.08em; color:var(--grass-dk); margin-bottom:18px; display:flex; align-items:center; gap:10px; border-bottom:2px dashed var(--border); padding-bottom:12px; }
+  .card { background:var(--white); border-radius:var(--r); padding:24px 26px; box-shadow:var(--shadow); margin-bottom:22px; animation:riseUp .45s cubic-bezier(.34,1.56,.64,1) both; border:1.5px solid var(--border); }
+  .card-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.25rem; text-transform:uppercase; letter-spacing:.08em; color:var(--grass-dk); margin-bottom:16px; display:flex; align-items:center; gap:10px; border-bottom:2px dashed var(--border); padding-bottom:10px; }
 
   /* ── Buttons ── */
   .btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px 22px; border:none; border-radius:10px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.05rem; text-transform:uppercase; letter-spacing:.06em; cursor:pointer; transition:transform .15s, box-shadow .15s, opacity .15s; white-space:nowrap; }
@@ -109,12 +116,11 @@
   .btn-green { background:linear-gradient(135deg,var(--grass),var(--grass-lt)); color:#fff; box-shadow:0 4px 14px rgba(26,122,58,.35); }
   .btn-green:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 7px 20px rgba(26,122,58,.42); }
   .btn-red { background:linear-gradient(135deg,var(--red),#e53e3e); color:#fff; box-shadow:0 4px 14px rgba(214,48,48,.35); }
-  .btn-red:hover:not(:disabled) { transform:translateY(-2px); }
   .btn-ghost { background:#f1f5f9; color:var(--text-md); border:none; }
   .btn-ghost:hover { background:#e2e8f0; }
+  .btn-full { width:100%; }
   .btn-sm { background:#fff1f2; color:var(--red); border:1.5px solid #fecaca; border-radius:8px; padding:5px 12px; cursor:pointer; font-family:'Barlow',sans-serif; font-weight:700; font-size:.82rem; transition:background .15s; }
   .btn-sm:hover { background:#fee2e2; }
-  .btn-sm::before { content:'🔒 '; font-size:.75rem; }
 
   /* ── Form fields ── */
   .fields { display:grid; gap:13px; }
@@ -124,19 +130,18 @@
   .f input, .f select { width:100%; padding:11px 14px; border:2px solid var(--border); border-radius:10px; font-family:'Barlow',sans-serif; font-size:.95rem; font-weight:600; color:var(--text); background:var(--chalk); outline:none; transition:border-color .2s, box-shadow .2s; appearance:none; -webkit-appearance:none; }
   .f select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9e8a' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; cursor:pointer; }
   .f input:focus, .f select:focus { border-color:var(--grass); box-shadow:0 0 0 3px rgba(26,122,58,.12); background:#fff; }
-  .f-end { display:flex; align-items:flex-end; }
 
   /* ── Drill toggles ── */
   .drill-label { font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--text-lt); margin-bottom:8px; display:block; }
   .drill-grid { display:flex; flex-wrap:wrap; gap:8px; }
   .drill-toggle { display:none; }
-  .drill-toggle + label { display:inline-flex; align-items:center; gap:6px; padding:8px 18px; border-radius:50px; border:2px solid var(--border); background:var(--chalk); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; color:var(--text-lt); transition:all .2s; user-select:none; }
+  .drill-toggle + label { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:50px; border:2px solid var(--border); background:var(--chalk); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.92rem; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; color:var(--text-lt); transition:all .2s; user-select:none; }
   .drill-toggle + label:hover { border-color:var(--grass); color:var(--grass); }
   .drill-toggle:checked + label { background:var(--grass); border-color:var(--grass); color:#fff; box-shadow:0 3px 10px rgba(26,122,58,.3); }
 
-  /* ── Chips ── */
-  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
-  .chip { padding:7px 16px; border-radius:50px; border:2px solid var(--border); background:var(--chalk); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; transition:all .2s; color:var(--text-lt); }
+  /* ── Player chips ── */
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+  .chip { padding:7px 16px; border-radius:50px; border:2px solid var(--border); background:var(--chalk); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.92rem; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; transition:all .2s; color:var(--text-lt); }
   .chip:hover { border-color:var(--grass); color:var(--grass); }
   .chip.on { border-color:transparent; color:#fff; }
   .chip.c0.on{background:linear-gradient(135deg,#1a7a3a,#22a04d);box-shadow:0 3px 12px rgba(26,122,58,.3)}
@@ -148,116 +153,103 @@
 
   /* ── Drill tags ── */
   .drill-tags { display:flex; flex-wrap:wrap; gap:4px; }
-  .drill-tag { display:inline-block; padding:2px 8px; border-radius:50px; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; background:var(--field); color:var(--grass-dk); border:1px solid var(--border); white-space:nowrap; }
+  .drill-tag { display:inline-block; padding:2px 8px; border-radius:50px; font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; background:var(--field); color:var(--grass-dk); border:1px solid var(--border); white-space:nowrap; }
 
   /* ── Table ── */
-  .tbl { width:100%; border-collapse:collapse; margin-top:16px; }
-  .tbl th { font-family:'Barlow Condensed',sans-serif; font-size:.75rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); padding:8px 12px; text-align:left; border-bottom:2px solid var(--border); background:var(--chalk); }
-  .tbl td { padding:11px 12px; border-bottom:1px solid var(--border); font-weight:600; font-size:.9rem; vertical-align:middle; }
+  .tbl { width:100%; border-collapse:collapse; margin-top:14px; }
+  .tbl th { font-family:'Barlow Condensed',sans-serif; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); padding:8px 12px; text-align:left; border-bottom:2px solid var(--border); background:var(--chalk); }
+  .tbl td { padding:10px 12px; border-bottom:1px solid var(--border); font-weight:600; font-size:.88rem; vertical-align:middle; }
   .tbl tr:last-child td { border-bottom:none; }
   .tbl tr:hover td { background:var(--field); }
-  .badge { display:inline-block; padding:3px 11px; border-radius:50px; font-weight:800; font-size:.8rem; background:#dcfce7; color:var(--grass-dk); font-family:'Barlow Condensed',sans-serif; letter-spacing:.04em; white-space:nowrap; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:50px; font-weight:800; font-size:.78rem; background:#dcfce7; color:var(--grass-dk); font-family:'Barlow Condensed',sans-serif; letter-spacing:.04em; white-space:nowrap; }
 
   /* ── Leaderboard rows ── */
-  .lb { display:flex; flex-direction:column; gap:10px; }
-  .lb-row { display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:14px; background:var(--chalk); border:1.5px solid var(--border); transition:transform .2s, box-shadow .2s; position:relative; overflow:hidden; animation:riseUp .35s ease both; }
+  .lb { display:flex; flex-direction:column; gap:9px; }
+  .lb-row { display:flex; align-items:center; gap:13px; padding:13px 16px; border-radius:13px; background:var(--chalk); border:1.5px solid var(--border); transition:transform .2s, box-shadow .2s; position:relative; overflow:hidden; animation:riseUp .35s ease both; }
   .lb-row::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--grass); }
   .lb-row.r1::before{background:linear-gradient(180deg,var(--gold),#f97316)} .lb-row.r2::before{background:linear-gradient(180deg,#94a3b8,#64748b)} .lb-row.r3::before{background:linear-gradient(180deg,#cd7c2e,#a55c1e)}
-  .lb-row:hover { transform:translateX(5px); box-shadow:var(--shadow); }
+  .lb-row:hover { transform:translateX(4px); box-shadow:var(--shadow); }
   .lb-row.r1{background:linear-gradient(135deg,#fffbeb,#fef9e7);border-color:#fde68a}
   .lb-row.r2{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-color:#e2e8f0}
   .lb-row.r3{background:linear-gradient(135deg,#fff7ed,#fef3e8);border-color:#fed7aa}
-  .lb-rank { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.6rem; min-width:42px; text-align:center; line-height:1; }
+  .lb-rank { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.5rem; min-width:38px; text-align:center; line-height:1; }
   .lb-rank.r1c{color:var(--gold-dk)} .lb-rank.r2c{color:#64748b} .lb-rank.r3c{color:#cd7c2e}
-  .lax-av { width:44px; height:44px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.1rem; color:#fff; }
+  .lax-av { width:42px; height:42px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1rem; color:#fff; }
   .la0{background:linear-gradient(135deg,#1a7a3a,#22a04d)} .la1{background:linear-gradient(135deg,#d63030,#f56565)} .la2{background:linear-gradient(135deg,#2196c4,#38bdf8)} .la3{background:linear-gradient(135deg,#f5b800,#f97316)} .la4{background:linear-gradient(135deg,#7c3aed,#a78bfa)} .la5{background:linear-gradient(135deg,#0f4d24,#1a7a3a)}
   .lb-info { flex:1; min-width:0; }
-  .lb-name { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.05rem; text-transform:uppercase; letter-spacing:.04em; }
-  .lb-sub { font-size:.73rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  .lb-name { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1rem; text-transform:uppercase; letter-spacing:.04em; }
+  .lb-sub { font-size:.7rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
   .bar-bg { height:6px; background:var(--border); border-radius:6px; overflow:hidden; margin-top:5px; }
   .bar-fill { height:100%; border-radius:6px; transition:width .9s cubic-bezier(.34,1.56,.64,1); }
   .lb-stat { text-align:right; }
-  .lb-stat-n { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.25rem; color:var(--grass); }
-  .lb-stat-l { display:block; font-family:'Barlow',sans-serif; font-size:.68rem; font-weight:700; color:var(--text-lt); letter-spacing:.04em; text-transform:uppercase; }
-
-  /* ── Drill board accent colors ── */
-  .drill-accent-shooting   { --da:#d63030; }
-  .drill-accent-wallballs  { --da:#2196c4; }
-  .drill-accent-groundballs{ --da:#1a7a3a; }
-  .drill-accent-footwork   { --da:#7c3aed; }
-  .drill-accent-total      { --da:var(--gold-dk); }
-
-  .lb-stat-n.colored { color:var(--da); }
-  .bar-fill.colored  { background:var(--da)!important; }
+  .lb-stat-n { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.2rem; }
+  .lb-stat-l { display:block; font-family:'Barlow',sans-serif; font-size:.65rem; font-weight:700; color:var(--text-lt); letter-spacing:.04em; text-transform:uppercase; }
 
   /* ── Drill board header ── */
-  .drill-board-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:2px dashed var(--border); }
-  .drill-board-icon { font-size:1.8rem; }
-  .drill-board-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.2rem; text-transform:uppercase; letter-spacing:.08em; color:var(--grass-dk); }
-  .drill-board-sub { font-size:.75rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
-
-  /* ── No-data state ── */
-  .lb-empty { text-align:center; padding:28px 20px; color:var(--text-lt); font-size:.88rem; font-weight:700; }
+  .drill-board-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:2px dashed var(--border); }
+  .drill-board-icon { font-size:1.7rem; }
+  .drill-board-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.15rem; text-transform:uppercase; letter-spacing:.08em; color:var(--grass-dk); }
+  .drill-board-sub { font-size:.72rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
 
   /* ── Position badge ── */
-  .pos-badge { display:inline-block; padding:2px 9px; border-radius:50px; font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em; }
+  .pos-badge { display:inline-block; padding:2px 9px; border-radius:50px; font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em; }
   .pos-Goalie{background:#fef3c7;color:#92400e} .pos-Attack{background:#fee2e2;color:#991b1b} .pos-Midfielder{background:#dbeafe;color:#1e40af} .pos-Defender{background:#dcfce7;color:#166534}
 
   /* ── Manage ── */
-  .mgr-list { display:flex; flex-direction:column; gap:9px; margin-top:12px; }
-  .mgr-row { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--chalk); border-radius:10px; border:1.5px solid var(--border); }
-  .mgr-info { display:flex; align-items:center; gap:11px; font-weight:700; }
-  .mgr-sub { font-size:.78rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+  .mgr-list { display:flex; flex-direction:column; gap:9px; margin-top:10px; }
+  .mgr-row { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--chalk); border-radius:10px; border:1.5px solid var(--border); }
+  .mgr-info { display:flex; align-items:center; gap:10px; font-weight:700; }
+  .mgr-sub { font-size:.75rem; color:var(--text-lt); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
 
   /* ── Empty ── */
-  .empty { text-align:center; padding:40px 20px; color:var(--text-lt); font-size:.92rem; font-weight:700; }
-  .empty .ei { font-size:3rem; display:block; margin-bottom:10px; }
+  .empty { text-align:center; padding:36px 20px; color:var(--text-lt); font-size:.9rem; font-weight:700; }
+  .empty .ei { font-size:2.8rem; display:block; margin-bottom:10px; }
+  .lb-empty { text-align:center; padding:24px; color:var(--text-lt); font-size:.85rem; font-weight:700; }
 
-  /* ── Password Modal ── */
-  .modal-overlay { position:fixed; inset:0; z-index:500; background:rgba(10,30,15,0.65); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:20px; animation:fadeIn .2s ease; }
+  /* ── Admin password modal ── */
+  .modal-overlay { position:fixed; inset:0; z-index:500; background:rgba(10,30,15,0.65); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:20px; }
   .modal-overlay.hidden { display:none; }
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   .modal { background:var(--white); border-radius:24px; padding:36px 32px; max-width:400px; width:100%; box-shadow:var(--shadow-lg); animation:popIn .35s cubic-bezier(.34,1.56,.64,1); border-top:5px solid var(--grass); text-align:center; }
   @keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
-  .modal-icon { font-size:3rem; display:block; margin-bottom:8px; }
-  .modal h3 { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.6rem; text-transform:uppercase; letter-spacing:.06em; color:var(--grass-dk); margin-bottom:6px; }
-  .modal p { font-size:.88rem; color:var(--text-lt); font-weight:600; margin-bottom:20px; }
-  .modal-input-wrap { position:relative; margin-bottom:16px; }
-  .modal-input-wrap input { width:100%; padding:13px 44px 13px 16px; border:2.5px solid var(--border); border-radius:12px; font-family:'Barlow',sans-serif; font-size:1.1rem; font-weight:700; color:var(--text); background:var(--chalk); outline:none; text-align:center; letter-spacing:.15em; transition:border-color .2s, box-shadow .2s; }
+  .modal-icon { font-size:2.8rem; display:block; margin-bottom:8px; }
+  .modal h3 { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.5rem; text-transform:uppercase; letter-spacing:.06em; color:var(--grass-dk); margin-bottom:6px; }
+  .modal p { font-size:.85rem; color:var(--text-lt); font-weight:600; margin-bottom:18px; }
+  .modal-input-wrap { position:relative; margin-bottom:14px; }
+  .modal-input-wrap input { width:100%; padding:12px 44px 12px 16px; border:2.5px solid var(--border); border-radius:12px; font-family:'Barlow',sans-serif; font-size:1.05rem; font-weight:700; color:var(--text); background:var(--chalk); outline:none; text-align:center; letter-spacing:.15em; transition:border-color .2s; }
   .modal-input-wrap input:focus { border-color:var(--grass); box-shadow:0 0 0 3px rgba(26,122,58,.15); background:#fff; }
   .modal-input-wrap input.shake { animation:shake .35s ease; border-color:var(--red)!important; }
   @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
-  .eye-btn { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:1.1rem; color:var(--text-lt); padding:4px; }
-  .modal-error { font-size:.82rem; color:var(--red); font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px; min-height:18px; }
+  .eye-btn { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:1rem; color:var(--text-lt); padding:4px; }
+  .modal-error { font-size:.8rem; color:var(--red); font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin-bottom:12px; min-height:18px; }
   .modal-btns { display:flex; gap:10px; }
   .modal-btns .btn { flex:1; }
 
-  .pw-warning { background:#fffbeb; border:2px solid #fde68a; border-radius:12px; padding:14px 18px; margin-bottom:20px; font-size:.85rem; font-weight:700; color:#92400e; display:none; }
-  .pw-warning.show { display:block; }
-
-  #toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(90px); background:var(--grass-dk); color:#fff; padding:11px 24px; border-radius:50px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.06em; box-shadow:var(--shadow-lg); z-index:200; transition:transform .35s cubic-bezier(.34,1.56,.64,1); white-space:nowrap; }
+  /* ── Toast ── */
+  #toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(90px); background:var(--grass-dk); color:#fff; padding:10px 22px; border-radius:50px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.9rem; text-transform:uppercase; letter-spacing:.06em; box-shadow:var(--shadow-lg); z-index:200; transition:transform .35s cubic-bezier(.34,1.56,.64,1); white-space:nowrap; }
   #toast.show { transform:translateX(-50%) translateY(0); }
   #toast.bad { background:var(--red); }
 
-  .spinner-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px; gap:16px; }
+  /* ── Spinner ── */
+  .spinner-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px; gap:14px; }
   .spinner { width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--grass);border-radius:50%;animation:spin .7s linear infinite; }
   @keyframes spin{to{transform:rotate(360deg)}}
-  .spinner-wrap p { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); }
+  .spinner-wrap p { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); }
 
   .danger-card { border-color:#fecaca!important; }
-  .divider { height:1px; background:var(--border); margin:18px 0; }
-  .section-label { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; color:var(--text-lt); margin-bottom:10px; }
+  .divider { height:1px; background:var(--border); margin:16px 0; }
+  .section-label { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--text-lt); margin-bottom:9px; }
+  .my-label { display:inline-block; padding:2px 8px; border-radius:4px; background:#dcfce7; color:var(--grass-dk); font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin-left:6px; }
 </style>
 </head>
 <body>
 
 <div class="field-bg"></div>
 
-<!-- Password Modal -->
+<!-- Admin password modal -->
 <div class="modal-overlay hidden" id="pw-modal">
   <div class="modal">
     <span class="modal-icon">🔒</span>
-    <h3>Admin Access Required</h3>
+    <h3>Admin Required</h3>
     <p>Enter the admin password to perform this action.</p>
     <div class="modal-input-wrap">
       <input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')confirmPassword()">
@@ -275,35 +267,59 @@
 <div class="hero">
   <div class="hero-inner">
     <span class="lax-icon">🥍</span>
-    <header>
-      <h1>Lax<em>Practice Tracker</em></h1>
-      <p>Log your reps · Own the field · Top the board</p>
-    </header>
-    <div class="field-lines">
-      <div class="field-line"></div>
-      <div class="field-line"></div>
-      <div class="field-line"></div>
+    <h1>Lax<em>Practice Tracker</em></h1>
+    <p>Log your reps · Own the field · Top the board</p>
+    <div class="field-lines"><div class="field-line"></div><div class="field-line"></div><div class="field-line"></div></div>
+    <div class="hero-auth" id="hero-auth" style="display:none">
+      <span class="hero-user" id="hero-email"></span>
+      <button class="btn-hero" onclick="signOut()">Sign Out</button>
     </div>
   </div>
 </div>
 
 <div class="page">
 
-  <div class="stats">
-    <div class="stat-card"><div class="stat-n" id="s-kids">0</div><div class="stat-l">🥍 Players</div></div>
-    <div class="stat-card"><div class="stat-n" id="s-sess">0</div><div class="stat-l">📋 Sessions</div></div>
-    <div class="stat-card"><div class="stat-n" id="s-mins">0</div><div class="stat-l">⏱ Total Mins</div></div>
+  <!-- Loading -->
+  <div id="init-loading" class="spinner-wrap"><div class="spinner"></div><p>Loading…</p></div>
+
+  <!-- Auth screen -->
+  <div id="auth-screen" style="display:none">
+    <div class="auth-card">
+      <!-- Sign In view -->
+      <div id="view-signin">
+        <h2>Welcome Back</h2>
+        <p class="auth-sub">Sign in to manage your players</p>
+        <div class="auth-fields">
+          <div class="auth-field"><label>Email</label><input type="email" id="si-email" placeholder="parent@email.com" onkeydown="if(event.key==='Enter')doSignIn()"></div>
+          <div class="auth-field"><label>Password</label><input type="password" id="si-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignIn()"></div>
+        </div>
+        <div class="auth-err" id="si-err"></div>
+        <button class="btn btn-green btn-full" onclick="doSignIn()">Sign In →</button>
+        <div class="auth-toggle">Don't have an account? <a onclick="switchView('signup')">Sign up</a></div>
+      </div>
+      <!-- Sign Up view -->
+      <div id="view-signup" style="display:none">
+        <h2>Create Account</h2>
+        <p class="auth-sub">Sign up to start tracking your players</p>
+        <div class="auth-fields">
+          <div class="auth-field"><label>Your Name</label><input type="text" id="su-name" placeholder="e.g. Coach Smith" onkeydown="if(event.key==='Enter')doSignUp()"></div>
+          <div class="auth-field"><label>Email</label><input type="email" id="su-email" placeholder="parent@email.com" onkeydown="if(event.key==='Enter')doSignUp()"></div>
+          <div class="auth-field"><label>Password</label><input type="password" id="su-pass" placeholder="Min. 6 characters" onkeydown="if(event.key==='Enter')doSignUp()"></div>
+        </div>
+        <div class="auth-err" id="su-err"></div>
+        <button class="btn btn-green btn-full" onclick="doSignUp()">Create Account →</button>
+        <div class="auth-toggle">Already have an account? <a onclick="switchView('signin')">Sign in</a></div>
+      </div>
+    </div>
   </div>
 
-  <div id="app-loading" class="spinner-wrap">
-    <div class="spinner"></div>
-    <p>Loading Roster…</p>
-  </div>
-
+  <!-- Main app -->
   <div id="app-body" style="display:none">
 
-    <div class="pw-warning" id="pw-warning">
-      ⚠️ No admin password found. Create <strong>config → admin</strong> with a <strong>password</strong> field in Firestore to enable protection.
+    <div class="stats">
+      <div class="stat-card"><div class="stat-n" id="s-kids">0</div><div class="stat-l">🥍 My Players</div></div>
+      <div class="stat-card"><div class="stat-n" id="s-sess">0</div><div class="stat-l">📋 My Sessions</div></div>
+      <div class="stat-card"><div class="stat-n" id="s-mins">0</div><div class="stat-l">⏱ My Minutes</div></div>
     </div>
 
     <div class="sync-bar">
@@ -319,13 +335,11 @@
 
     <!-- LOG TAB -->
     <div class="panel on" id="tab-log">
+      <!-- Add player -->
       <div class="card" style="animation-delay:.05s">
         <div class="card-title"><span>🥍</span> Add a Player</div>
         <div class="fields f2">
-          <div class="f">
-            <label>Player Name</label>
-            <input type="text" id="add-name" placeholder="e.g. Jake" maxlength="30">
-          </div>
+          <div class="f"><label>Player Name</label><input type="text" id="add-name" placeholder="e.g. Jake" maxlength="30"></div>
           <div class="f">
             <label>Position</label>
             <select id="add-position">
@@ -342,34 +356,26 @@
         </div>
       </div>
 
+      <!-- Log minutes -->
       <div class="card" style="animation-delay:.1s">
         <div class="card-title"><span>⏱️</span> Log Practice Minutes</div>
         <div id="no-kids" class="empty"><span class="ei">🥍</span>Add a player above to get started!</div>
         <div id="log-section" style="display:none">
-          <p class="section-label">Select Player</p>
+          <p class="section-label">Select Your Player</p>
           <div class="chips" id="chips"></div>
           <div class="divider"></div>
           <div class="fields f2" style="margin-bottom:14px">
-            <div class="f">
-              <label>Minutes Practiced</label>
-              <input type="number" id="log-mins" placeholder="e.g. 45" min="1" max="999">
-            </div>
-            <div class="f">
-              <label>Date</label>
-              <input type="date" id="log-date">
-            </div>
+            <div class="f"><label>Minutes Practiced</label><input type="number" id="log-mins" placeholder="e.g. 45" min="1" max="999"></div>
+            <div class="f"><label>Date</label><input type="date" id="log-date"></div>
           </div>
           <span class="drill-label">Drills Practiced <span style="font-weight:600;text-transform:none;letter-spacing:0">(select all that apply)</span></span>
           <div class="drill-grid">
             <input type="checkbox" class="drill-toggle" id="d-shooting"    value="Shooting">
             <label for="d-shooting">🎯 Shooting</label>
-
             <input type="checkbox" class="drill-toggle" id="d-wallballs"   value="Wall Balls">
             <label for="d-wallballs">🧱 Wall Balls</label>
-
             <input type="checkbox" class="drill-toggle" id="d-groundballs" value="Ground Balls">
             <label for="d-groundballs">⬇️ Ground Balls</label>
-
             <input type="checkbox" class="drill-toggle" id="d-footwork"    value="Footwork">
             <label for="d-footwork">👟 Footwork</label>
           </div>
@@ -379,6 +385,7 @@
         </div>
       </div>
 
+      <!-- Session history -->
       <div class="card" id="hist-card" style="animation-delay:.15s;display:none">
         <div class="card-title"><span>📋</span> Sessions — <span id="hist-name" style="color:var(--grass)"></span></div>
         <div id="hist-body"></div>
@@ -387,98 +394,40 @@
 
     <!-- LEADERBOARD TAB -->
     <div class="panel" id="tab-board">
-
-      <!-- Sub-tab buttons -->
       <div class="lb-tabs">
-        <button class="lb-tab total on"       onclick="goLbTab('total',this)">🏆 Total Time</button>
-        <button class="lb-tab shooting"       onclick="goLbTab('shooting',this)">🎯 Shooting</button>
-        <button class="lb-tab wallballs"      onclick="goLbTab('wallballs',this)">🧱 Wall Balls</button>
-        <button class="lb-tab groundballs"    onclick="goLbTab('groundballs',this)">⬇️ Ground Balls</button>
-        <button class="lb-tab footwork"       onclick="goLbTab('footwork',this)">👟 Footwork</button>
+        <button class="lb-tab total on"        onclick="goLbTab('total',this)">🏆 Total Time</button>
+        <button class="lb-tab shooting"        onclick="goLbTab('shooting',this)">🎯 Shooting</button>
+        <button class="lb-tab wallballs"       onclick="goLbTab('wallballs',this)">🧱 Wall Balls</button>
+        <button class="lb-tab groundballs"     onclick="goLbTab('groundballs',this)">⬇️ Ground Balls</button>
+        <button class="lb-tab footwork"        onclick="goLbTab('footwork',this)">👟 Footwork</button>
       </div>
-
-      <!-- Total time board -->
       <div class="lb-panel on" id="lbp-total">
-        <div class="card">
-          <div class="drill-board-header">
-            <span class="drill-board-icon">🏆</span>
-            <div>
-              <div class="drill-board-title">Total Practice Time</div>
-              <div class="drill-board-sub">All sessions · all drills combined</div>
-            </div>
-          </div>
-          <div id="lb-total"></div>
-        </div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🏆</span><div><div class="drill-board-title">Total Practice Time</div><div class="drill-board-sub">All players · all sessions</div></div></div><div id="lb-total"></div></div>
       </div>
-
-      <!-- Shooting board -->
       <div class="lb-panel" id="lbp-shooting">
-        <div class="card">
-          <div class="drill-board-header">
-            <span class="drill-board-icon">🎯</span>
-            <div>
-              <div class="drill-board-title">Shooting</div>
-              <div class="drill-board-sub">Sessions that included shooting drills</div>
-            </div>
-          </div>
-          <div id="lb-shooting"></div>
-        </div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🎯</span><div><div class="drill-board-title">Shooting</div><div class="drill-board-sub">Sessions including shooting drills</div></div></div><div id="lb-shooting"></div></div>
       </div>
-
-      <!-- Wall Balls board -->
       <div class="lb-panel" id="lbp-wallballs">
-        <div class="card">
-          <div class="drill-board-header">
-            <span class="drill-board-icon">🧱</span>
-            <div>
-              <div class="drill-board-title">Wall Balls</div>
-              <div class="drill-board-sub">Sessions that included wall ball drills</div>
-            </div>
-          </div>
-          <div id="lb-wallballs"></div>
-        </div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🧱</span><div><div class="drill-board-title">Wall Balls</div><div class="drill-board-sub">Sessions including wall ball drills</div></div></div><div id="lb-wallballs"></div></div>
       </div>
-
-      <!-- Ground Balls board -->
       <div class="lb-panel" id="lbp-groundballs">
-        <div class="card">
-          <div class="drill-board-header">
-            <span class="drill-board-icon">⬇️</span>
-            <div>
-              <div class="drill-board-title">Ground Balls</div>
-              <div class="drill-board-sub">Sessions that included ground ball drills</div>
-            </div>
-          </div>
-          <div id="lb-groundballs"></div>
-        </div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">⬇️</span><div><div class="drill-board-title">Ground Balls</div><div class="drill-board-sub">Sessions including ground ball drills</div></div></div><div id="lb-groundballs"></div></div>
       </div>
-
-      <!-- Footwork board -->
       <div class="lb-panel" id="lbp-footwork">
-        <div class="card">
-          <div class="drill-board-header">
-            <span class="drill-board-icon">👟</span>
-            <div>
-              <div class="drill-board-title">Footwork</div>
-              <div class="drill-board-sub">Sessions that included footwork drills</div>
-            </div>
-          </div>
-          <div id="lb-footwork"></div>
-        </div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">👟</span><div><div class="drill-board-title">Footwork</div><div class="drill-board-sub">Sessions including footwork drills</div></div></div><div id="lb-footwork"></div></div>
       </div>
-
     </div>
 
     <!-- MANAGE TAB -->
     <div class="panel" id="tab-manage">
       <div class="card">
-        <div class="card-title"><span>⚙️</span> Manage Players</div>
-        <p style="font-size:.83rem;color:var(--text-lt);font-weight:700;margin-bottom:4px">🔒 Removing players requires the admin password.</p>
+        <div class="card-title"><span>⚙️</span> My Players</div>
+        <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:2px">You can remove your own players. Admin password required to reset all data.</p>
         <div class="mgr-list" id="mgr-list"><div class="empty"><span class="ei">👤</span>No players yet.</div></div>
       </div>
       <div class="card danger-card">
-        <div class="card-title" style="color:var(--red)"><span>🗑️</span> Reset All Data</div>
-        <p style="color:var(--text-md);font-size:.92rem;margin-bottom:16px">🔒 Permanently deletes all players and sessions. Requires admin password.</p>
+        <div class="card-title" style="color:var(--red)"><span>🗑️</span> Admin: Reset All Data</div>
+        <p style="color:var(--text-md);font-size:.9rem;margin-bottom:14px">🔒 Permanently deletes every player and session across all accounts.</p>
         <button class="btn btn-red" onclick="guardedAction('reset')">Reset Everything</button>
       </div>
     </div>
@@ -489,10 +438,13 @@
 <div id="toast"></div>
 
 <script type="module">
-import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp }        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, doc, getDoc, addDoc, deleteDoc,
-         onSnapshot, query, orderBy }
+         onSnapshot, query, where, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+         onAuthStateChanged, signOut as fbSignOut, updateProfile }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // ── 🔥 REPLACE WITH YOUR FIREBASE CONFIG ───────────────────
 const firebaseConfig = {
@@ -503,181 +455,271 @@ const firebaseConfig = {
 };
 // ───────────────────────────────────────────────────────────
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
 
 const DRILLS = [
-  { key:'Shooting',    id:'d-shooting',    emoji:'🎯', accent:'#d63030', cls:'shooting'    },
-  { key:'Wall Balls',  id:'d-wallballs',   emoji:'🧱', accent:'#2196c4', cls:'wallballs'   },
-  { key:'Ground Balls',id:'d-groundballs', emoji:'⬇️', accent:'#1a7a3a', cls:'groundballs' },
-  { key:'Footwork',    id:'d-footwork',    emoji:'👟', accent:'#7c3aed', cls:'footwork'    },
+  { key:'Shooting',     id:'d-shooting',    emoji:'🎯', accent:'#d63030', cls:'shooting'     },
+  { key:'Wall Balls',   id:'d-wallballs',   emoji:'🧱', accent:'#2196c4', cls:'wallballs'    },
+  { key:'Ground Balls', id:'d-groundballs', emoji:'⬇️', accent:'#1a7a3a', cls:'groundballs'  },
+  { key:'Footwork',     id:'d-footwork',    emoji:'👟', accent:'#7c3aed', cls:'footwork'     },
 ];
 
-let children = [], sessions = [], selId = null;
-let adminPassword = null, authUntil = 0, pendingAction = null;
-let activeLbTab = 'total';
+let currentUser  = null;
+let myChildren   = [];   // current user's players
+let allChildren  = [];   // everyone's players (for leaderboard)
+let mySessions   = [];   // current user's sessions
+let allSessions  = [];   // everyone's sessions (for leaderboard)
+let selId        = null;
+let adminPassword = null;
+let authUntil    = 0;
+let pendingAction = null;
 
-// ── Load admin password ───────────────────────────────────
+let unsubMyKids, unsubAllKids, unsubMySess, unsubAllSess;
+
+// ── Auth state ────────────────────────────────────────────
+onAuthStateChanged(auth, async user => {
+  document.getElementById('init-loading').style.display = 'none';
+  if (user) {
+    currentUser = user;
+    document.getElementById('auth-screen').style.display  = 'none';
+    document.getElementById('app-body').style.display     = 'block';
+    document.getElementById('hero-auth').style.display    = 'flex';
+    document.getElementById('hero-email').textContent     = user.displayName || user.email;
+    await loadAdminPassword();
+    startListeners();
+  } else {
+    currentUser = null;
+    stopListeners();
+    document.getElementById('app-body').style.display    = 'none';
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('hero-auth').style.display   = 'none';
+    resetLocalState();
+  }
+});
+
+function resetLocalState() {
+  myChildren=[]; allChildren=[]; mySessions=[]; allSessions=[]; selId=null;
+  renderStats(); renderChips(); renderSessions();
+}
+
+function stopListeners() {
+  if (unsubMyKids)  unsubMyKids();
+  if (unsubAllKids) unsubAllKids();
+  if (unsubMySess)  unsubMySess();
+  if (unsubAllSess) unsubAllSess();
+}
+
+function startListeners() {
+  setSync('busy','Connecting…');
+
+  // My players
+  const myKidsQ = query(collection(db,'children'), where('uid','==',currentUser.uid), orderBy('createdAt'));
+  unsubMyKids = onSnapshot(myKidsQ, snap => {
+    myChildren = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderStats(); renderChips(); renderSessions();
+  }, err => { setSync('bad','Error'); toast(err.message,true); });
+
+  // All players (for leaderboard)
+  const allKidsQ = query(collection(db,'children'), orderBy('createdAt'));
+  unsubAllKids = onSnapshot(allKidsQ, snap => {
+    allChildren = snap.docs.map(d=>({id:d.id,...d.data()}));
+    if (document.getElementById('tab-board').classList.contains('on')) renderAllLeaderboards();
+  });
+
+  // My sessions
+  const mySessQ = query(collection(db,'sessions'), where('uid','==',currentUser.uid), orderBy('date'));
+  unsubMySess = onSnapshot(mySessQ, snap => {
+    mySessions = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderStats(); renderSessions();
+    setSync('ok','Live · Field Ready');
+  }, err => { setSync('bad','Error'); toast(err.message,true); });
+
+  // All sessions (for leaderboard)
+  const allSessQ = query(collection(db,'sessions'), orderBy('date'));
+  unsubAllSess = onSnapshot(allSessQ, snap => {
+    allSessions = snap.docs.map(d=>({id:d.id,...d.data()}));
+    if (document.getElementById('tab-board').classList.contains('on')) renderAllLeaderboards();
+  });
+}
+
+// ── Admin password ────────────────────────────────────────
 async function loadAdminPassword() {
   try {
     const snap = await getDoc(doc(db,'config','admin'));
-    if (snap.exists() && snap.data().password) {
-      adminPassword = snap.data().password;
-    } else {
-      adminPassword = null;
-      document.getElementById('pw-warning').classList.add('show');
-    }
+    adminPassword = (snap.exists() && snap.data().password) ? snap.data().password : null;
   } catch(e) { adminPassword = null; }
 }
 
-// ── Firestore listeners ───────────────────────────────────
-setSync('busy','Connecting…');
+// ── Sign in / Sign up ─────────────────────────────────────
+window.switchView = v => {
+  document.getElementById('view-signin').style.display = v==='signin' ? 'block':'none';
+  document.getElementById('view-signup').style.display = v==='signup' ? 'block':'none';
+};
 
-onSnapshot(query(collection(db,'children'), orderBy('createdAt')), snap => {
-  children = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-  renderAll();
-}, err => { setSync('bad','Connection error'); toast(err.message,true); });
+window.doSignIn = async () => {
+  const email = document.getElementById('si-email').value.trim();
+  const pass  = document.getElementById('si-pass').value;
+  const errEl = document.getElementById('si-err');
+  errEl.textContent = '';
+  if (!email||!pass) { errEl.textContent='Please fill in all fields.'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    errEl.textContent = friendlyAuthError(e.code);
+  }
+};
 
-onSnapshot(query(collection(db,'sessions'), orderBy('date')), snap => {
-  sessions = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-  renderAll();
-  setSync('ok','Live · Field Ready');
-  document.getElementById('app-loading').style.display = 'none';
-  document.getElementById('app-body').style.display    = 'block';
-}, err => { setSync('bad','Connection error'); toast(err.message,true); });
+window.doSignUp = async () => {
+  const name  = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pass  = document.getElementById('su-pass').value;
+  const errEl = document.getElementById('su-err');
+  errEl.textContent = '';
+  if (!name||!email||!pass) { errEl.textContent='Please fill in all fields.'; return; }
+  if (pass.length < 6) { errEl.textContent='Password must be at least 6 characters.'; return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+  } catch(e) {
+    errEl.textContent = friendlyAuthError(e.code);
+  }
+};
 
-loadAdminPassword();
+window.signOut = async () => {
+  await fbSignOut(auth);
+  toast('Signed out');
+};
 
-// ── Password gate ─────────────────────────────────────────
+function friendlyAuthError(code) {
+  const map = {
+    'auth/invalid-email':            'Invalid email address.',
+    'auth/user-not-found':           'No account found with that email.',
+    'auth/wrong-password':           'Incorrect password.',
+    'auth/email-already-in-use':     'An account with that email already exists.',
+    'auth/weak-password':            'Password must be at least 6 characters.',
+    'auth/invalid-credential':       'Email or password is incorrect.',
+    'auth/too-many-requests':        'Too many attempts. Please try again later.',
+  };
+  return map[code] || 'Something went wrong. Please try again.';
+}
+
+// ── Admin password gate (reset-all only) ─────────────────
 window.guardedAction = (action, id) => {
-  if (!adminPassword || Date.now() < authUntil) { runAction(action, id); return; }
-  pendingAction = { action, id };
-  document.getElementById('pw-input').value = '';
-  document.getElementById('pw-error').textContent = '';
+  if (!adminPassword || Date.now() < authUntil) { runAction(action,id); return; }
+  pendingAction = {action,id};
+  document.getElementById('pw-input').value='';
+  document.getElementById('pw-error').textContent='';
   document.getElementById('pw-modal').classList.remove('hidden');
-  setTimeout(() => document.getElementById('pw-input').focus(), 80);
+  setTimeout(()=>document.getElementById('pw-input').focus(),80);
 };
 
 window.confirmPassword = () => {
   const val = document.getElementById('pw-input').value;
   if (val === adminPassword) {
-    authUntil = Date.now() + 5 * 60 * 1000;
+    authUntil = Date.now() + 5*60*1000;
     document.getElementById('pw-modal').classList.add('hidden');
-    if (pendingAction) { runAction(pendingAction.action, pendingAction.id); pendingAction = null; }
+    if (pendingAction) { runAction(pendingAction.action, pendingAction.id); pendingAction=null; }
   } else {
-    const input = document.getElementById('pw-input');
+    const inp = document.getElementById('pw-input');
     document.getElementById('pw-error').textContent = 'Incorrect password — try again';
-    input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake');
-    input.value = ''; setTimeout(() => input.focus(), 50);
+    inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
+    inp.value=''; setTimeout(()=>inp.focus(),50);
   }
 };
 
-window.cancelPassword = () => {
-  pendingAction = null;
-  document.getElementById('pw-modal').classList.add('hidden');
-};
-
+window.cancelPassword = () => { pendingAction=null; document.getElementById('pw-modal').classList.add('hidden'); };
 window.toggleEye = () => {
-  const input = document.getElementById('pw-input');
-  input.type = input.type === 'password' ? 'text' : 'password';
-  document.getElementById('eye-btn').textContent = input.type === 'password' ? '👁' : '🙈';
+  const inp=document.getElementById('pw-input');
+  inp.type=inp.type==='password'?'text':'password';
+  document.getElementById('eye-btn').textContent=inp.type==='password'?'👁':'🙈';
 };
 
-async function runAction(action, id) {
-  if (action === 'delSess')     await doDelSess(id);
-  if (action === 'removeChild') await doRemoveChild(id);
-  if (action === 'reset')       await doResetAll();
+async function runAction(action,id) {
+  if (action==='removeChild') await doRemoveChild(id);
+  if (action==='reset')       await doResetAll();
 }
 
 // ── Render ────────────────────────────────────────────────
-function renderAll() {
-  renderStats(); renderChips(); renderSessions();
-  if (document.getElementById('tab-board').classList.contains('on'))  renderAllLeaderboards();
-  if (document.getElementById('tab-manage').classList.contains('on')) renderManage();
-}
-
 function renderStats() {
-  document.getElementById('s-kids').textContent = children.length;
-  document.getElementById('s-sess').textContent = sessions.length;
-  document.getElementById('s-mins').textContent = sessions.reduce((a,s)=>a+s.minutes,0);
+  document.getElementById('s-kids').textContent = myChildren.length;
+  document.getElementById('s-sess').textContent = mySessions.length;
+  document.getElementById('s-mins').textContent = mySessions.reduce((a,s)=>a+s.minutes,0);
 }
 
 function renderChips() {
   const wrap=document.getElementById('chips'), noKids=document.getElementById('no-kids'), logSec=document.getElementById('log-section');
-  if (!children.length) { noKids.style.display='block'; logSec.style.display='none'; document.getElementById('hist-card').style.display='none'; return; }
+  if (!myChildren.length) { noKids.style.display='block'; logSec.style.display='none'; document.getElementById('hist-card').style.display='none'; return; }
   noKids.style.display='none'; logSec.style.display='block';
-  if (selId && !children.find(c=>c.id===selId)) selId=children[0].id;
-  if (!selId) selId=children[0].id;
-  wrap.innerHTML=children.map(c=>`<button class="chip c${c.colorIdx} ${selId===c.id?'on':''}" onclick="window._sel('${c.id}')">${c.name}</button>`).join('');
+  if (selId && !myChildren.find(c=>c.id===selId)) selId=myChildren[0].id;
+  if (!selId) selId=myChildren[0].id;
+  wrap.innerHTML=myChildren.map(c=>`<button class="chip c${c.colorIdx} ${selId===c.id?'on':''}" onclick="window._sel('${c.id}')">${c.name}</button>`).join('');
 }
 
 function renderSessions() {
   const card=document.getElementById('hist-card'), nameEl=document.getElementById('hist-name'), body=document.getElementById('hist-body');
-  if (!selId||!children.length){card.style.display='none';return;}
-  const child=children.find(c=>c.id===selId);
+  if (!selId||!myChildren.length){card.style.display='none';return;}
+  const child=myChildren.find(c=>c.id===selId);
   if (!child){card.style.display='none';return;}
   card.style.display='block';
   nameEl.textContent=child.name.toUpperCase();
-  const cs=sessions.filter(s=>s.childId===selId).sort((a,b)=>b.date.localeCompare(a.date));
+  const cs=mySessions.filter(s=>s.childId===selId).sort((a,b)=>b.date.localeCompare(a.date));
   if (!cs.length){body.innerHTML=`<div class="empty"><span class="ei">📅</span>No sessions logged yet for ${child.name}.</div>`;return;}
   const total=cs.reduce((a,s)=>a+s.minutes,0);
   body.innerHTML=`
-    <p style="font-family:'Barlow Condensed',sans-serif;font-weight:800;color:var(--text-md);margin-bottom:12px;font-size:1rem;text-transform:uppercase;letter-spacing:.05em">
-      Total: <span style="color:var(--grass);font-size:1.3rem">${total}</span> mins &nbsp;·&nbsp;
-      <span style="color:var(--grass);font-size:1.3rem">${cs.length}</span> session${cs.length!==1?'s':''}
+    <p style="font-family:'Barlow Condensed',sans-serif;font-weight:800;color:var(--text-md);margin-bottom:10px;font-size:.95rem;text-transform:uppercase;letter-spacing:.05em">
+      Total: <span style="color:var(--grass);font-size:1.2rem">${total}</span> mins &nbsp;·&nbsp;
+      <span style="color:var(--grass);font-size:1.2rem">${cs.length}</span> session${cs.length!==1?'s':''}
     </p>
     <table class="tbl">
       <thead><tr><th>Date</th><th>Mins</th><th>Drills</th><th></th></tr></thead>
       <tbody>${cs.map(s=>{
         const tags=(s.drills&&s.drills.length)
           ? `<div class="drill-tags">${s.drills.map(d=>{const dr=DRILLS.find(x=>x.key===d);return`<span class="drill-tag">${dr?dr.emoji:''} ${d}</span>`;}).join('')}</div>`
-          : `<span style="color:var(--text-lt);font-size:.82rem">General</span>`;
-        return`<tr><td>${fmtDate(s.date)}</td><td><span class="badge">${s.minutes} min</span></td><td>${tags}</td><td><button class="btn-sm" onclick="window.guardedAction('delSess','${s.id}')">Remove</button></td></tr>`;
+          : `<span style="color:var(--text-lt);font-size:.8rem">General</span>`;
+        return`<tr><td>${fmtDate(s.date)}</td><td><span class="badge">${s.minutes} min</span></td><td>${tags}</td><td><button class="btn-sm" onclick="window.delSession('${s.id}')">✕</button></td></tr>`;
       }).join('')}</tbody>
     </table>`;
 }
 
-// ── Leaderboard helpers ───────────────────────────────────
 const medals=['🥇','🥈','🥉'], rankCls=['r1c','r2c','r3c'];
-const barFills=['linear-gradient(90deg,#1a7a3a,#22a04d)','linear-gradient(90deg,#d63030,#f56565)','linear-gradient(90deg,#2196c4,#38bdf8)','linear-gradient(90deg,#f5b800,#f97316)','linear-gradient(90deg,#7c3aed,#a78bfa)','linear-gradient(90deg,#0f4d24,#1a7a3a)'];
 
 function buildLbHTML(ranked, accentColor, valueLabel) {
-  if (!ranked.length) return `<div class="lb-empty">No data yet for this drill!</div>`;
-  const max = Math.max(ranked[0].value||1, 1);
-  return `<div class="lb">${ranked.map((c,i)=>`
-    <div class="lb-row r${i+1}" style="animation-delay:${i*.05}s">
+  if (!ranked.length) return `<div class="lb-empty">No data yet — start logging sessions!</div>`;
+  const max=Math.max(ranked[0].value||1,1);
+  return `<div class="lb">${ranked.map((c,i)=>{
+    const isMe = c.uid === currentUser?.uid;
+    return `<div class="lb-row r${i+1}" style="animation-delay:${i*.05}s">
       <div class="lb-rank ${rankCls[i]||''}">${medals[i]||`#${i+1}`}</div>
       <div class="lax-av la${c.colorIdx}">${c.name.slice(0,2).toUpperCase()}</div>
       <div class="lb-info">
-        <div class="lb-name">${c.name}
-          <span class="pos-badge pos-${c.position||'Attack'}" style="margin-left:6px">${c.position||''}</span>
-        </div>
-        <div class="bar-bg">
-          <div class="bar-fill" style="width:${Math.round(c.value/max*100)}%;background:${accentColor}"></div>
-        </div>
-        <div style="font-size:.7rem;color:var(--text-lt);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.06em">${c.sessions} session${c.sessions!==1?'s':''}</div>
+        <div class="lb-name">${c.name}${isMe?`<span class="my-label">Mine</span>`:''} <span class="pos-badge pos-${c.position||'Attack'}" style="margin-left:4px">${c.position||''}</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.value/max*100)}%;background:${accentColor}"></div></div>
+        <div style="font-size:.68rem;color:var(--text-lt);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.06em">${c.sessions} session${c.sessions!==1?'s':''}</div>
       </div>
       <div class="lb-stat">
         <div class="lb-stat-n" style="color:${accentColor}">${c.value}</div>
         <span class="lb-stat-l">${valueLabel}</span>
       </div>
-    </div>`).join('')}</div>`;
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function renderAllLeaderboards() {
-  // Total time board
-  const totalRanked = children.map(c=>({
+  // Total time
+  const totalRanked = allChildren.map(c=>({
     ...c,
-    value: sessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0),
-    sessions: sessions.filter(s=>s.childId===c.id).length
+    value:    allSessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0),
+    sessions: allSessions.filter(s=>s.childId===c.id).length
   })).filter(c=>c.value>0).sort((a,b)=>b.value-a.value);
   document.getElementById('lb-total').innerHTML = buildLbHTML(totalRanked,'var(--gold-dk)','minutes');
 
-  // Per-drill boards — count sessions that included each drill
-  DRILLS.forEach(drill => {
-    const ranked = children.map(c=>{
-      const drillSess = sessions.filter(s=>s.childId===c.id && s.drills && s.drills.includes(drill.key));
-      return { ...c, value: drillSess.length, sessions: drillSess.length };
+  // Per-drill
+  DRILLS.forEach(drill=>{
+    const ranked = allChildren.map(c=>{
+      const ds=allSessions.filter(s=>s.childId===c.id && s.drills && s.drills.includes(drill.key));
+      return { ...c, value:ds.length, sessions:ds.length };
     }).filter(c=>c.value>0).sort((a,b)=>b.value-a.value);
     document.getElementById('lb-'+drill.cls).innerHTML = buildLbHTML(ranked, drill.accent, 'sessions');
   });
@@ -685,22 +727,22 @@ function renderAllLeaderboards() {
 
 function renderManage() {
   const list=document.getElementById('mgr-list');
-  if (!children.length){list.innerHTML=`<div class="empty"><span class="ei">👤</span>No players yet.</div>`;return;}
-  list.innerHTML=children.map(c=>{
-    const total=sessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0);
-    const count=sessions.filter(s=>s.childId===c.id).length;
+  if (!myChildren.length){list.innerHTML=`<div class="empty"><span class="ei">👤</span>No players yet.</div>`;return;}
+  list.innerHTML=myChildren.map(c=>{
+    const total=mySessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0);
+    const count=mySessions.filter(s=>s.childId===c.id).length;
     return `<div class="mgr-row">
       <div class="mgr-info">
         <div class="lax-av la${c.colorIdx}" style="width:38px;height:38px;font-size:.9rem;border-radius:8px">${c.name.slice(0,2).toUpperCase()}</div>
         <div>
           <div style="display:flex;align-items:center;gap:7px">
-            <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem;text-transform:uppercase;letter-spacing:.04em">${c.name}</span>
+            <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.04em">${c.name}</span>
             <span class="pos-badge pos-${c.position||'Attack'}">${c.position||''}</span>
           </div>
           <div class="mgr-sub">${total} mins · ${count} session${count!==1?'s':''}</div>
         </div>
       </div>
-      <button class="btn-sm" onclick="window.guardedAction('removeChild','${c.id}')">Remove</button>
+      <button class="btn-sm" onclick="window.guardedAction('removeChild','${c.id}')">✕ Remove</button>
     </div>`;
   }).join('');
 }
@@ -709,44 +751,61 @@ function renderManage() {
 window._sel = id => { selId=id; renderChips(); renderSessions(); };
 
 window.addChild = async () => {
+  if (!currentUser) return;
   const name     = document.getElementById('add-name').value.trim();
   const position = document.getElementById('add-position').value;
   if (!name)     { toast('Enter a player name!',true); return; }
   if (!position) { toast('Select a position!',true); return; }
-  if (children.find(c=>c.name.toLowerCase()===name.toLowerCase())) { toast('Player already on roster!',true); return; }
-  await addDoc(collection(db,'children'),{ name, position, colorIdx:children.length%6, createdAt:new Date().toISOString() });
+  if (myChildren.find(c=>c.name.toLowerCase()===name.toLowerCase())) { toast('Player already on your roster!',true); return; }
+  await addDoc(collection(db,'children'),{
+    name, position,
+    uid: currentUser.uid,
+    ownerName: currentUser.displayName || currentUser.email,
+    colorIdx: myChildren.length % 6,
+    createdAt: new Date().toISOString()
+  });
   document.getElementById('add-name').value='';
   document.getElementById('add-position').value='';
-  toast(`${name} added to the roster!`);
+  toast(`${name} added to your roster!`);
 };
 
 window.logSession = async () => {
-  if (!selId){toast('Select a player first!',true);return;}
+  if (!currentUser||!selId){toast('Select a player first!',true);return;}
   const mins  = parseInt(document.getElementById('log-mins').value);
   const date  = document.getElementById('log-date').value||new Date().toISOString().slice(0,10);
   const drills = DRILLS.filter(d=>document.getElementById(d.id)?.checked).map(d=>d.key);
   if (!mins||mins<1){toast('Enter valid minutes!',true);return;}
-  await addDoc(collection(db,'sessions'),{ childId:selId, minutes:mins, date, drills, loggedAt:new Date().toISOString() });
+  await addDoc(collection(db,'sessions'),{
+    childId: selId,
+    uid: currentUser.uid,
+    minutes: mins, date, drills,
+    loggedAt: new Date().toISOString()
+  });
   document.getElementById('log-mins').value='';
   DRILLS.forEach(d=>{ const el=document.getElementById(d.id); if(el)el.checked=false; });
-  const child=children.find(c=>c.id===selId);
+  const child=myChildren.find(c=>c.id===selId);
   toast(`${mins} mins logged for ${child?.name}!`);
 };
 
-async function doDelSess(id) { await deleteDoc(doc(db,'sessions',id)); toast('Session removed'); }
+window.delSession = async id => {
+  await deleteDoc(doc(db,'sessions',id));
+  toast('Session removed');
+};
+
 async function doRemoveChild(id) {
-  const child=children.find(c=>c.id===id);
+  const child=myChildren.find(c=>c.id===id);
   if (!confirm(`Remove ${child?.name} and ALL their sessions?`)) return;
-  await Promise.all(sessions.filter(s=>s.childId===id).map(s=>deleteDoc(doc(db,'sessions',s.id))));
+  await Promise.all(mySessions.filter(s=>s.childId===id).map(s=>deleteDoc(doc(db,'sessions',s.id))));
   await deleteDoc(doc(db,'children',id));
   if (selId===id) selId=null;
   toast(`${child?.name} removed`);
 }
+
 async function doResetAll() {
-  if (!confirm('Delete ALL players and sessions? This cannot be undone.')) return;
-  await Promise.all(sessions.map(s=>deleteDoc(doc(db,'sessions',s.id))));
-  await Promise.all(children.map(c=>deleteDoc(doc(db,'children',c.id))));
-  selId=null; toast('Roster cleared');
+  if (!confirm('Delete EVERY player and session across all accounts? This cannot be undone.')) return;
+  await Promise.all(allSessions.map(s=>deleteDoc(doc(db,'sessions',s.id))));
+  await Promise.all(allChildren.map(c=>deleteDoc(doc(db,'children',c.id))));
+  selId=null; toast('All data cleared');
 }
 
 // ── Tabs ──────────────────────────────────────────────────
@@ -764,7 +823,6 @@ window.goLbTab = (name, btn) => {
   document.querySelectorAll('.lb-tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('lbp-'+name).classList.add('on');
   btn.classList.add('on');
-  activeLbTab = name;
 };
 
 // ── Helpers ───────────────────────────────────────────────
