@@ -101,7 +101,8 @@
   .lb-tab.shooting.on   { background:linear-gradient(135deg,#d63030,#f56565); }
   .lb-tab.wallballs.on  { background:linear-gradient(135deg,#2196c4,#38bdf8); }
   .lb-tab.groundballs.on{ background:linear-gradient(135deg,#1a7a3a,#22a04d); }
-  .lb-tab.footwork.on   { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
+  .lb-tab.footwork.on      { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
+  .lb-tab.goaliedrills.on{ background:linear-gradient(135deg,#0f4d24,#1a7a3a); }
   .lb-panel { display:none; }
   .lb-panel.on { display:block; }
 
@@ -125,7 +126,8 @@
   /* ── Form fields ── */
   .fields { display:grid; gap:13px; }
   .f2 { grid-template-columns:1fr 1fr; }
-  @media(max-width:620px){ .f2{grid-template-columns:1fr;} }
+  .f3 { grid-template-columns:1fr 1fr 1fr; }
+  @media(max-width:620px){ .f2,.f3{grid-template-columns:1fr;} }
   .f label { display:block; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--text-lt); margin-bottom:5px; }
   .f input, .f select { width:100%; padding:11px 14px; border:2px solid var(--border); border-radius:10px; font-family:'Barlow',sans-serif; font-size:.95rem; font-weight:600; color:var(--text); background:var(--chalk); outline:none; transition:border-color .2s, box-shadow .2s; appearance:none; -webkit-appearance:none; }
   .f select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9e8a' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; cursor:pointer; }
@@ -236,6 +238,15 @@
   .spinner-wrap p { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); }
 
   .danger-card { border-color:#fecaca!important; }
+
+  /* ── Grade filter ── */
+  .grade-filter { display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+  .grade-filter-label { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-lt); white-space:nowrap; }
+  .grade-select { padding:8px 36px 8px 14px; border-radius:50px; border:2px solid var(--border); background:var(--chalk); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.88rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9e8a' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; transition:border-color .2s; }
+  .grade-select:hover, .grade-select:focus { border-color:var(--grass); outline:none; }
+  .grade-badge { display:inline-block; padding:2px 9px; border-radius:50px; font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em; }
+  .grade-78 { background:#fef3c7; color:#92400e; }
+  .grade-56 { background:#dbeafe; color:#1e40af; }
   .divider { height:1px; background:var(--border); margin:16px 0; }
   .section-label { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--text-lt); margin-bottom:9px; }
   .my-label { display:inline-block; padding:2px 8px; border-radius:4px; background:#dcfce7; color:var(--grass-dk); font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin-left:6px; }
@@ -338,7 +349,7 @@
       <!-- Add player -->
       <div class="card" style="animation-delay:.05s">
         <div class="card-title"><span>🥍</span> Add a Player</div>
-        <div class="fields f2">
+        <div class="fields f3">
           <div class="f"><label>Player Name</label><input type="text" id="add-name" placeholder="e.g. Jake" maxlength="30"></div>
           <div class="f">
             <label>Position</label>
@@ -348,6 +359,14 @@
               <option value="Attack">⚔️ Attack</option>
               <option value="Midfielder">🔄 Midfielder</option>
               <option value="Defender">🛡️ Defender</option>
+            </select>
+          </div>
+          <div class="f">
+            <label>Grade</label>
+            <select id="add-grade">
+              <option value="" disabled selected>Select grade…</option>
+              <option value="7/8">7th / 8th Grade</option>
+              <option value="5/6">5th / 6th Grade</option>
             </select>
           </div>
         </div>
@@ -376,8 +395,10 @@
             <label for="d-wallballs">🧱 Wall Balls</label>
             <input type="checkbox" class="drill-toggle" id="d-groundballs" value="Ground Balls">
             <label for="d-groundballs">⬇️ Ground Balls</label>
-            <input type="checkbox" class="drill-toggle" id="d-footwork"    value="Footwork">
+            <input type="checkbox" class="drill-toggle" id="d-footwork"      value="Footwork">
             <label for="d-footwork">👟 Footwork</label>
+            <input type="checkbox" class="drill-toggle" id="d-goaliedrills" value="Goalie Drills">
+            <label for="d-goaliedrills">🥅 Goalie Drills</label>
           </div>
           <div style="margin-top:16px;display:flex;justify-content:flex-end">
             <button class="btn btn-green" onclick="logSession()">Log Session ✓</button>
@@ -394,27 +415,41 @@
 
     <!-- LEADERBOARD TAB -->
     <div class="panel" id="tab-board">
+      <!-- Grade filter -->
+      <div class="grade-filter">
+        <span class="grade-filter-label">🎓 Grade:</span>
+        <select class="grade-select" id="lb-grade-select" onchange="onGradeChange()">
+          <option value="all">All Grades</option>
+          <option value="7/8">7th / 8th Grade</option>
+          <option value="5/6">5th / 6th Grade</option>
+        </select>
+      </div>
+
       <div class="lb-tabs">
-        <button class="lb-tab total on"        onclick="goLbTab('total',this)">🏆 Total Time</button>
-        <button class="lb-tab shooting"        onclick="goLbTab('shooting',this)">🎯 Shooting</button>
-        <button class="lb-tab wallballs"       onclick="goLbTab('wallballs',this)">🧱 Wall Balls</button>
-        <button class="lb-tab groundballs"     onclick="goLbTab('groundballs',this)">⬇️ Ground Balls</button>
-        <button class="lb-tab footwork"        onclick="goLbTab('footwork',this)">👟 Footwork</button>
+        <button class="lb-tab total on"     onclick="goLbTab('total',this)">🏆 Total Time</button>
+        <button class="lb-tab shooting"     onclick="goLbTab('shooting',this)">🎯 Shooting</button>
+        <button class="lb-tab wallballs"    onclick="goLbTab('wallballs',this)">🧱 Wall Balls</button>
+        <button class="lb-tab groundballs"  onclick="goLbTab('groundballs',this)">⬇️ Ground Balls</button>
+        <button class="lb-tab footwork"     onclick="goLbTab('footwork',this)">👟 Footwork</button>
+        <button class="lb-tab goaliedrills" onclick="goLbTab('goaliedrills',this)">🥅 Goalie Drills</button>
       </div>
       <div class="lb-panel on" id="lbp-total">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🏆</span><div><div class="drill-board-title">Total Practice Time</div><div class="drill-board-sub">All players · all sessions</div></div></div><div id="lb-total"></div></div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🏆</span><div><div class="drill-board-title">Total Practice Time</div><div class="drill-board-sub" id="lbs-total">All grades · all sessions</div></div></div><div id="lb-total"></div></div>
       </div>
       <div class="lb-panel" id="lbp-shooting">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🎯</span><div><div class="drill-board-title">Shooting</div><div class="drill-board-sub">Sessions including shooting drills</div></div></div><div id="lb-shooting"></div></div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🎯</span><div><div class="drill-board-title">Shooting</div><div class="drill-board-sub" id="lbs-shooting">All grades · shooting sessions</div></div></div><div id="lb-shooting"></div></div>
       </div>
       <div class="lb-panel" id="lbp-wallballs">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🧱</span><div><div class="drill-board-title">Wall Balls</div><div class="drill-board-sub">Sessions including wall ball drills</div></div></div><div id="lb-wallballs"></div></div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🧱</span><div><div class="drill-board-title">Wall Balls</div><div class="drill-board-sub" id="lbs-wallballs">All grades · wall ball sessions</div></div></div><div id="lb-wallballs"></div></div>
       </div>
       <div class="lb-panel" id="lbp-groundballs">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">⬇️</span><div><div class="drill-board-title">Ground Balls</div><div class="drill-board-sub">Sessions including ground ball drills</div></div></div><div id="lb-groundballs"></div></div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">⬇️</span><div><div class="drill-board-title">Ground Balls</div><div class="drill-board-sub" id="lbs-groundballs">All grades · ground ball sessions</div></div></div><div id="lb-groundballs"></div></div>
       </div>
       <div class="lb-panel" id="lbp-footwork">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">👟</span><div><div class="drill-board-title">Footwork</div><div class="drill-board-sub">Sessions including footwork drills</div></div></div><div id="lb-footwork"></div></div>
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">👟</span><div><div class="drill-board-title">Footwork</div><div class="drill-board-sub" id="lbs-footwork">All grades · footwork sessions</div></div></div><div id="lb-footwork"></div></div>
+      </div>
+      <div class="lb-panel" id="lbp-goaliedrills">
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🥅</span><div><div class="drill-board-title">Goalie Drills</div><div class="drill-board-sub" id="lbs-goaliedrills">All grades · goalie drill sessions</div></div></div><div id="lb-goaliedrills"></div></div>
       </div>
     </div>
 
@@ -460,10 +495,11 @@ const db   = getFirestore(app);
 const auth = getAuth(app);
 
 const DRILLS = [
-  { key:'Shooting',     id:'d-shooting',    emoji:'🎯', accent:'#d63030', cls:'shooting'     },
-  { key:'Wall Balls',   id:'d-wallballs',   emoji:'🧱', accent:'#2196c4', cls:'wallballs'    },
-  { key:'Ground Balls', id:'d-groundballs', emoji:'⬇️', accent:'#1a7a3a', cls:'groundballs'  },
-  { key:'Footwork',     id:'d-footwork',    emoji:'👟', accent:'#7c3aed', cls:'footwork'     },
+  { key:'Shooting',      id:'d-shooting',     emoji:'🎯', accent:'#d63030', cls:'shooting'     },
+  { key:'Wall Balls',    id:'d-wallballs',    emoji:'🧱', accent:'#2196c4', cls:'wallballs'    },
+  { key:'Ground Balls',  id:'d-groundballs',  emoji:'⬇️', accent:'#1a7a3a', cls:'groundballs'  },
+  { key:'Footwork',      id:'d-footwork',     emoji:'👟', accent:'#7c3aed', cls:'footwork'     },
+  { key:'Goalie Drills', id:'d-goaliedrills', emoji:'🥅', accent:'#0f4d24', cls:'goaliedrills' },
 ];
 
 let currentUser  = null;
@@ -706,7 +742,7 @@ function buildLbHTML(ranked, accentColor, valueLabel) {
       <div class="lb-rank ${rankCls[i]||''}">${medals[i]||`#${i+1}`}</div>
       <div class="lax-av la${c.colorIdx}">${c.name.slice(0,2).toUpperCase()}</div>
       <div class="lb-info">
-        <div class="lb-name">${c.name}${isMe?`<span class="my-label">Mine</span>`:''} <span class="pos-badge pos-${c.position||'Attack'}" style="margin-left:4px">${c.position||''}</span></div>
+        <div class="lb-name">${c.name}${isMe?`<span class="my-label">Mine</span>`:''} <span class="pos-badge pos-${c.position||'Attack'}" style="margin-left:4px">${c.position||''}</span> ${c.grade?`<span class="grade-badge grade-${c.grade==='7/8'?'78':'56'}">${c.grade}</span>`:''}</div>
         <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.value/max*100)}%;background:${accentColor}"></div></div>
         <div style="font-size:.68rem;color:var(--text-lt);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.06em">${c.sessions} session${c.sessions!==1?'s':''}</div>
       </div>
@@ -718,19 +754,44 @@ function buildLbHTML(ranked, accentColor, valueLabel) {
   }).join('')}</div>`;
 }
 
+let activeLbGrade = 'all';
+
+window.onGradeChange = function() {
+  activeLbGrade = document.getElementById('lb-grade-select').value;
+  renderAllLeaderboards();
+};
+
+function gradeLabel() {
+  if (activeLbGrade === '7/8') return '7th / 8th Grade';
+  if (activeLbGrade === '5/6') return '5th / 6th Grade';
+  return 'All Grades';
+}
+
 function renderAllLeaderboards() {
-  // Total time
-  const totalRanked = allChildren.map(c=>({
+  const filtered = activeLbGrade === 'all'
+    ? allChildren
+    : allChildren.filter(c => c.grade === activeLbGrade);
+
+  const gl = gradeLabel();
+  document.getElementById('lbs-total').textContent        = gl + ' · all sessions';
+  document.getElementById('lbs-shooting').textContent     = gl + ' · shooting sessions';
+  document.getElementById('lbs-wallballs').textContent    = gl + ' · wall ball sessions';
+  document.getElementById('lbs-groundballs').textContent  = gl + ' · ground ball sessions';
+  document.getElementById('lbs-footwork').textContent     = gl + ' · footwork sessions';
+  document.getElementById('lbs-goaliedrills').textContent = gl + ' · goalie drill sessions';
+
+  // Total time board
+  const totalRanked = filtered.map(c=>({
     ...c,
     value:    allSessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0),
     sessions: allSessions.filter(s=>s.childId===c.id).length
   })).filter(c=>c.value>0).sort((a,b)=>b.value-a.value);
   document.getElementById('lb-total').innerHTML = buildLbHTML(totalRanked,'var(--gold-dk)','minutes');
 
-  // Per-drill
+  // Per-drill boards
   DRILLS.forEach(drill=>{
-    const ranked = allChildren.map(c=>{
-      const ds=allSessions.filter(s=>s.childId===c.id && s.drills && s.drills.includes(drill.key));
+    const ranked = filtered.map(c=>{
+      const ds = allSessions.filter(s=>s.childId===c.id && s.drills && s.drills.includes(drill.key));
       return { ...c, value:ds.length, sessions:ds.length };
     }).filter(c=>c.value>0).sort((a,b)=>b.value-a.value);
     document.getElementById('lb-'+drill.cls).innerHTML = buildLbHTML(ranked, drill.accent, 'sessions');
@@ -747,9 +808,10 @@ function renderManage() {
       <div class="mgr-info">
         <div class="lax-av la${c.colorIdx}" style="width:38px;height:38px;font-size:.9rem;border-radius:8px">${c.name.slice(0,2).toUpperCase()}</div>
         <div>
-          <div style="display:flex;align-items:center;gap:7px">
+          <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
             <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.04em">${c.name}</span>
             <span class="pos-badge pos-${c.position||'Attack'}">${c.position||''}</span>
+            ${c.grade?`<span class="grade-badge grade-${c.grade==='7/8'?'78':'56'}">${c.grade}</span>`:''}
           </div>
           <div class="mgr-sub">${total} mins · ${count} session${count!==1?'s':''}</div>
         </div>
@@ -766,11 +828,13 @@ window.addChild = async () => {
   if (!currentUser) return;
   const name     = document.getElementById('add-name').value.trim();
   const position = document.getElementById('add-position').value;
+  const grade    = document.getElementById('add-grade').value;
   if (!name)     { toast('Enter a player name!',true); return; }
   if (!position) { toast('Select a position!',true); return; }
+  if (!grade)    { toast('Select a grade!',true); return; }
   if (myChildren.find(c=>c.name.toLowerCase()===name.toLowerCase())) { toast('Player already on your roster!',true); return; }
   await addDoc(collection(db,'children'),{
-    name, position,
+    name, position, grade,
     uid: currentUser.uid,
     ownerName: currentUser.displayName || currentUser.email,
     colorIdx: allChildren.length % 6,
@@ -778,6 +842,7 @@ window.addChild = async () => {
   });
   document.getElementById('add-name').value='';
   document.getElementById('add-position').value='';
+  document.getElementById('add-grade').value='';
   toast(`${name} added to your roster!`);
 };
 
