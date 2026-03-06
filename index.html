@@ -245,8 +245,11 @@
   .grade-select { padding:8px 36px 8px 14px; border-radius:50px; border:2px solid var(--border); background:var(--chalk); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.88rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9e8a' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; transition:border-color .2s; }
   .grade-select:hover, .grade-select:focus { border-color:var(--grass); outline:none; }
   .grade-badge { display:inline-block; padding:2px 9px; border-radius:50px; font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.07em; }
+  .grade-HS { background:#e0e7ff; color:#1e3a8a; }
   .grade-78 { background:#fef3c7; color:#92400e; }
   .grade-56 { background:#dbeafe; color:#1e40af; }
+  .grade-34 { background:#dcfce7; color:#166534; }
+  .grade-12 { background:#f3e8ff; color:#6b21a8; }
   .divider { height:1px; background:var(--border); margin:16px 0; }
   .section-label { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--text-lt); margin-bottom:9px; }
   .my-label { display:inline-block; padding:2px 8px; border-radius:4px; background:#dcfce7; color:var(--grass-dk); font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; margin-left:6px; }
@@ -365,8 +368,11 @@
             <label>Grade</label>
             <select id="add-grade">
               <option value="" disabled selected>Select grade…</option>
+              <option value="HS">High School</option>
               <option value="7/8">7th / 8th Grade</option>
               <option value="5/6">5th / 6th Grade</option>
+              <option value="3/4">3rd / 4th Grade</option>
+              <option value="1/2">1st / 2nd Grade</option>
             </select>
           </div>
         </div>
@@ -420,8 +426,11 @@
         <span class="grade-filter-label">🎓 Grade:</span>
         <select class="grade-select" id="lb-grade-select" onchange="onGradeChange()">
           <option value="all">All Grades</option>
+          <option value="HS">High School</option>
           <option value="7/8">7th / 8th Grade</option>
           <option value="5/6">5th / 6th Grade</option>
+          <option value="3/4">3rd / 4th Grade</option>
+          <option value="1/2">1st / 2nd Grade</option>
         </select>
       </div>
 
@@ -762,8 +771,11 @@ window.onGradeChange = function() {
 };
 
 function gradeLabel() {
+  if (activeLbGrade === 'HS')  return 'High School';
   if (activeLbGrade === '7/8') return '7th / 8th Grade';
   if (activeLbGrade === '5/6') return '5th / 6th Grade';
+  if (activeLbGrade === '3/4') return '3rd / 4th Grade';
+  if (activeLbGrade === '1/2') return '1st / 2nd Grade';
   return 'All Grades';
 }
 
@@ -811,7 +823,7 @@ function renderManage() {
           <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
             <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.04em">${c.name}</span>
             <span class="pos-badge pos-${c.position||'Attack'}">${c.position||''}</span>
-            ${c.grade?`<span class="grade-badge grade-${c.grade==='7/8'?'78':'56'}">${c.grade}</span>`:''}
+            ${c.grade?`<span class="grade-badge grade-${({'HS':'HS','7/8':'78','5/6':'56','3/4':'34','1/2':'12'}[c.grade]||'78')}">${c.grade}</span>`:''}
           </div>
           <div class="mgr-sub">${total} mins · ${count} session${count!==1?'s':''}</div>
         </div>
