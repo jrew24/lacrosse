@@ -102,7 +102,8 @@
   .lb-tab.wallballs.on  { background:linear-gradient(135deg,#2196c4,#38bdf8); }
   .lb-tab.groundballs.on{ background:linear-gradient(135deg,#1a7a3a,#22a04d); }
   .lb-tab.footwork.on      { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
-  .lb-tab.goaliedrills.on{ background:linear-gradient(135deg,#0f4d24,#1a7a3a); }
+  .lb-tab.goaliedrills.on  { background:linear-gradient(135deg,#0f4d24,#1a7a3a); }
+  .lb-tab.faceoffdrills.on { background:linear-gradient(135deg,#b45309,#d97706); }
   .lb-panel { display:none; }
   .lb-panel.on { display:block; }
 
@@ -403,8 +404,10 @@
             <label for="d-groundballs">⬇️ Ground Balls</label>
             <input type="checkbox" class="drill-toggle" id="d-footwork"      value="Footwork">
             <label for="d-footwork">👟 Footwork</label>
-            <input type="checkbox" class="drill-toggle" id="d-goaliedrills" value="Goalie Drills">
+            <input type="checkbox" class="drill-toggle" id="d-goaliedrills"  value="Goalie Drills">
             <label for="d-goaliedrills">🥅 Goalie Drills</label>
+            <input type="checkbox" class="drill-toggle" id="d-faceoffdrills" value="Faceoff Drills">
+            <label for="d-faceoffdrills">🤜 Faceoff Drills</label>
           </div>
           <div style="margin-top:16px;display:flex;justify-content:flex-end">
             <button class="btn btn-green" onclick="logSession()">Log Session ✓</button>
@@ -440,7 +443,8 @@
         <button class="lb-tab wallballs"    onclick="goLbTab('wallballs',this)">🧱 Wall Balls</button>
         <button class="lb-tab groundballs"  onclick="goLbTab('groundballs',this)">⬇️ Ground Balls</button>
         <button class="lb-tab footwork"     onclick="goLbTab('footwork',this)">👟 Footwork</button>
-        <button class="lb-tab goaliedrills" onclick="goLbTab('goaliedrills',this)">🥅 Goalie Drills</button>
+        <button class="lb-tab goaliedrills"   onclick="goLbTab('goaliedrills',this)">🥅 Goalie Drills</button>
+        <button class="lb-tab faceoffdrills"  onclick="goLbTab('faceoffdrills',this)">🤜 Faceoff Drills</button>
       </div>
       <div class="lb-panel on" id="lbp-total">
         <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🏆</span><div><div class="drill-board-title">Total Practice Time</div><div class="drill-board-sub" id="lbs-total">All grades · all sessions</div></div></div><div id="lb-total"></div></div>
@@ -459,6 +463,9 @@
       </div>
       <div class="lb-panel" id="lbp-goaliedrills">
         <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🥅</span><div><div class="drill-board-title">Goalie Drills</div><div class="drill-board-sub" id="lbs-goaliedrills">All grades · goalie drill sessions</div></div></div><div id="lb-goaliedrills"></div></div>
+      </div>
+      <div class="lb-panel" id="lbp-faceoffdrills">
+        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🤜</span><div><div class="drill-board-title">Faceoff Drills</div><div class="drill-board-sub" id="lbs-faceoffdrills">All grades · faceoff drill sessions</div></div></div><div id="lb-faceoffdrills"></div></div>
       </div>
     </div>
 
@@ -508,7 +515,8 @@ const DRILLS = [
   { key:'Wall Balls',    id:'d-wallballs',    emoji:'🧱', accent:'#2196c4', cls:'wallballs'    },
   { key:'Ground Balls',  id:'d-groundballs',  emoji:'⬇️', accent:'#1a7a3a', cls:'groundballs'  },
   { key:'Footwork',      id:'d-footwork',     emoji:'👟', accent:'#7c3aed', cls:'footwork'     },
-  { key:'Goalie Drills', id:'d-goaliedrills', emoji:'🥅', accent:'#0f4d24', cls:'goaliedrills' },
+  { key:'Goalie Drills',  id:'d-goaliedrills',  emoji:'🥅', accent:'#0f4d24', cls:'goaliedrills'  },
+  { key:'Faceoff Drills', id:'d-faceoffdrills', emoji:'🤜', accent:'#b45309', cls:'faceoffdrills' },
 ];
 
 let currentUser  = null;
@@ -790,7 +798,8 @@ function renderAllLeaderboards() {
   document.getElementById('lbs-wallballs').textContent    = gl + ' · wall ball sessions';
   document.getElementById('lbs-groundballs').textContent  = gl + ' · ground ball sessions';
   document.getElementById('lbs-footwork').textContent     = gl + ' · footwork sessions';
-  document.getElementById('lbs-goaliedrills').textContent = gl + ' · goalie drill sessions';
+  document.getElementById('lbs-goaliedrills').textContent  = gl + ' · goalie drill sessions';
+  document.getElementById('lbs-faceoffdrills').textContent = gl + ' · faceoff drill sessions';
 
   // Total time board
   const totalRanked = filtered.map(c=>({
