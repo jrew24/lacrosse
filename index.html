@@ -232,6 +232,13 @@
   #toast.show { transform:translateX(-50%) translateY(0); }
   #toast.bad { background:var(--red); }
 
+  /* ── Session timeout warning ── */
+  #session-warning { position:fixed; top:0; left:0; right:0; z-index:300; background:linear-gradient(135deg,#92400e,#b45309); color:#fff; padding:12px 20px; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.06em; box-shadow:0 4px 20px rgba(0,0,0,.25); animation:slideDown .4s cubic-bezier(.34,1.56,.64,1); }
+  #session-warning.hidden { display:none; }
+  @keyframes slideDown { from{transform:translateY(-100%)} to{transform:translateY(0)} }
+  #session-warning .sw-btn { padding:6px 16px; border-radius:50px; border:2px solid rgba(255,255,255,.6); background:rgba(255,255,255,.15); color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; transition:background .2s; }
+  #session-warning .sw-btn:hover { background:rgba(255,255,255,.3); }
+
   /* ── Spinner ── */
   .spinner-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px; gap:14px; }
   .spinner { width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--grass);border-radius:50%;animation:spin .7s linear infinite; }
@@ -506,6 +513,11 @@
   </div>
 </div>
 
+<div id="session-warning" class="hidden">
+  ⏱ Your session will expire in 1 minute due to inactivity.
+  <button class="sw-btn" onclick="resetSessionTimer()">Stay Signed In</button>
+  <button class="sw-btn" onclick="window.signOut()">Sign Out</button>
+</div>
 <div id="toast"></div>
 
 <script type="module">
@@ -553,6 +565,49 @@ let pendingAction = null;
 
 let unsubMyKids, unsubAllKids, unsubMySess, unsubAllSess;
 
+// ── Session timeout (15 min inactivity) ──────────────────
+const SESSION_TIMEOUT_MS  = 15 * 60 * 1000;  // 15 minutes
+const SESSION_WARNING_MS  = 60 * 1000;        // warn 1 min before
+let sessionTimer   = null;
+let sessionWarning = null;
+
+function resetSessionTimer() {
+  if (!currentUser) return;
+  clearTimeout(sessionTimer);
+  clearTimeout(sessionWarning);
+  dismissTimeoutWarning();
+  sessionWarning = setTimeout(showTimeoutWarning,  SESSION_TIMEOUT_MS - SESSION_WARNING_MS);
+  sessionTimer   = setTimeout(forceSessionTimeout, SESSION_TIMEOUT_MS);
+}
+
+function stopSessionTimer() {
+  clearTimeout(sessionTimer);
+  clearTimeout(sessionWarning);
+  dismissTimeoutWarning();
+  sessionTimer = sessionWarning = null;
+}
+
+async function forceSessionTimeout() {
+  dismissTimeoutWarning();
+  await fbSignOut(auth);
+  toast('Session expired — please sign in again.', true);
+}
+
+function showTimeoutWarning() {
+  const el = document.getElementById('session-warning');
+  if (el) el.classList.remove('hidden');
+}
+
+function dismissTimeoutWarning() {
+  const el = document.getElementById('session-warning');
+  if (el) el.classList.add('hidden');
+}
+
+// Reset timer on any meaningful user interaction
+['click','keydown','mousemove','touchstart','scroll'].forEach(evt =>
+  document.addEventListener(evt, () => { if (currentUser) resetSessionTimer(); }, { passive: true })
+);
+
 // ── Auth state ────────────────────────────────────────────
 onAuthStateChanged(auth, async user => {
   document.getElementById('init-loading').style.display = 'none';
@@ -583,11 +638,13 @@ onAuthStateChanged(auth, async user => {
     document.getElementById('hero-email').textContent     = user.displayName || user.email;
     await loadAdminPassword();
     startListeners();
+    resetSessionTimer();
   } else {
     currentUser = null;
     currentSchoolCode = null;
     allSchoolCodes = [];
     stopListeners();
+    stopSessionTimer();
     document.getElementById('app-body').style.display    = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('hero-auth').style.display   = 'none';
@@ -670,6 +727,7 @@ window.doSignIn = async () => {
   if (!email||!pass) { errEl.textContent='Please fill in all fields.'; return; }
   try {
     await signInWithEmailAndPassword(auth, email, pass);
+    resetSessionTimer();
   } catch(e) {
     errEl.textContent = friendlyAuthError(e.code);
   }
