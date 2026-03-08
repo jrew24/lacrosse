@@ -319,6 +319,7 @@
         <div class="auth-fields">
           <div class="auth-field"><label>Your Name</label><input type="text" id="su-name" placeholder="e.g. Coach Smith" onkeydown="if(event.key==='Enter')doSignUp()"></div>
           <div class="auth-field"><label>Email</label><input type="email" id="su-email" placeholder="parent@email.com" onkeydown="if(event.key==='Enter')doSignUp()"></div>
+          <div class="auth-field"><label>School Code</label><input type="text" id="su-code" placeholder="Ask your coach for the school code" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')doSignUp()"></div>
           <div class="auth-field"><label>Password</label><input type="password" id="su-pass" placeholder="Min. 6 characters" onkeydown="if(event.key==='Enter')doSignUp()"></div>
         </div>
         <div class="auth-err" id="su-err"></div>
@@ -473,14 +474,33 @@
     <div class="panel" id="tab-manage">
       <div class="card">
         <div class="card-title"><span>⚙️</span> My Players</div>
-        <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:2px">You can remove your own players. Admin password required to reset all data.</p>
+        <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:2px">You can remove your own players.</p>
+        <div id="school-display" style="font-size:.85rem;color:var(--grass);font-weight:700;margin-bottom:10px">🏫 School: <span id="current-school-display">Loading...</span></div>
         <div class="mgr-list" id="mgr-list"><div class="empty"><span class="ei">👤</span>No players yet.</div></div>
       </div>
-      <div class="card danger-card">
-        <div class="card-title" style="color:var(--red)"><span>🗑️</span> Admin: Reset All Data</div>
-        <p style="color:var(--text-md);font-size:.9rem;margin-bottom:14px">🔒 Permanently deletes every player and session across all accounts.</p>
-        <button class="btn btn-red" onclick="guardedAction('reset')">Reset Everything</button>
+      <div id="admin-section" style="display:none">
+        <div class="card">
+          <div class="card-title"><span>🏫</span> Admin: Create School Code</div>
+          <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:14px">Create a school code for parents/coaches to use when signing up.</p>
+          <div class="fields f2" style="margin-bottom:12px">
+            <div class="f"><label>School Name</label><input type="text" id="new-school-name" placeholder="e.g. Lakewood High School"></div>
+            <div class="f"><label>School Code</label><input type="text" id="new-school-code" placeholder="e.g. LAKEWOOD2025" style="text-transform:uppercase" maxlength="20"></div>
+          </div>
+          <button class="btn btn-green" onclick="createSchoolCode()">Create Code ＋</button>
+          <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border)">
+            <p style="font-size:.8rem;color:var(--text-lt);font-weight:700;margin-bottom:10px;text-transform:uppercase">Existing Codes:</p>
+            <div id="school-codes-list" style="font-size:.9rem;color:var(--text-md)"><span style="color:var(--text-lt)">None yet</span></div>
+          </div>
+        </div>
+
+        <div class="card danger-card">
+          <div class="card-title" style="color:var(--red)"><span>🗑️</span> Admin: Reset All Data</div>
+          <p style="color:var(--text-md);font-size:.9rem;margin-bottom:14px">🔒 Permanently deletes every player and session in your school.</p>
+          <button class="btn btn-red" onclick="guardedAction('reset')">Reset Everything</button>
+        </div>
       </div>
+
+      <button id="admin-unlock-btn" class="btn btn-green" onclick="unlockAdminSection()" style="margin-top:20px">🔓 Unlock Admin Section</button>
     </div>
 
   </div>
@@ -490,7 +510,7 @@
 
 <script type="module">
 import { initializeApp }        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, addDoc, deleteDoc,
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, deleteDoc, getDocs,
          onSnapshot, query, where, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
@@ -500,7 +520,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
 // ── 🔥 REPLACE WITH YOUR FIREBASE CONFIG ───────────────────
 const firebaseConfig = {
   apiKey:      "AIzaSyBhb2NkSfvAWdgrDmN15QaJxi9D0MW28Hw",
-  authDomain:  "lacrosse-8cac2.firebaseapp.comm",
+  authDomain:  "lacrosse-8cac2.firebaseapp.com",
   projectId:   "lacrosse-8cac2",
   appId:       "1:98850780334:web:76356f8230b503121b693f"
 };
@@ -520,10 +540,12 @@ const DRILLS = [
 ];
 
 let currentUser  = null;
+let currentSchoolCode = null;  // Track the user's school code
+let allSchoolCodes = [];       // Available school codes
 let myChildren   = [];   // current user's players
-let allChildren  = [];   // everyone's players (for leaderboard)
+let allChildren  = [];   // all players from same school (for leaderboard)
 let mySessions   = [];   // current user's sessions
-let allSessions  = [];   // everyone's sessions (for leaderboard)
+let allSessions  = [];   // all sessions from same school (for leaderboard)
 let selId        = null;
 let adminPassword = null;
 let authUntil    = 0;
@@ -536,6 +558,25 @@ onAuthStateChanged(auth, async user => {
   document.getElementById('init-loading').style.display = 'none';
   if (user) {
     currentUser = user;
+    // Load user's school code — retry briefly in case the Firestore write
+    // (from doSignUp) hasn't fully propagated yet when this fires.
+    let userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (!userDoc.exists()) {
+      await new Promise(r => setTimeout(r, 1200));
+      userDoc = await getDoc(doc(db, 'users', user.uid));
+    }
+    currentSchoolCode = userDoc.exists() ? userDoc.data().schoolCode : null;
+    
+    // Load all school codes for reference
+    const schoolsSnap = await getDocs(collection(db, 'schoolCodes'));
+    allSchoolCodes = schoolsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    if (!currentSchoolCode) {
+      // User signed in but has no school code (shouldn't happen in normal flow)
+      toast('Error: No school code found. Please contact an admin.', true);
+      return;
+    }
+    
     document.getElementById('auth-screen').style.display  = 'none';
     document.getElementById('app-body').style.display     = 'block';
     document.getElementById('hero-auth').style.display    = 'flex';
@@ -544,6 +585,8 @@ onAuthStateChanged(auth, async user => {
     startListeners();
   } else {
     currentUser = null;
+    currentSchoolCode = null;
+    allSchoolCodes = [];
     stopListeners();
     document.getElementById('app-body').style.display    = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
@@ -571,13 +614,15 @@ function startListeners() {
   const myKidsQ = query(collection(db,'children'), where('uid','==',currentUser.uid), orderBy('createdAt'));
   unsubMyKids = onSnapshot(myKidsQ, snap => {
     myChildren = snap.docs.map(d=>({id:d.id,...d.data()}));
+    console.log('My players loaded:', myChildren.length);
     renderStats(); renderChips(); renderSessions();
   }, err => { setSync('bad','Error'); toast(err.message,true); });
 
-  // All players (for leaderboard)
-  const allKidsQ = query(collection(db,'children'), orderBy('createdAt'));
+  // All players from same school (for leaderboard) - no orderBy to avoid index requirement
+  const allKidsQ = query(collection(db,'children'), where('schoolCode','==',currentSchoolCode));
   unsubAllKids = onSnapshot(allKidsQ, snap => {
-    allChildren = snap.docs.map(d=>({id:d.id,...d.data()}));
+    allChildren = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+    console.log('All players (leaderboard):', allChildren.length, 'schoolCode:', currentSchoolCode);
     if (document.getElementById('tab-board').classList.contains('on')) renderAllLeaderboards();
   });
 
@@ -585,14 +630,16 @@ function startListeners() {
   const mySessQ = query(collection(db,'sessions'), where('uid','==',currentUser.uid), orderBy('date'));
   unsubMySess = onSnapshot(mySessQ, snap => {
     mySessions = snap.docs.map(d=>({id:d.id,...d.data()}));
+    console.log('My sessions loaded:', mySessions.length);
     renderStats(); renderSessions();
     setSync('ok','Live · Field Ready');
   }, err => { setSync('bad','Error'); toast(err.message,true); });
 
-  // All sessions (for leaderboard)
-  const allSessQ = query(collection(db,'sessions'), orderBy('date'));
+  // All sessions from same school (for leaderboard) - no orderBy to avoid index requirement
+  const allSessQ = query(collection(db,'sessions'), where('schoolCode','==',currentSchoolCode));
   unsubAllSess = onSnapshot(allSessQ, snap => {
-    allSessions = snap.docs.map(d=>({id:d.id,...d.data()}));
+    allSessions = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+    console.log('All sessions (leaderboard):', allSessions.length, 'schoolCode:', currentSchoolCode);
     if (document.getElementById('tab-board').classList.contains('on')) renderAllLeaderboards();
   });
 }
@@ -611,6 +658,10 @@ window.switchView = v => {
   document.getElementById('view-signup').style.display = v==='signup' ? 'block':'none';
 };
 
+async function loadAvailableSchools() {
+  // No longer needed - parents enter school code manually
+}
+
 window.doSignIn = async () => {
   const email = document.getElementById('si-email').value.trim();
   const pass  = document.getElementById('si-pass').value;
@@ -627,14 +678,38 @@ window.doSignIn = async () => {
 window.doSignUp = async () => {
   const name  = document.getElementById('su-name').value.trim();
   const email = document.getElementById('su-email').value.trim();
+  const code  = document.getElementById('su-code').value.trim().toUpperCase();
   const pass  = document.getElementById('su-pass').value;
   const errEl = document.getElementById('su-err');
   errEl.textContent = '';
-  if (!name||!email||!pass) { errEl.textContent='Please fill in all fields.'; return; }
+  if (!name||!email||!code||!pass) { errEl.textContent='Please fill in all fields.'; return; }
   if (pass.length < 6) { errEl.textContent='Password must be at least 6 characters.'; return; }
+  if (code.length < 3) { errEl.textContent='School code must be at least 3 characters.'; return; }
+  // Check school code existence BEFORE any auth call
+  try {
+    const schoolCodeDoc = await getDoc(doc(db, 'schoolCodes', code));
+    if (!schoolCodeDoc.exists()) {
+      errEl.textContent = 'Invalid school code. Please check and try again.';
+      return;
+    }
+  } catch (e) {
+    errEl.textContent = 'Error checking school code. Please try again.';
+    return;
+  }
+  // Now create auth user — write profile + user doc together BEFORE
+  // onAuthStateChanged can read them, eliminating the race condition.
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    await updateProfile(cred.user, { displayName: name });
+    await Promise.all([
+      updateProfile(cred.user, { displayName: name }),
+      setDoc(doc(db, 'users', cred.user.uid), {
+        uid: cred.user.uid,
+        schoolCode: code,
+        createdAt: new Date().toISOString()
+      })
+    ]);
+    // Re-trigger onAuthStateChanged so it re-reads the now-complete user doc.
+    await cred.user.reload();
   } catch(e) {
     errEl.textContent = friendlyAuthError(e.code);
   }
@@ -673,13 +748,34 @@ window.confirmPassword = () => {
   if (val === adminPassword) {
     authUntil = Date.now() + 5*60*1000;
     document.getElementById('pw-modal').classList.add('hidden');
-    if (pendingAction) { runAction(pendingAction.action, pendingAction.id); pendingAction=null; }
+    if (pendingAction) {
+      if (pendingAction.action === 'unlockAdmin') {
+        document.getElementById('admin-section').style.display = 'block';
+        document.getElementById('admin-unlock-btn').style.display = 'none';
+      } else {
+        runAction(pendingAction.action, pendingAction.id);
+      }
+      pendingAction = null;
+    }
   } else {
     const inp = document.getElementById('pw-input');
     document.getElementById('pw-error').textContent = 'Incorrect password — try again';
     inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
     inp.value=''; setTimeout(()=>inp.focus(),50);
   }
+};
+
+window.unlockAdminSection = () => {
+  if (!adminPassword || Date.now() < authUntil) {
+    document.getElementById('admin-section').style.display = 'block';
+    document.getElementById('admin-unlock-btn').style.display = 'none';
+    return;
+  }
+  pendingAction = {action: 'unlockAdmin'};
+  document.getElementById('pw-input').value='';
+  document.getElementById('pw-error').textContent='';
+  document.getElementById('pw-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('pw-input').focus(),80);
 };
 
 window.cancelPassword = () => { pendingAction=null; document.getElementById('pw-modal').classList.add('hidden'); };
@@ -792,6 +888,10 @@ function renderAllLeaderboards() {
     ? allChildren
     : allChildren.filter(c => c.grade === activeLbGrade);
 
+  // DEBUG: Show what we're working with
+  const debugInfo = `School: ${currentSchoolCode} | All Players: ${allChildren.length} | Filtered: ${filtered.length} | Sessions: ${allSessions.length}`;
+  console.log(debugInfo);
+
   const gl = gradeLabel();
   document.getElementById('lbs-total').textContent        = gl + ' · all sessions';
   document.getElementById('lbs-shooting').textContent     = gl + ' · shooting sessions';
@@ -821,6 +921,17 @@ function renderAllLeaderboards() {
 
 function renderManage() {
   const list=document.getElementById('mgr-list');
+  
+  // Display current school code
+  const schoolDisplay = document.getElementById('current-school-display');
+  if (currentSchoolCode) {
+    const schoolData = allSchoolCodes.find(s => s.id === currentSchoolCode);
+    schoolDisplay.textContent = `${schoolData ? schoolData.name : 'Unknown'} (${currentSchoolCode})`;
+  } else {
+    schoolDisplay.textContent = 'Not set';
+    schoolDisplay.style.color = 'var(--red)';
+  }
+  
   if (!myChildren.length){list.innerHTML=`<div class="empty"><span class="ei">👤</span>No players yet.</div>`;return;}
   list.innerHTML=myChildren.map(c=>{
     const total=mySessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0);
@@ -840,7 +951,238 @@ function renderManage() {
       <button class="btn-sm" onclick="window.guardedAction('removeChild','${c.id}')">✕ Remove</button>
     </div>`;
   }).join('');
+  renderSchoolCodesDisplay();
 }
+
+async function renderSchoolCodesDisplay() {
+  try {
+    const snap = await getDocs(collection(db, 'schoolCodes'));
+    const codes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const listEl = document.getElementById('school-codes-list');
+    if (codes.length === 0) {
+      listEl.innerHTML = `<span style="color:var(--text-lt)">No school codes yet</span>`;
+    } else {
+      listEl.innerHTML = codes.map(c => `
+        <div style="margin-bottom:8px;padding:8px;background:var(--chalk);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">${c.name}</div>
+            <div style="font-size:.8rem;color:var(--text-lt);font-family:monospace">${c.id}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    console.error('Error loading school codes:', e);
+  }
+}
+
+window.createSchoolCode = async () => {
+  const name = document.getElementById('new-school-name').value.trim();
+  const code = document.getElementById('new-school-code').value.trim().toUpperCase();
+  if (!name || !code) {
+    toast('Please fill in school name and code', true);
+    return;
+  }
+  if (code.length < 3) {
+    toast('School code must be at least 3 characters', true);
+    return;
+  }
+  try {
+    await setDoc(doc(db, 'schoolCodes', code), {
+      name: name,
+      createdAt: new Date().toISOString()
+    });
+    document.getElementById('new-school-name').value = '';
+    document.getElementById('new-school-code').value = '';
+    toast(`School code "${code}" created!`);
+    renderSchoolCodesDisplay();
+  } catch(e) {
+    toast('Error creating school code: ' + e.message, true);
+  }
+};
+
+window.bulkAddParentsToUsersCollection = async () => {
+  const input = document.getElementById('bulk-uids-input').value.trim();
+  if (!input) {
+    toast('Please paste User IDs', true);
+    return;
+  }
+  
+  const uids = input.split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0);
+  
+  if (uids.length === 0) {
+    toast('No valid User IDs found', true);
+    return;
+  }
+  
+  if (!confirm(`Create ${uids.length} user document(s)?`)) return;
+  
+  try {
+    let created = 0;
+    for (const uid of uids) {
+      try {
+        await setDoc(doc(db, 'users', uid), {
+          uid: uid,
+          createdAt: new Date().toISOString(),
+          schoolCode: 'BOERNELACROSSE2026',
+          schoolName: 'Boerne'
+        });
+        created++;
+      } catch(e) {
+        console.error(`Failed to create user ${uid}:`, e.message);
+      }
+    }
+    document.getElementById('bulk-uids-input').value = '';
+    toast(`Created ${created}/${uids.length} user document(s)`);
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  }
+};
+
+window.addParentToUsersCollection = async () => {
+  const uid = document.getElementById('add-uid-input').value.trim();
+  if (!uid) {
+    toast('Please enter a Firebase User ID', true);
+    return;
+  }
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      uid: uid,
+      createdAt: new Date().toISOString(),
+      schoolCode: 'BOERNELACROSSE2026',
+      schoolName: 'Boerne'
+    });
+    document.getElementById('add-uid-input').value = '';
+    toast(`User ${uid} added with schoolCode BOERNELACROSSE2026`);
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  }
+};
+
+window.bulkCreateUserDocuments = async () => {
+  const output = document.getElementById('verify-output');
+  output.style.display = 'block';
+  output.textContent = 'Scanning database...';
+
+  try {
+    // Get all players
+    const childSnap = await getDocs(collection(db, 'children'));
+    const players = childSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Get all sessions
+    const sessSnap = await getDocs(collection(db, 'sessions'));
+    const sessions = sessSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Count by schoolCode
+    const playersByCode = {};
+    const sessionsByCode = {};
+
+    players.forEach(p => {
+      const code = p.schoolCode || '(no schoolCode)';
+      playersByCode[code] = (playersByCode[code] || 0) + 1;
+    });
+
+    sessions.forEach(s => {
+      const code = s.schoolCode || '(no schoolCode)';
+      sessionsByCode[code] = (sessionsByCode[code] || 0) + 1;
+    });
+
+    // Build output
+    let report = `═══════════════════════════════════\nDATABASE VERIFICATION REPORT\n═══════════════════════════════════\n\n`;
+
+    report += `PLAYERS (Total: ${players.length})\n`;
+    report += `───────────────────────────────────\n`;
+    Object.entries(playersByCode).forEach(([code, count]) => {
+      report += `  ${code}: ${count}\n`;
+    });
+
+    report += `\nSESSIONS (Total: ${sessions.length})\n`;
+    report += `───────────────────────────────────\n`;
+    Object.entries(sessionsByCode).forEach(([code, count]) => {
+      report += `  ${code}: ${count}\n`;
+    });
+
+    report += `\nYOUR SCHOOL CODE\n`;
+    report += `───────────────────────────────────\n`;
+    report += `  ${currentSchoolCode}\n`;
+
+    report += `\nMATCH STATUS\n`;
+    report += `───────────────────────────────────\n`;
+    const playersInYourSchool = playersByCode[currentSchoolCode] || 0;
+    const sessionsInYourSchool = sessionsByCode[currentSchoolCode] || 0;
+    report += `  Players: ${playersInYourSchool}\n`;
+    report += `  Sessions: ${sessionsInYourSchool}\n`;
+
+    if (playersInYourSchool === 0) {
+      report += `\n⚠️ NO PLAYERS with your schoolCode!\n`;
+      if (playersByCode['(no schoolCode)']) {
+        report += `💡 Found ${playersByCode['(no schoolCode)']} players with NO schoolCode\n`;
+        report += `   → Try "Update ALL Players" button\n`;
+      }
+    }
+    if (sessionsInYourSchool === 0) {
+      report += `\n⚠️ NO SESSIONS with your schoolCode!\n`;
+      if (sessionsByCode['(no schoolCode)']) {
+        report += `💡 Found ${sessionsByCode['(no schoolCode)']} sessions with NO schoolCode\n`;
+        report += `   → Try "Update ALL Sessions" button\n`;
+      }
+    }
+
+    output.textContent = report;
+  } catch(e) {
+    output.textContent = `ERROR: ${e.message}`;
+  }
+};
+
+window.bulkUpdateAllPlayersInDatabase = async () => {
+  const schoolCode = 'BOERNELACROSSE2026';
+  if (!confirm(`Update ALL players in the database with schoolCode "${schoolCode}"?`)) return;
+  try {
+    setSync('busy', 'Updating all players...');
+    const childSnap = await getDocs(collection(db, 'children'));
+    let updated = 0;
+
+    for (const childDoc of childSnap.docs) {
+      const child = childDoc.data();
+      await setDoc(doc(db, 'children', childDoc.id), { 
+        ...child, 
+        schoolCode: schoolCode 
+      });
+      updated++;
+    }
+    setSync('ok', 'Live · Field Ready');
+    toast(`Updated ${updated} player(s) with schoolCode "${schoolCode}"`);
+  } catch(e) {
+    setSync('bad', 'Error');
+    toast('Error updating players: ' + e.message, true);
+  }
+};
+
+window.bulkUpdateAllSessionsInDatabase = async () => {
+  const schoolCode = 'BOERNELACROSSE2026';
+  if (!confirm(`Update ALL sessions in the database with schoolCode "${schoolCode}"?`)) return;
+  try {
+    setSync('busy', 'Updating all sessions...');
+    const sessSnap = await getDocs(collection(db, 'sessions'));
+    let updated = 0;
+
+    for (const sessDoc of sessSnap.docs) {
+      const sess = sessDoc.data();
+      await setDoc(doc(db, 'sessions', sessDoc.id), { 
+        ...sess, 
+        schoolCode: schoolCode 
+      });
+      updated++;
+    }
+    setSync('ok', 'Live · Field Ready');
+    toast(`Updated ${updated} session(s) with schoolCode "${schoolCode}"`);
+  } catch(e) {
+    setSync('bad', 'Error');
+    toast('Error updating sessions: ' + e.message, true);
+  }
+};
 
 // ── Actions ───────────────────────────────────────────────
 window._sel = id => { selId=id; renderChips(); renderSessions(); renderStats(); };
@@ -857,6 +1199,7 @@ window.addChild = async () => {
   await addDoc(collection(db,'children'),{
     name, position, grade,
     uid: currentUser.uid,
+    schoolCode: currentSchoolCode,
     ownerName: currentUser.displayName || currentUser.email,
     colorIdx: allChildren.length % 6,
     createdAt: new Date().toISOString()
@@ -876,6 +1219,7 @@ window.logSession = async () => {
   await addDoc(collection(db,'sessions'),{
     childId: selId,
     uid: currentUser.uid,
+    schoolCode: currentSchoolCode,
     minutes: mins, date, drills,
     loggedAt: new Date().toISOString()
   });
@@ -900,10 +1244,10 @@ async function doRemoveChild(id) {
 }
 
 async function doResetAll() {
-  if (!confirm('Delete EVERY player and session across all accounts? This cannot be undone.')) return;
+  if (!confirm('Delete all players and sessions for your school? This cannot be undone.')) return;
   await Promise.all(allSessions.map(s=>deleteDoc(doc(db,'sessions',s.id))));
   await Promise.all(allChildren.map(c=>deleteDoc(doc(db,'children',c.id))));
-  selId=null; toast('All data cleared');
+  selId=null; toast('All school data cleared');
 }
 
 // ── Tabs ──────────────────────────────────────────────────
