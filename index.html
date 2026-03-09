@@ -26,6 +26,8 @@
     --r: 16px;
   }
   * { box-sizing:border-box; margin:0; padding:0; }
+  html { transition: background-color .6s ease, color .6s ease; }
+  body, .hero, .card, .auth-card, .tabs, .tab, .stat-card, .btn-green { transition: background .6s ease, background-color .6s ease, border-color .6s ease, color .4s ease, box-shadow .6s ease; }
   body { font-family:'Barlow',sans-serif; background:var(--chalk); color:var(--text); min-height:100vh; overflow-x:hidden; }
 
   .field-bg { position:fixed; inset:0; z-index:0; pointer-events:none; background:repeating-linear-gradient(180deg,rgba(26,122,58,0.045) 0px,rgba(26,122,58,0.045) 60px,rgba(26,122,58,0.02) 60px,rgba(26,122,58,0.02) 120px); }
@@ -551,6 +553,106 @@ const DRILLS = [
   { key:'Faceoff Drills', id:'d-faceoffdrills', emoji:'🤜', accent:'#b45309', cls:'faceoffdrills' },
 ];
 
+// ── School themes ─────────────────────────────────────────
+const SCHOOL_THEMES = {
+  // Boerne Lacrosse — Navy & Silver
+  'BOERNE': {
+    name: 'Boerne Lacrosse',
+    primary:   '#1a2a5e',   // navy
+    primaryLt: '#2a3f8f',
+    primaryDk: '#0e1a3d',
+    accent:    '#a8b4c8',   // silver
+    accentDk:  '#7a8fa8',
+    field:     '#eaecf4',
+    chalk:     '#f0f2f8',
+    border:    '#c8cfe8',
+    text:      '#0d1220',
+    textMd:    '#3a4466',
+    textLt:    '#7a88aa',
+    shadow:    '0 4px 24px rgba(10,20,60,0.12)',
+    shadowLg:  '0 12px 48px rgba(10,20,60,0.18)',
+    bgStripe1: 'rgba(26,42,94,0.045)',
+    bgStripe2: 'rgba(26,42,94,0.02)',
+  },
+  // TMI — Orange & Black
+  'TMI': {
+    name: 'TMI',
+    primary:   '#c45000',   // deep orange
+    primaryLt: '#e86010',
+    primaryDk: '#7a3000',
+    accent:    '#f5a623',   // gold-orange
+    accentDk:  '#d4861a',
+    field:     '#fdf0e6',
+    chalk:     '#fdf5ee',
+    border:    '#f5d8b8',
+    text:      '#1a0d00',
+    textMd:    '#5a3a1a',
+    textLt:    '#a07040',
+    shadow:    '0 4px 24px rgba(80,30,0,0.12)',
+    shadowLg:  '0 12px 48px rgba(80,30,0,0.18)',
+    bgStripe1: 'rgba(196,80,0,0.045)',
+    bgStripe2: 'rgba(196,80,0,0.02)',
+  },
+  // Smithson Valley — Navy & White
+  'SV': {
+    name: 'Smithson Valley',
+    primary:   '#0d2060',   // navy
+    primaryLt: '#1a3494',
+    primaryDk: '#081440',
+    accent:    '#90a8d0',   // light blue-silver
+    accentDk:  '#6080b0',
+    field:     '#e8ecf8',
+    chalk:     '#f2f4fc',
+    border:    '#c0ccec',
+    text:      '#08102a',
+    textMd:    '#2a3a60',
+    textLt:    '#6878a8',
+    shadow:    '0 4px 24px rgba(8,16,60,0.12)',
+    shadowLg:  '0 12px 48px rgba(8,16,60,0.18)',
+    bgStripe1: 'rgba(13,32,96,0.045)',
+    bgStripe2: 'rgba(13,32,96,0.02)',
+  },
+};
+
+function applySchoolTheme(schoolCode) {
+  // Match by exact key first, then by checking if the school code *contains*
+  // a known keyword — handles any suffix/prefix users may have typed at signup.
+  let theme = SCHOOL_THEMES[schoolCode];
+  if (!theme && schoolCode) {
+    const upper = schoolCode.toUpperCase();
+    const matchKey = Object.keys(SCHOOL_THEMES).find(k => upper.includes(k) || k.includes(upper));
+    if (matchKey) theme = SCHOOL_THEMES[matchKey];
+  }
+  const root  = document.documentElement;
+  if (!theme) {
+    // Fall back to default green lacrosse theme
+    root.removeAttribute('data-school');
+    ['--grass','--grass-lt','--grass-dk','--field','--chalk','--gold','--gold-dk',
+     '--border','--text','--text-md','--text-lt','--shadow','--shadow-lg'].forEach(v => root.style.removeProperty(v));
+    document.querySelector('.field-bg').style.background = '';
+    document.title = 'Lax Practice Tracker 🥍';
+    return;
+  }
+  root.setAttribute('data-school', schoolCode);
+  root.style.setProperty('--grass',    theme.primary);
+  root.style.setProperty('--grass-lt', theme.primaryLt);
+  root.style.setProperty('--grass-dk', theme.primaryDk);
+  root.style.setProperty('--field',    theme.field);
+  root.style.setProperty('--chalk',    theme.chalk);
+  root.style.setProperty('--gold',     theme.accent);
+  root.style.setProperty('--gold-dk',  theme.accentDk);
+  root.style.setProperty('--border',   theme.border);
+  root.style.setProperty('--text',     theme.text);
+  root.style.setProperty('--text-md',  theme.textMd);
+  root.style.setProperty('--text-lt',  theme.textLt);
+  root.style.setProperty('--shadow',   theme.shadow);
+  root.style.setProperty('--shadow-lg',theme.shadowLg);
+  // Update the field-stripe background to match school color
+  document.querySelector('.field-bg').style.background =
+    `repeating-linear-gradient(180deg,${theme.bgStripe1} 0px,${theme.bgStripe1} 60px,${theme.bgStripe2} 60px,${theme.bgStripe2} 120px)`;
+  document.title = `${theme.name} · Lax Practice Tracker 🥍`;
+}
+
 let currentUser  = null;
 let currentSchoolCode = null;  // Track the user's school code
 let allSchoolCodes = [];       // Available school codes
@@ -632,6 +734,8 @@ onAuthStateChanged(auth, async user => {
       return;
     }
     
+    console.log('🏫 School code for this user:', currentSchoolCode);
+    applySchoolTheme(currentSchoolCode);
     document.getElementById('auth-screen').style.display  = 'none';
     document.getElementById('app-body').style.display     = 'block';
     document.getElementById('hero-auth').style.display    = 'flex';
@@ -645,6 +749,7 @@ onAuthStateChanged(auth, async user => {
     allSchoolCodes = [];
     stopListeners();
     stopSessionTimer();
+    applySchoolTheme(null);
     document.getElementById('app-body').style.display    = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('hero-auth').style.display   = 'none';
