@@ -319,7 +319,20 @@
         </div>
         <div class="auth-err" id="si-err"></div>
         <button class="btn btn-green btn-full" onclick="doSignIn()">Sign In →</button>
+        <div class="auth-toggle" style="margin-top:8px"><a onclick="switchView('reset')" style="font-size:.82rem">Forgot password?</a></div>
         <div class="auth-toggle">Don't have an account? <a onclick="switchView('signup')">Sign up</a></div>
+      </div>
+      <!-- Reset Password view -->
+      <div id="view-reset" style="display:none">
+        <h2>Reset Password</h2>
+        <p class="auth-sub">Enter your email and we'll send you a reset link</p>
+        <div class="auth-fields">
+          <div class="auth-field"><label>Email</label><input type="email" id="rp-email" placeholder="parent@email.com" onkeydown="if(event.key==='Enter')doResetPassword()"></div>
+        </div>
+        <div class="auth-err" id="rp-err"></div>
+        <div id="rp-ok" style="display:none;font-size:.85rem;font-weight:700;color:var(--grass);margin-bottom:12px">✓ Reset email sent — check your inbox!</div>
+        <button class="btn btn-green btn-full" onclick="doResetPassword()">Send Reset Email →</button>
+        <div class="auth-toggle">Remember your password? <a onclick="switchView('signin')">Sign in</a></div>
       </div>
       <!-- Sign Up view -->
       <div id="view-signup" style="display:none">
@@ -528,7 +541,7 @@ import { getFirestore, collection, doc, getDoc, setDoc, addDoc, deleteDoc, getDo
          onSnapshot, query, where, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-         onAuthStateChanged, signOut as fbSignOut, updateProfile }
+         onAuthStateChanged, signOut as fbSignOut, updateProfile, sendPasswordResetEmail }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // ── 🔥 REPLACE WITH YOUR FIREBASE CONFIG ───────────────────
@@ -818,6 +831,12 @@ async function loadAdminPassword() {
 window.switchView = v => {
   document.getElementById('view-signin').style.display = v==='signin' ? 'block':'none';
   document.getElementById('view-signup').style.display = v==='signup' ? 'block':'none';
+  document.getElementById('view-reset').style.display  = v==='reset'  ? 'block':'none';
+  if (v==='reset') {
+    document.getElementById('rp-err').textContent = '';
+    document.getElementById('rp-ok').style.display = 'none';
+    document.getElementById('rp-email').value = '';
+  }
 };
 
 async function loadAvailableSchools() {
@@ -833,6 +852,22 @@ window.doSignIn = async () => {
   try {
     await signInWithEmailAndPassword(auth, email, pass);
     resetSessionTimer();
+  } catch(e) {
+    errEl.textContent = friendlyAuthError(e.code);
+  }
+};
+
+window.doResetPassword = async () => {
+  const email  = document.getElementById('rp-email').value.trim();
+  const errEl  = document.getElementById('rp-err');
+  const okEl   = document.getElementById('rp-ok');
+  errEl.textContent = '';
+  okEl.style.display = 'none';
+  if (!email) { errEl.textContent = 'Please enter your email address.'; return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    okEl.style.display = 'block';
+    document.getElementById('rp-email').value = '';
   } catch(e) {
     errEl.textContent = friendlyAuthError(e.code);
   }
