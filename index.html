@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lax Practice Tracker 🥍</title>
+<title>RepLogger</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,800&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -26,6 +26,8 @@
     --r: 16px;
   }
   * { box-sizing:border-box; margin:0; padding:0; }
+  html { transition: background-color .6s ease, color .6s ease; }
+  body, .hero, .card, .auth-card, .tabs, .tab, .stat-card, .btn-green { transition: background .6s ease, background-color .6s ease, border-color .6s ease, color .4s ease, box-shadow .6s ease; }
   body { font-family:'Barlow',sans-serif; background:var(--chalk); color:var(--text); min-height:100vh; overflow-x:hidden; }
 
   .field-bg { position:fixed; inset:0; z-index:0; pointer-events:none; background:repeating-linear-gradient(180deg,rgba(26,122,58,0.045) 0px,rgba(26,122,58,0.045) 60px,rgba(26,122,58,0.02) 60px,rgba(26,122,58,0.02) 120px); }
@@ -35,8 +37,16 @@
   .hero::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 80px); }
   .hero::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:32px; background:var(--chalk); clip-path:ellipse(55% 100% at 50% 100%); }
   .hero-inner { position:relative; z-index:1; }
-  .lax-icon { font-size:4.5rem; display:block; animation:spinBounce 3s ease-in-out infinite; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
-  @keyframes spinBounce { 0%{transform:translateY(0) rotate(-8deg)} 25%{transform:translateY(-12px) rotate(8deg)} 50%{transform:translateY(0) rotate(-4deg)} 75%{transform:translateY(-6px) rotate(4deg)} 100%{transform:translateY(0) rotate(-8deg)} }
+  /* Sport icons row */
+  .sport-icons { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:4px; }
+  .sport-icon-btn { font-size:2.4rem; display:inline-flex; align-items:center; justify-content:center;
+    width:56px; height:56px; border-radius:14px; background:rgba(255,255,255,0.10);
+    border:2px solid rgba(255,255,255,0.18); transition:all .25s; cursor:default;
+    filter:drop-shadow(0 3px 8px rgba(0,0,0,0.25)); }
+  .sport-icon-btn.active { background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.7);
+    transform:translateY(-4px) scale(1.12); filter:drop-shadow(0 6px 16px rgba(0,0,0,0.35)); }
+  @keyframes floatIcon { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .sport-icon-btn.active { animation:floatIcon 2.8s ease-in-out infinite; }
   .hero h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(2.4rem,7vw,4.5rem); font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:2px; line-height:1; margin-top:10px; text-shadow:0 3px 16px rgba(0,0,0,0.3); }
   .hero h1 em { font-style:italic; color:var(--gold); display:block; font-size:0.85em; letter-spacing:4px; }
   .hero p { color:rgba(255,255,255,0.75); font-size:.95rem; font-weight:600; margin-top:8px; letter-spacing:.5px; }
@@ -232,6 +242,13 @@
   #toast.show { transform:translateX(-50%) translateY(0); }
   #toast.bad { background:var(--red); }
 
+  /* ── Session timeout warning ── */
+  #session-warning { position:fixed; top:0; left:0; right:0; z-index:300; background:linear-gradient(135deg,#92400e,#b45309); color:#fff; padding:12px 20px; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.95rem; text-transform:uppercase; letter-spacing:.06em; box-shadow:0 4px 20px rgba(0,0,0,.25); animation:slideDown .4s cubic-bezier(.34,1.56,.64,1); }
+  #session-warning.hidden { display:none; }
+  @keyframes slideDown { from{transform:translateY(-100%)} to{transform:translateY(0)} }
+  #session-warning .sw-btn { padding:6px 16px; border-radius:50px; border:2px solid rgba(255,255,255,.6); background:rgba(255,255,255,.15); color:#fff; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:.05em; cursor:pointer; transition:background .2s; }
+  #session-warning .sw-btn:hover { background:rgba(255,255,255,.3); }
+
   /* ── Spinner ── */
   .spinner-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px; gap:14px; }
   .spinner { width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--grass);border-radius:50%;animation:spin .7s linear infinite; }
@@ -281,9 +298,17 @@
 <!-- Hero -->
 <div class="hero">
   <div class="hero-inner">
-    <span class="lax-icon">🥍</span>
-    <h1>Lax<em>Practice Tracker</em></h1>
-    <p>Log your reps · Own the field · Top the board</p>
+    <div class="sport-icons" id="hero-sport-icons">
+      <span class="sport-icon-btn active" data-sport="lacrosse">🥍</span>
+      <span class="sport-icon-btn" data-sport="soccer">⚽</span>
+      <span class="sport-icon-btn" data-sport="baseball">⚾</span>
+      <span class="sport-icon-btn" data-sport="basketball">🏀</span>
+      <span class="sport-icon-btn" data-sport="football">🏈</span>
+      <span class="sport-icon-btn" data-sport="swimming">🏊</span>
+      <span class="sport-icon-btn" data-sport="golf">⛳</span>
+    </div>
+    <h1><span style="color:var(--gold)">Rep</span>Logger</h1>
+    <p id="hero-sport-sub">Log your reps · Own the field · Top the board</p>
     <div class="field-lines"><div class="field-line"></div><div class="field-line"></div><div class="field-line"></div></div>
     <div class="hero-auth" id="hero-auth" style="display:none">
       <span class="hero-user" id="hero-email"></span>
@@ -319,6 +344,7 @@
         <div class="auth-fields">
           <div class="auth-field"><label>Your Name</label><input type="text" id="su-name" placeholder="e.g. Coach Smith" onkeydown="if(event.key==='Enter')doSignUp()"></div>
           <div class="auth-field"><label>Email</label><input type="email" id="su-email" placeholder="parent@email.com" onkeydown="if(event.key==='Enter')doSignUp()"></div>
+          <div class="auth-field"><label>School Code</label><input type="text" id="su-code" placeholder="Ask your coach for the school code" style="text-transform:uppercase" onkeydown="if(event.key==='Enter')doSignUp()"></div>
           <div class="auth-field"><label>Password</label><input type="password" id="su-pass" placeholder="Min. 6 characters" onkeydown="if(event.key==='Enter')doSignUp()"></div>
         </div>
         <div class="auth-err" id="su-err"></div>
@@ -352,18 +378,12 @@
     <div class="panel on" id="tab-log">
       <!-- Add player -->
       <div class="card" style="animation-delay:.05s">
-        <div class="card-title"><span>🥍</span> Add a Player</div>
+        <div class="card-title"><span id="add-player-sport-icon">🥍</span> Add a Player</div>
         <div class="fields f3">
           <div class="f"><label>Player Name</label><input type="text" id="add-name" placeholder="e.g. Jake" maxlength="30"></div>
           <div class="f">
             <label>Position</label>
-            <select id="add-position">
-              <option value="" disabled selected>Select position…</option>
-              <option value="Goalie">🥅 Goalie</option>
-              <option value="Attack">⚔️ Attack</option>
-              <option value="Midfielder">🔄 Midfielder</option>
-              <option value="Defender">🛡️ Defender</option>
-            </select>
+            <select id="add-position"><option value="" disabled selected>Select position…</option></select>
           </div>
           <div class="f">
             <label>Grade</label>
@@ -385,30 +405,23 @@
       <!-- Log minutes -->
       <div class="card" style="animation-delay:.1s">
         <div class="card-title"><span>⏱️</span> Log Practice Minutes</div>
-        <div id="no-kids" class="empty"><span class="ei">🥍</span>Add a player above to get started!</div>
+        <div id="no-kids" class="empty"><span class="ei" id="no-kids-icon">🥍</span>Add a player above to get started!</div>
         <div id="log-section" style="display:none">
           <p class="section-label">Select Your Player</p>
           <div class="chips" id="chips"></div>
+          <!-- Sport selector (shown when player plays multiple sports) -->
+          <div id="sport-selector-wrap" style="display:none;margin-bottom:12px">
+            <p class="section-label">Sport</p>
+            <select id="log-sport-select" class="grade-select" onchange="onLogSportChange()" style="border-radius:10px;padding:10px 36px 10px 14px">
+            </select>
+          </div>
           <div class="divider"></div>
           <div class="fields f2" style="margin-bottom:14px">
             <div class="f"><label>Minutes Practiced</label><input type="number" id="log-mins" placeholder="e.g. 45" min="1" max="999"></div>
             <div class="f"><label>Date</label><input type="date" id="log-date"></div>
           </div>
           <span class="drill-label">Drills Practiced <span style="font-weight:600;text-transform:none;letter-spacing:0">(select all that apply)</span></span>
-          <div class="drill-grid">
-            <input type="checkbox" class="drill-toggle" id="d-shooting"    value="Shooting">
-            <label for="d-shooting">🎯 Shooting</label>
-            <input type="checkbox" class="drill-toggle" id="d-wallballs"   value="Wall Balls">
-            <label for="d-wallballs">🧱 Wall Balls</label>
-            <input type="checkbox" class="drill-toggle" id="d-groundballs" value="Ground Balls">
-            <label for="d-groundballs">⬇️ Ground Balls</label>
-            <input type="checkbox" class="drill-toggle" id="d-footwork"      value="Footwork">
-            <label for="d-footwork">👟 Footwork</label>
-            <input type="checkbox" class="drill-toggle" id="d-goaliedrills"  value="Goalie Drills">
-            <label for="d-goaliedrills">🥅 Goalie Drills</label>
-            <input type="checkbox" class="drill-toggle" id="d-faceoffdrills" value="Faceoff Drills">
-            <label for="d-faceoffdrills">🤜 Faceoff Drills</label>
-          </div>
+          <div class="drill-grid" id="drill-grid"></div>
           <div style="margin-top:16px;display:flex;justify-content:flex-end">
             <button class="btn btn-green" onclick="logSession()">Log Session ✓</button>
           </div>
@@ -424,9 +437,11 @@
 
     <!-- LEADERBOARD TAB -->
     <div class="panel" id="tab-board">
-      <!-- Grade filter -->
+      <!-- Filters row -->
       <div class="grade-filter">
-        <span class="grade-filter-label">🎓 Grade:</span>
+        <span class="grade-filter-label">⚽ Sport:</span>
+        <select class="grade-select" id="lb-sport-select" onchange="onLbSportChange()" style="min-width:140px"></select>
+        <span class="grade-filter-label" style="margin-left:8px">🎓 Grade:</span>
         <select class="grade-select" id="lb-grade-select" onchange="onGradeChange()">
           <option value="all">All Grades</option>
           <option value="HS">High School</option>
@@ -436,61 +451,93 @@
           <option value="1/2">1st / 2nd Grade</option>
         </select>
       </div>
-
-      <div class="lb-tabs">
-        <button class="lb-tab total on"     onclick="goLbTab('total',this)">🏆 Total Time</button>
-        <button class="lb-tab shooting"     onclick="goLbTab('shooting',this)">🎯 Shooting</button>
-        <button class="lb-tab wallballs"    onclick="goLbTab('wallballs',this)">🧱 Wall Balls</button>
-        <button class="lb-tab groundballs"  onclick="goLbTab('groundballs',this)">⬇️ Ground Balls</button>
-        <button class="lb-tab footwork"     onclick="goLbTab('footwork',this)">👟 Footwork</button>
-        <button class="lb-tab goaliedrills"   onclick="goLbTab('goaliedrills',this)">🥅 Goalie Drills</button>
-        <button class="lb-tab faceoffdrills"  onclick="goLbTab('faceoffdrills',this)">🤜 Faceoff Drills</button>
-      </div>
-      <div class="lb-panel on" id="lbp-total">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🏆</span><div><div class="drill-board-title">Total Practice Time</div><div class="drill-board-sub" id="lbs-total">All grades · all sessions</div></div></div><div id="lb-total"></div></div>
-      </div>
-      <div class="lb-panel" id="lbp-shooting">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🎯</span><div><div class="drill-board-title">Shooting</div><div class="drill-board-sub" id="lbs-shooting">All grades · shooting sessions</div></div></div><div id="lb-shooting"></div></div>
-      </div>
-      <div class="lb-panel" id="lbp-wallballs">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🧱</span><div><div class="drill-board-title">Wall Balls</div><div class="drill-board-sub" id="lbs-wallballs">All grades · wall ball sessions</div></div></div><div id="lb-wallballs"></div></div>
-      </div>
-      <div class="lb-panel" id="lbp-groundballs">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">⬇️</span><div><div class="drill-board-title">Ground Balls</div><div class="drill-board-sub" id="lbs-groundballs">All grades · ground ball sessions</div></div></div><div id="lb-groundballs"></div></div>
-      </div>
-      <div class="lb-panel" id="lbp-footwork">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">👟</span><div><div class="drill-board-title">Footwork</div><div class="drill-board-sub" id="lbs-footwork">All grades · footwork sessions</div></div></div><div id="lb-footwork"></div></div>
-      </div>
-      <div class="lb-panel" id="lbp-goaliedrills">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🥅</span><div><div class="drill-board-title">Goalie Drills</div><div class="drill-board-sub" id="lbs-goaliedrills">All grades · goalie drill sessions</div></div></div><div id="lb-goaliedrills"></div></div>
-      </div>
-      <div class="lb-panel" id="lbp-faceoffdrills">
-        <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🤜</span><div><div class="drill-board-title">Faceoff Drills</div><div class="drill-board-sub" id="lbs-faceoffdrills">All grades · faceoff drill sessions</div></div></div><div id="lb-faceoffdrills"></div></div>
-      </div>
+      <!-- drill sub-tabs rendered dynamically -->
+      <div class="lb-tabs" id="lb-drill-tabs"></div>
+      <!-- drill panels rendered dynamically -->
+      <div id="lb-drill-panels"></div>
     </div>
 
     <!-- MANAGE TAB -->
     <div class="panel" id="tab-manage">
+      <!-- Add a Sport card -->
+      <div class="card" style="animation-delay:.05s">
+        <div class="card-title"><span>➕</span> Add a Sport for Your Child</div>
+        <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:14px">
+          Enter a sport-specific school code to enroll your child in another sport at the same school.
+          The code must be from the same school you registered with.
+        </p>
+        <div class="fields f2" style="margin-bottom:12px">
+          <div class="f">
+            <label>Player</label>
+            <select id="add-sport-child-select" class="grade-select" style="border-radius:10px;padding:10px 36px 10px 14px;width:100%">
+              <option value="" disabled selected>Select player…</option>
+            </select>
+          </div>
+          <div class="f">
+            <label>Sport School Code</label>
+            <input type="text" id="add-sport-code" placeholder="e.g. BOERNE-SOCCER"
+              style="width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Barlow',sans-serif;font-size:.95rem;font-weight:600;color:var(--text);background:var(--chalk);outline:none;text-transform:uppercase"
+              oninput="onAddSportCodeChange()" onkeydown="if(event.key==='Enter')addSportToChild()">
+          </div>
+        </div>
+        <div class="fields f2" style="margin-bottom:12px" id="add-sport-position-wrap" style="display:none">
+          <div class="f">
+            <label>Position for this Sport</label>
+            <select id="add-sport-position">
+              <option value="" disabled selected>Enter code above first…</option>
+            </select>
+          </div>
+        </div>
+        <div id="add-sport-err" style="font-size:.82rem;color:var(--red);font-weight:700;min-height:18px;margin-bottom:10px"></div>
+        <div style="display:flex;justify-content:flex-end">
+          <button class="btn btn-green" onclick="addSportToChild()">Add Sport ＋</button>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title"><span>⚙️</span> My Players</div>
-        <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:2px">You can remove your own players. Admin password required to reset all data.</p>
+        <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:2px">You can remove your own players.</p>
+        <div id="school-display" style="font-size:.85rem;color:var(--grass);font-weight:700;margin-bottom:10px">🏫 School: <span id="current-school-display">Loading...</span></div>
         <div class="mgr-list" id="mgr-list"><div class="empty"><span class="ei">👤</span>No players yet.</div></div>
       </div>
-      <div class="card danger-card">
-        <div class="card-title" style="color:var(--red)"><span>🗑️</span> Admin: Reset All Data</div>
-        <p style="color:var(--text-md);font-size:.9rem;margin-bottom:14px">🔒 Permanently deletes every player and session across all accounts.</p>
-        <button class="btn btn-red" onclick="guardedAction('reset')">Reset Everything</button>
+      <div id="admin-section" style="display:none">
+        <div class="card">
+          <div class="card-title"><span>🏫</span> Admin: Create School Code</div>
+          <p style="font-size:.82rem;color:var(--text-lt);font-weight:700;margin-bottom:14px">Create a school code for parents/coaches to use when signing up.</p>
+          <div class="fields f2" style="margin-bottom:12px">
+            <div class="f"><label>School Name</label><input type="text" id="new-school-name" placeholder="e.g. Lakewood High School"></div>
+            <div class="f"><label>School Code</label><input type="text" id="new-school-code" placeholder="e.g. LAKEWOOD2025" style="text-transform:uppercase" maxlength="20"></div>
+          </div>
+          <button class="btn btn-green" onclick="createSchoolCode()">Create Code ＋</button>
+          <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border)">
+            <p style="font-size:.8rem;color:var(--text-lt);font-weight:700;margin-bottom:10px;text-transform:uppercase">Existing Codes:</p>
+            <div id="school-codes-list" style="font-size:.9rem;color:var(--text-md)"><span style="color:var(--text-lt)">None yet</span></div>
+          </div>
+        </div>
+
+        <div class="card danger-card">
+          <div class="card-title" style="color:var(--red)"><span>🗑️</span> Admin: Reset All Data</div>
+          <p style="color:var(--text-md);font-size:.9rem;margin-bottom:14px">🔒 Permanently deletes every player and session in your school.</p>
+          <button class="btn btn-red" onclick="guardedAction('reset')">Reset Everything</button>
+        </div>
       </div>
+
+      <button id="admin-unlock-btn" class="btn btn-green" onclick="unlockAdminSection()" style="margin-top:20px">🔓 Unlock Admin Section</button>
     </div>
 
   </div>
 </div>
 
+<div id="session-warning" class="hidden">
+  ⏱ Your session will expire in 1 minute due to inactivity.
+  <button class="sw-btn" onclick="resetSessionTimer()">Stay Signed In</button>
+  <button class="sw-btn" onclick="window.signOut()">Sign Out</button>
+</div>
 <div id="toast"></div>
 
 <script type="module">
 import { initializeApp }        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, addDoc, deleteDoc,
+import { getFirestore, collection, doc, getDoc, setDoc, addDoc, deleteDoc, getDocs,
          onSnapshot, query, where, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
@@ -510,20 +557,230 @@ const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
 const auth = getAuth(app);
 
-const DRILLS = [
-  { key:'Shooting',      id:'d-shooting',     emoji:'🎯', accent:'#d63030', cls:'shooting'     },
-  { key:'Wall Balls',    id:'d-wallballs',    emoji:'🧱', accent:'#2196c4', cls:'wallballs'    },
-  { key:'Ground Balls',  id:'d-groundballs',  emoji:'⬇️', accent:'#1a7a3a', cls:'groundballs'  },
-  { key:'Footwork',      id:'d-footwork',     emoji:'👟', accent:'#7c3aed', cls:'footwork'     },
-  { key:'Goalie Drills',  id:'d-goaliedrills',  emoji:'🥅', accent:'#0f4d24', cls:'goaliedrills'  },
-  { key:'Faceoff Drills', id:'d-faceoffdrills', emoji:'🤜', accent:'#b45309', cls:'faceoffdrills' },
-];
+// ── Sport configuration ───────────────────────────────────
+const SPORTS_CONFIG = {
+  lacrosse: {
+    label: 'Lacrosse', emoji: '🥍', accent: '#1a7a3a',
+    positions: ['Goalie','Attack','Midfielder','Defender'],
+    drills: [
+      { key:'Shooting',      id:'d-shooting',      emoji:'🎯', accent:'#d63030', cls:'shooting'      },
+      { key:'Wall Balls',    id:'d-wallballs',     emoji:'🧱', accent:'#2196c4', cls:'wallballs'     },
+      { key:'Ground Balls',  id:'d-groundballs',   emoji:'⬇️', accent:'#1a7a3a', cls:'groundballs'   },
+      { key:'Footwork',      id:'d-footwork',      emoji:'👟', accent:'#7c3aed', cls:'footwork'      },
+      { key:'Goalie Drills', id:'d-goaliedrills',  emoji:'🥅', accent:'#0f4d24', cls:'goaliedrills'  },
+      { key:'Faceoff Drills',id:'d-faceoffdrills', emoji:'🤜', accent:'#b45309', cls:'faceoffdrills' },
+    ]
+  },
+  soccer: {
+    label: 'Soccer', emoji: '⚽', accent: '#166534',
+    positions: ['Goalkeeper','Defender','Midfielder','Forward'],
+    drills: [
+      { key:'Passing',       id:'d-passing',       emoji:'🎯', accent:'#166534', cls:'passing'       },
+      { key:'Shooting',      id:'d-shooting',      emoji:'🥅', accent:'#d63030', cls:'shooting'      },
+      { key:'Dribbling',     id:'d-dribbling',     emoji:'🌀', accent:'#2196c4', cls:'dribbling'     },
+      { key:'Defending',     id:'d-defending',     emoji:'🛡️', accent:'#7c3aed', cls:'defending'     },
+      { key:'Set Pieces',    id:'d-setpieces',     emoji:'📐', accent:'#b45309', cls:'setpieces'     },
+      { key:'Conditioning',  id:'d-conditioning',  emoji:'🏃', accent:'#0f4d24', cls:'conditioning'  },
+    ]
+  },
+  baseball: {
+    label: 'Baseball', emoji: '⚾', accent: '#1e3a8a',
+    positions: ['Pitcher','Catcher','Infielder','Outfielder','Designated Hitter'],
+    drills: [
+      { key:'Batting',       id:'d-batting',       emoji:'🏏', accent:'#d63030', cls:'batting'       },
+      { key:'Fielding',      id:'d-fielding',      emoji:'🧤', accent:'#1e3a8a', cls:'fielding'      },
+      { key:'Pitching',      id:'d-pitching',      emoji:'⚾', accent:'#166534', cls:'pitching'      },
+      { key:'Base Running',  id:'d-baserunning',   emoji:'🏃', accent:'#7c3aed', cls:'baserunning'   },
+      { key:'Catching',      id:'d-catching',      emoji:'🥅', accent:'#b45309', cls:'catching'      },
+      { key:'Conditioning',  id:'d-conditioning',  emoji:'💪', accent:'#0f4d24', cls:'conditioning'  },
+    ]
+  },
+  basketball: {
+    label: 'Basketball', emoji: '🏀', accent:'#c2410c',
+    positions: ['Point Guard','Shooting Guard','Small Forward','Power Forward','Center'],
+    drills: [
+      { key:'Shooting',      id:'d-shooting',      emoji:'🎯', accent:'#c2410c', cls:'shooting'      },
+      { key:'Dribbling',     id:'d-dribbling',     emoji:'🌀', accent:'#2196c4', cls:'dribbling'     },
+      { key:'Passing',       id:'d-passing',       emoji:'↔️', accent:'#166534', cls:'passing'       },
+      { key:'Defense',       id:'d-defense',       emoji:'🛡️', accent:'#7c3aed', cls:'defense'       },
+      { key:'Rebounding',    id:'d-rebounding',    emoji:'⬆️', accent:'#b45309', cls:'rebounding'    },
+      { key:'Conditioning',  id:'d-conditioning',  emoji:'🏃', accent:'#0f4d24', cls:'conditioning'  },
+    ]
+  },
+  football: {
+    label: 'Football', emoji: '🏈', accent:'#92400e',
+    positions: ['Quarterback','Running Back','Wide Receiver','Tight End','Offensive Line','Defensive Line','Linebacker','Cornerback','Safety','Kicker'],
+    drills: [
+      { key:'Route Running',  id:'d-routerunning', emoji:'📐', accent:'#d63030', cls:'routerunning'  },
+      { key:'Throwing',       id:'d-throwing',     emoji:'🏈', accent:'#92400e', cls:'throwing'      },
+      { key:'Blocking',       id:'d-blocking',     emoji:'🛡️', accent:'#1e3a8a', cls:'blocking'      },
+      { key:'Tackling',       id:'d-tackling',     emoji:'💥', accent:'#7c3aed', cls:'tackling'      },
+      { key:'Footwork',       id:'d-footwork',     emoji:'👟', accent:'#166534', cls:'footwork'      },
+      { key:'Conditioning',   id:'d-conditioning', emoji:'🏃', accent:'#0f4d24', cls:'conditioning'  },
+    ]
+  },
+  swimming: {
+    label: 'Swimming', emoji: '🏊', accent:'#0284c7',
+    positions: ['Freestyle','Backstroke','Breaststroke','Butterfly','Individual Medley','Relay'],
+    drills: [
+      { key:'Freestyle',     id:'d-freestyle',     emoji:'🏊', accent:'#0284c7', cls:'freestyle'     },
+      { key:'Backstroke',    id:'d-backstroke',    emoji:'🔄', accent:'#2196c4', cls:'backstroke'    },
+      { key:'Breaststroke',  id:'d-breaststroke',  emoji:'🐸', accent:'#166534', cls:'breaststroke'  },
+      { key:'Butterfly',     id:'d-butterfly',     emoji:'🦋', accent:'#7c3aed', cls:'butterfly'     },
+      { key:'Starts & Turns',id:'d-startsturns',   emoji:'🔁', accent:'#b45309', cls:'startsturns'   },
+      { key:'Endurance',     id:'d-endurance',     emoji:'💪', accent:'#0f4d24', cls:'endurance'     },
+    ]
+  },
+  golf: {
+    label: 'Golf', emoji: '⛳', accent:'#166534',
+    positions: ['Individual'],
+    drills: [
+      { key:'Driving',       id:'d-driving',       emoji:'🏌️', accent:'#166534', cls:'driving'       },
+      { key:'Iron Play',     id:'d-ironplay',      emoji:'⛳', accent:'#2196c4', cls:'ironplay'      },
+      { key:'Chipping',      id:'d-chipping',      emoji:'🎯', accent:'#d63030', cls:'chipping'      },
+      { key:'Putting',       id:'d-putting',       emoji:'🕳️', accent:'#7c3aed', cls:'putting'       },
+      { key:'Bunker Play',   id:'d-bunkerplay',    emoji:'🏖️', accent:'#b45309', cls:'bunkerplay'    },
+      { key:'Course Management', id:'d-coursemgmt',emoji:'🗺️', accent:'#0f4d24', cls:'coursemgmt'    },
+    ]
+  },
+};
+
+// Sport keyword → sport key mapping (for school code parsing)
+const SPORT_KEYWORDS = {
+  lacrosse: ['LAX','LACROSSE'],
+  soccer:   ['SOCCER','SOC'],
+  baseball: ['BASEBALL','BASE','BB'],
+  basketball:['BASKETBALL','BBALL','HOOPS'],
+  football: ['FOOTBALL','FB'],
+  swimming: ['SWIM','SWIMMING'],
+  golf:     ['GOLF'],
+};
+
+function detectSportFromCode(schoolCode) {
+  if (!schoolCode) return 'lacrosse';
+  const upper = schoolCode.toUpperCase();
+  for (const [sport, keywords] of Object.entries(SPORT_KEYWORDS)) {
+    if (keywords.some(kw => upper.includes(kw))) return sport;
+  }
+  return 'lacrosse'; // default
+}
+
+// Active sport for the current user (set at login, can change per leaderboard view)
+let currentSport = 'lacrosse';
+let DRILLS = SPORTS_CONFIG.lacrosse.drills; // kept in sync with currentSport
+
+function setSport(sport) {
+  currentSport = sport;
+  DRILLS = SPORTS_CONFIG[sport].drills;
+}
+
+// ── School themes ─────────────────────────────────────────
+const SCHOOL_THEMES = {
+  // Boerne Lacrosse — Navy & Silver
+  'BOERNE': {
+    name: 'Boerne Lacrosse',
+    primary:   '#1a2a5e',   // navy
+    primaryLt: '#2a3f8f',
+    primaryDk: '#0e1a3d',
+    accent:    '#a8b4c8',   // silver
+    accentDk:  '#7a8fa8',
+    field:     '#eaecf4',
+    chalk:     '#f0f2f8',
+    border:    '#c8cfe8',
+    text:      '#0d1220',
+    textMd:    '#3a4466',
+    textLt:    '#7a88aa',
+    shadow:    '0 4px 24px rgba(10,20,60,0.12)',
+    shadowLg:  '0 12px 48px rgba(10,20,60,0.18)',
+    bgStripe1: 'rgba(26,42,94,0.045)',
+    bgStripe2: 'rgba(26,42,94,0.02)',
+  },
+  // TMI — Orange & Black
+  'TMI': {
+    name: 'TMI',
+    primary:   '#c45000',   // deep orange
+    primaryLt: '#e86010',
+    primaryDk: '#7a3000',
+    accent:    '#f5a623',   // gold-orange
+    accentDk:  '#d4861a',
+    field:     '#fdf0e6',
+    chalk:     '#fdf5ee',
+    border:    '#f5d8b8',
+    text:      '#1a0d00',
+    textMd:    '#5a3a1a',
+    textLt:    '#a07040',
+    shadow:    '0 4px 24px rgba(80,30,0,0.12)',
+    shadowLg:  '0 12px 48px rgba(80,30,0,0.18)',
+    bgStripe1: 'rgba(196,80,0,0.045)',
+    bgStripe2: 'rgba(196,80,0,0.02)',
+  },
+  // Smithson Valley — Navy & White
+  'SV': {
+    name: 'Smithson Valley',
+    primary:   '#0d2060',   // navy
+    primaryLt: '#1a3494',
+    primaryDk: '#081440',
+    accent:    '#90a8d0',   // light blue-silver
+    accentDk:  '#6080b0',
+    field:     '#e8ecf8',
+    chalk:     '#f2f4fc',
+    border:    '#c0ccec',
+    text:      '#08102a',
+    textMd:    '#2a3a60',
+    textLt:    '#6878a8',
+    shadow:    '0 4px 24px rgba(8,16,60,0.12)',
+    shadowLg:  '0 12px 48px rgba(8,16,60,0.18)',
+    bgStripe1: 'rgba(13,32,96,0.045)',
+    bgStripe2: 'rgba(13,32,96,0.02)',
+  },
+};
+
+function applySchoolTheme(schoolCode) {
+  // Match by exact key first, then by checking if the school code *contains*
+  // a known keyword — handles any suffix/prefix users may have typed at signup.
+  let theme = SCHOOL_THEMES[schoolCode];
+  if (!theme && schoolCode) {
+    const upper = schoolCode.toUpperCase();
+    const matchKey = Object.keys(SCHOOL_THEMES).find(k => upper.includes(k) || k.includes(upper));
+    if (matchKey) theme = SCHOOL_THEMES[matchKey];
+  }
+  const root  = document.documentElement;
+  if (!theme) {
+    // Fall back to default green lacrosse theme
+    root.removeAttribute('data-school');
+    ['--grass','--grass-lt','--grass-dk','--field','--chalk','--gold','--gold-dk',
+     '--border','--text','--text-md','--text-lt','--shadow','--shadow-lg'].forEach(v => root.style.removeProperty(v));
+    document.querySelector('.field-bg').style.background = '';
+    document.title = 'RepLogger';
+    return;
+  }
+  root.setAttribute('data-school', schoolCode);
+  root.style.setProperty('--grass',    theme.primary);
+  root.style.setProperty('--grass-lt', theme.primaryLt);
+  root.style.setProperty('--grass-dk', theme.primaryDk);
+  root.style.setProperty('--field',    theme.field);
+  root.style.setProperty('--chalk',    theme.chalk);
+  root.style.setProperty('--gold',     theme.accent);
+  root.style.setProperty('--gold-dk',  theme.accentDk);
+  root.style.setProperty('--border',   theme.border);
+  root.style.setProperty('--text',     theme.text);
+  root.style.setProperty('--text-md',  theme.textMd);
+  root.style.setProperty('--text-lt',  theme.textLt);
+  root.style.setProperty('--shadow',   theme.shadow);
+  root.style.setProperty('--shadow-lg',theme.shadowLg);
+  // Update the field-stripe background to match school color
+  document.querySelector('.field-bg').style.background =
+    `repeating-linear-gradient(180deg,${theme.bgStripe1} 0px,${theme.bgStripe1} 60px,${theme.bgStripe2} 60px,${theme.bgStripe2} 120px)`;
+  document.title = `RepLogger · ${theme.name}`;
+}
 
 let currentUser  = null;
+let currentSchoolCode = null;  // Track the user's school code
+let allSchoolCodes = [];       // Available school codes
 let myChildren   = [];   // current user's players
-let allChildren  = [];   // everyone's players (for leaderboard)
+let allChildren  = [];   // all players from same school (for leaderboard)
 let mySessions   = [];   // current user's sessions
-let allSessions  = [];   // everyone's sessions (for leaderboard)
+let allSessions  = [];   // all sessions from same school (for leaderboard)
 let selId        = null;
 let adminPassword = null;
 let authUntil    = 0;
@@ -531,23 +788,116 @@ let pendingAction = null;
 
 let unsubMyKids, unsubAllKids, unsubMySess, unsubAllSess;
 
+// ── Session timeout (15 min inactivity) ──────────────────
+const SESSION_TIMEOUT_MS  = 15 * 60 * 1000;  // 15 minutes
+const SESSION_WARNING_MS  = 60 * 1000;        // warn 1 min before
+let sessionTimer   = null;
+let sessionWarning = null;
+
+function resetSessionTimer() {
+  if (!currentUser) return;
+  clearTimeout(sessionTimer);
+  clearTimeout(sessionWarning);
+  dismissTimeoutWarning();
+  sessionWarning = setTimeout(showTimeoutWarning,  SESSION_TIMEOUT_MS - SESSION_WARNING_MS);
+  sessionTimer   = setTimeout(forceSessionTimeout, SESSION_TIMEOUT_MS);
+}
+
+function stopSessionTimer() {
+  clearTimeout(sessionTimer);
+  clearTimeout(sessionWarning);
+  dismissTimeoutWarning();
+  sessionTimer = sessionWarning = null;
+}
+
+async function forceSessionTimeout() {
+  dismissTimeoutWarning();
+  await fbSignOut(auth);
+  toast('Session expired — please sign in again.', true);
+}
+
+function showTimeoutWarning() {
+  const el = document.getElementById('session-warning');
+  if (el) el.classList.remove('hidden');
+}
+
+function dismissTimeoutWarning() {
+  const el = document.getElementById('session-warning');
+  if (el) el.classList.add('hidden');
+}
+
+// Reset timer on meaningful user interaction — throttled to fire at most
+// once every 30 s so mousemove/scroll can't flood setTimeout/clearTimeout.
+let _lastReset = 0;
+function _throttledReset() {
+  if (!currentUser) return;
+  const now = Date.now();
+  if (now - _lastReset < 30_000) return; // ignore if reset < 30 s ago
+  _lastReset = now;
+  resetSessionTimer();
+}
+['click','keydown','touchstart'].forEach(evt =>
+  document.addEventListener(evt, _throttledReset, { passive: true })
+);
+// mousemove and scroll get an extra throttle — only fire when the user
+// has been idle enough that the warning banner is already showing.
+['mousemove','scroll'].forEach(evt =>
+  document.addEventListener(evt, () => {
+    if (!currentUser) return;
+    const el = document.getElementById('session-warning');
+    const warningVisible = el && !el.classList.contains('hidden');
+    if (warningVisible) resetSessionTimer(); // always reset if warning is up
+    else _throttledReset();                  // otherwise throttle
+  }, { passive: true })
+);
+
 // ── Auth state ────────────────────────────────────────────
-// Show auth screen immediately — don't wait on Firebase to resolve
+// Show auth screen immediately — don't block on Firebase resolving
 document.getElementById('init-loading').style.display = 'none';
 document.getElementById('auth-screen').style.display  = 'flex';
 
 onAuthStateChanged(auth, async user => {
   if (user) {
     currentUser = user;
+    // Load user's school code — retry briefly in case the Firestore write
+    // (from doSignUp) hasn't fully propagated yet when this fires.
+    let userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (!userDoc.exists()) {
+      await new Promise(r => setTimeout(r, 1200));
+      userDoc = await getDoc(doc(db, 'users', user.uid));
+    }
+    currentSchoolCode = userDoc.exists() ? userDoc.data().schoolCode : null;
+    
+    // Load all school codes for reference
+    const schoolsSnap = await getDocs(collection(db, 'schoolCodes'));
+    allSchoolCodes = schoolsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    if (!currentSchoolCode) {
+      // User signed in but has no school code (shouldn't happen in normal flow)
+      toast('Error: No school code found. Please contact an admin.', true);
+      return;
+    }
+    
+    console.log('🏫 School code for this user:', currentSchoolCode);
+    setSport(detectSportFromCode(currentSchoolCode));
+    applySchoolTheme(currentSchoolCode);
+    updateHeroSport();
     document.getElementById('auth-screen').style.display  = 'none';
     document.getElementById('app-body').style.display     = 'block';
     document.getElementById('hero-auth').style.display    = 'flex';
     document.getElementById('hero-email').textContent     = user.displayName || user.email;
     await loadAdminPassword();
     startListeners();
+    resetSessionTimer();
   } else {
     currentUser = null;
+    currentSchoolCode = null;
+    allSchoolCodes = [];
     stopListeners();
+    stopSessionTimer();
+    setSport('lacrosse');
+    applySchoolTheme(null);
+    updateHeroSport();
     document.getElementById('app-body').style.display    = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('hero-auth').style.display   = 'none';
@@ -574,13 +924,15 @@ function startListeners() {
   const myKidsQ = query(collection(db,'children'), where('uid','==',currentUser.uid), orderBy('createdAt'));
   unsubMyKids = onSnapshot(myKidsQ, snap => {
     myChildren = snap.docs.map(d=>({id:d.id,...d.data()}));
+    console.log('My players loaded:', myChildren.length);
     renderStats(); renderChips(); renderSessions();
   }, err => { setSync('bad','Error'); toast(err.message,true); });
 
-  // All players (for leaderboard)
-  const allKidsQ = query(collection(db,'children'), orderBy('createdAt'));
+  // All players from same school (for leaderboard) - no orderBy to avoid index requirement
+  const allKidsQ = query(collection(db,'children'), where('schoolCode','==',currentSchoolCode));
   unsubAllKids = onSnapshot(allKidsQ, snap => {
-    allChildren = snap.docs.map(d=>({id:d.id,...d.data()}));
+    allChildren = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+    console.log('All players (leaderboard):', allChildren.length, 'schoolCode:', currentSchoolCode);
     if (document.getElementById('tab-board').classList.contains('on')) renderAllLeaderboards();
   });
 
@@ -588,14 +940,18 @@ function startListeners() {
   const mySessQ = query(collection(db,'sessions'), where('uid','==',currentUser.uid), orderBy('date'));
   unsubMySess = onSnapshot(mySessQ, snap => {
     mySessions = snap.docs.map(d=>({id:d.id,...d.data()}));
+    console.log('My sessions loaded:', mySessions.length);
     renderStats(); renderSessions();
     setSync('ok','Live · Field Ready');
+  renderLbSportSelect();
+  updateHeroSport();
   }, err => { setSync('bad','Error'); toast(err.message,true); });
 
-  // All sessions (for leaderboard)
-  const allSessQ = query(collection(db,'sessions'), orderBy('date'));
+  // All sessions from same school (for leaderboard) - no orderBy to avoid index requirement
+  const allSessQ = query(collection(db,'sessions'), where('schoolCode','==',currentSchoolCode));
   unsubAllSess = onSnapshot(allSessQ, snap => {
-    allSessions = snap.docs.map(d=>({id:d.id,...d.data()}));
+    allSessions = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+    console.log('All sessions (leaderboard):', allSessions.length, 'schoolCode:', currentSchoolCode);
     if (document.getElementById('tab-board').classList.contains('on')) renderAllLeaderboards();
   });
 }
@@ -614,6 +970,10 @@ window.switchView = v => {
   document.getElementById('view-signup').style.display = v==='signup' ? 'block':'none';
 };
 
+async function loadAvailableSchools() {
+  // No longer needed - parents enter school code manually
+}
+
 window.doSignIn = async () => {
   const email = document.getElementById('si-email').value.trim();
   const pass  = document.getElementById('si-pass').value;
@@ -622,6 +982,7 @@ window.doSignIn = async () => {
   if (!email||!pass) { errEl.textContent='Please fill in all fields.'; return; }
   try {
     await signInWithEmailAndPassword(auth, email, pass);
+    resetSessionTimer();
   } catch(e) {
     errEl.textContent = friendlyAuthError(e.code);
   }
@@ -630,14 +991,38 @@ window.doSignIn = async () => {
 window.doSignUp = async () => {
   const name  = document.getElementById('su-name').value.trim();
   const email = document.getElementById('su-email').value.trim();
+  const code  = document.getElementById('su-code').value.trim().toUpperCase();
   const pass  = document.getElementById('su-pass').value;
   const errEl = document.getElementById('su-err');
   errEl.textContent = '';
-  if (!name||!email||!pass) { errEl.textContent='Please fill in all fields.'; return; }
+  if (!name||!email||!code||!pass) { errEl.textContent='Please fill in all fields.'; return; }
   if (pass.length < 6) { errEl.textContent='Password must be at least 6 characters.'; return; }
+  if (code.length < 3) { errEl.textContent='School code must be at least 3 characters.'; return; }
+  // Check school code existence BEFORE any auth call
+  try {
+    const schoolCodeDoc = await getDoc(doc(db, 'schoolCodes', code));
+    if (!schoolCodeDoc.exists()) {
+      errEl.textContent = 'Invalid school code. Please check and try again.';
+      return;
+    }
+  } catch (e) {
+    errEl.textContent = 'Error checking school code. Please try again.';
+    return;
+  }
+  // Now create auth user — write profile + user doc together BEFORE
+  // onAuthStateChanged can read them, eliminating the race condition.
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    await updateProfile(cred.user, { displayName: name });
+    await Promise.all([
+      updateProfile(cred.user, { displayName: name }),
+      setDoc(doc(db, 'users', cred.user.uid), {
+        uid: cred.user.uid,
+        schoolCode: code,
+        createdAt: new Date().toISOString()
+      })
+    ]);
+    // Re-trigger onAuthStateChanged so it re-reads the now-complete user doc.
+    await cred.user.reload();
   } catch(e) {
     errEl.textContent = friendlyAuthError(e.code);
   }
@@ -676,13 +1061,34 @@ window.confirmPassword = () => {
   if (val === adminPassword) {
     authUntil = Date.now() + 5*60*1000;
     document.getElementById('pw-modal').classList.add('hidden');
-    if (pendingAction) { runAction(pendingAction.action, pendingAction.id); pendingAction=null; }
+    if (pendingAction) {
+      if (pendingAction.action === 'unlockAdmin') {
+        document.getElementById('admin-section').style.display = 'block';
+        document.getElementById('admin-unlock-btn').style.display = 'none';
+      } else {
+        runAction(pendingAction.action, pendingAction.id);
+      }
+      pendingAction = null;
+    }
   } else {
     const inp = document.getElementById('pw-input');
     document.getElementById('pw-error').textContent = 'Incorrect password — try again';
     inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
     inp.value=''; setTimeout(()=>inp.focus(),50);
   }
+};
+
+window.unlockAdminSection = () => {
+  if (!adminPassword || Date.now() < authUntil) {
+    document.getElementById('admin-section').style.display = 'block';
+    document.getElementById('admin-unlock-btn').style.display = 'none';
+    return;
+  }
+  pendingAction = {action: 'unlockAdmin'};
+  document.getElementById('pw-input').value='';
+  document.getElementById('pw-error').textContent='';
+  document.getElementById('pw-modal').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('pw-input').focus(),80);
 };
 
 window.cancelPassword = () => { pendingAction=null; document.getElementById('pw-modal').classList.add('hidden'); };
@@ -696,6 +1102,126 @@ async function runAction(action,id) {
   if (action==='removeChild') await doRemoveChild(id);
   if (action==='reset')       await doResetAll();
 }
+
+// ── Sport UI helpers ──────────────────────────────────────
+function updateHeroSport() {
+  const sp = SPORTS_CONFIG[currentSport] || SPORTS_CONFIG.lacrosse;
+
+  // Highlight the active sport icon, leave all others neutral
+  document.querySelectorAll('.sport-icon-btn').forEach(btn => {
+    const isCurrent = btn.dataset.sport === currentSport;
+    btn.classList.toggle('active', isCurrent);
+  });
+
+  // Update add-player icon and no-kids icon
+  const addIcon = document.getElementById('add-player-sport-icon');
+  if (addIcon) addIcon.textContent = sp.emoji;
+  const noKidsIcon = document.getElementById('no-kids-icon');
+  if (noKidsIcon) noKidsIcon.textContent = sp.emoji;
+
+  // Update page title
+  document.title = `RepLogger${sp ? ' · ' + sp.label : ''}`;
+
+  renderPositionOptions(currentSport);
+  renderDrillGrid(currentSport);
+  renderLbSportSelect();
+  renderLbDrillTabs(currentSport);
+}
+
+function renderPositionOptions(sport) {
+  const sel = document.getElementById('add-position');
+  if (!sel) return;
+  const positions = SPORTS_CONFIG[sport]?.positions || SPORTS_CONFIG.lacrosse.positions;
+  sel.innerHTML = `<option value="" disabled selected>Select position…</option>` +
+    positions.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function renderDrillGrid(sport) {
+  const grid = document.getElementById('drill-grid');
+  if (!grid) return;
+  const drills = SPORTS_CONFIG[sport]?.drills || SPORTS_CONFIG.lacrosse.drills;
+  grid.innerHTML = drills.map(d =>
+    `<input type="checkbox" class="drill-toggle" id="${d.id}" value="${d.key}">` +
+    `<label for="${d.id}">${d.emoji} ${d.key}</label>`
+  ).join('');
+}
+
+// Active sport for leaderboard (can differ from currentSport)
+let activeLbSport = 'lacrosse';
+
+function renderLbSportSelect() {
+  const sel = document.getElementById('lb-sport-select');
+  if (!sel) return;
+  // Always show every sport — parent may have registered children under
+  // different codes and the dropdown must not be limited to what's in allChildren
+  const allSports = Object.keys(SPORTS_CONFIG);
+  sel.innerHTML = allSports.map(s =>
+    `<option value="${s}" ${s===activeLbSport?'selected':''}>${SPORTS_CONFIG[s].emoji} ${SPORTS_CONFIG[s].label}</option>`
+  ).join('');
+  // Keep activeLbSport in sync; default to currentSport on first render
+  if (!allSports.includes(activeLbSport)) activeLbSport = currentSport;
+  sel.value = activeLbSport;
+}
+
+function renderLbDrillTabs(sport) {
+  const drills = SPORTS_CONFIG[sport]?.drills || SPORTS_CONFIG.lacrosse.drills;
+  const tabsEl   = document.getElementById('lb-drill-tabs');
+  const panelsEl = document.getElementById('lb-drill-panels');
+  if (!tabsEl || !panelsEl) return;
+
+  tabsEl.innerHTML =
+    `<button class="lb-tab total on" onclick="goLbTab('total',this)">🏆 Total Time</button>` +
+    drills.map(d =>
+      `<button class="lb-tab ${d.cls}" onclick="goLbTab('${d.cls}',this)">${d.emoji} ${d.key}</button>`
+    ).join('');
+
+  panelsEl.innerHTML =
+    `<div class="lb-panel on" id="lbp-total">
+       <div class="card"><div class="drill-board-header"><span class="drill-board-icon">🏆</span>
+         <div><div class="drill-board-title">Total Practice Time</div>
+         <div class="drill-board-sub" id="lbs-total">All grades · all sessions</div></div></div>
+         <div id="lb-total"></div></div></div>` +
+    drills.map(d =>
+      `<div class="lb-panel" id="lbp-${d.cls}">
+         <div class="card"><div class="drill-board-header"><span class="drill-board-icon">${d.emoji}</span>
+           <div><div class="drill-board-title">${d.key}</div>
+           <div class="drill-board-sub" id="lbs-${d.cls}">All grades · ${d.key.toLowerCase()} sessions</div></div></div>
+           <div id="lb-${d.cls}"></div></div></div>`
+    ).join('');
+}
+
+window.onLbSportChange = function() {
+  activeLbSport = document.getElementById('lb-sport-select').value;
+  renderLbDrillTabs(activeLbSport);
+  renderAllLeaderboards();
+};
+
+// Sport selector in log section (for multi-sport children)
+let logSport = null; // null = use currentSport
+
+function renderSportSelectorForChild(childId) {
+  const child = myChildren.find(c => c.id === childId);
+  const wrap = document.getElementById('sport-selector-wrap');
+  const sel  = document.getElementById('log-sport-select');
+  if (!child || !child.sports || child.sports.length <= 1) {
+    wrap.style.display = 'none';
+    // Set logSport to child's single sport or default
+    logSport = (child && child.sports && child.sports[0]) || currentSport;
+    renderDrillGrid(logSport);
+    return;
+  }
+  wrap.style.display = 'block';
+  sel.innerHTML = child.sports.map(s =>
+    `<option value="${s}">${SPORTS_CONFIG[s]?.emoji || ''} ${SPORTS_CONFIG[s]?.label || s}</option>`
+  ).join('');
+  logSport = sel.value;
+  renderDrillGrid(logSport);
+}
+
+window.onLogSportChange = function() {
+  logSport = document.getElementById('log-sport-select').value;
+  renderDrillGrid(logSport);
+};
 
 // ── Render ────────────────────────────────────────────────
 function renderStats() {
@@ -723,6 +1249,7 @@ function renderChips() {
   if (selId && !myChildren.find(c=>c.id===selId)) selId=myChildren[0].id;
   if (!selId) selId=myChildren[0].id;
   wrap.innerHTML=myChildren.map(c=>`<button class="chip c${c.colorIdx} ${selId===c.id?'on':''}" onclick="window._sel('${c.id}')">${c.name}</button>`).join('');
+  renderSportSelectorForChild(selId);
 }
 
 function renderSessions() {
@@ -743,8 +1270,9 @@ function renderSessions() {
     <table class="tbl">
       <thead><tr><th>Date</th><th>Mins</th><th>Drills</th><th></th></tr></thead>
       <tbody>${cs.map(s=>{
+        const sessAllDrills = Object.values(SPORTS_CONFIG).flatMap(sp=>sp.drills);
         const tags=(s.drills&&s.drills.length)
-          ? `<div class="drill-tags">${s.drills.map(d=>{const dr=DRILLS.find(x=>x.key===d);return`<span class="drill-tag">${dr?dr.emoji:''} ${d}</span>`;}).join('')}</div>`
+          ? `<div class="drill-tags">${s.drills.map(d=>{const dr=sessAllDrills.find(x=>x.key===d);return`<span class="drill-tag">${dr?dr.emoji:''} ${d}</span>`;}).join('')}</div>`
           : `<span style="color:var(--text-lt);font-size:.8rem">General</span>`;
         return`<tr><td>${fmtDate(s.date)}</td><td><span class="badge">${s.minutes} min</span></td><td>${tags}</td><td><button class="btn-sm" onclick="window.delSession('${s.id}')">✕</button></td></tr>`;
       }).join('')}</tbody>
@@ -762,7 +1290,7 @@ function buildLbHTML(ranked, accentColor, valueLabel) {
       <div class="lb-rank ${rankCls[i]||''}">${medals[i]||`#${i+1}`}</div>
       <div class="lax-av la${c.colorIdx}">${c.name.slice(0,2).toUpperCase()}</div>
       <div class="lb-info">
-        <div class="lb-name">${c.name}${isMe?`<span class="my-label">Mine</span>`:''} <span class="pos-badge pos-${c.position||'Attack'}" style="margin-left:4px">${c.position||''}</span> ${c.grade?`<span class="grade-badge grade-${c.grade==='7/8'?'78':'56'}">${c.grade}</span>`:''}</div>
+        <div class="lb-name">${c.name}${isMe?`<span class="my-label">Mine</span>`:''} <span class="pos-badge" style="margin-left:4px;background:#e0e7ff;color:#1e3a8a">${(c.sportPositions&&c.sportPositions[activeLbSport||currentSport])||c.position||''}</span> ${c.grade?`<span class="grade-badge grade-${c.grade==='7/8'?'78':'56'}">${c.grade}</span>`:''}</div>
         <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(c.value/max*100)}%;background:${accentColor}"></div></div>
         <div style="font-size:.68rem;color:var(--text-lt);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.06em">${c.sessions} session${c.sessions!==1?'s':''}</div>
       </div>
@@ -791,62 +1319,456 @@ function gradeLabel() {
 }
 
 function renderAllLeaderboards() {
-  const filtered = activeLbGrade === 'all'
+  const sport  = activeLbSport || currentSport;
+  const drills = SPORTS_CONFIG[sport]?.drills || SPORTS_CONFIG.lacrosse.drills;
+
+  // Filter children by grade AND by sport
+  const gradeFiltered = activeLbGrade === 'all'
     ? allChildren
     : allChildren.filter(c => c.grade === activeLbGrade);
 
+  // A child with no sport field is treated as lacrosse (legacy data).
+  // Never let a missing field match every sport — only match explicitly.
+  const filtered = gradeFiltered.filter(c => {
+    const childSport  = c.sport  || 'lacrosse';
+    const childSports = c.sports && c.sports.length ? c.sports : [childSport];
+    return childSports.includes(sport);
+  });
+
+  // Sessions with no sport field are treated as lacrosse (legacy data).
+  const sportSessions = allSessions.filter(s =>
+    (s.sport || 'lacrosse') === sport
+  );
+
   const gl = gradeLabel();
-  document.getElementById('lbs-total').textContent        = gl + ' · all sessions';
-  document.getElementById('lbs-shooting').textContent     = gl + ' · shooting sessions';
-  document.getElementById('lbs-wallballs').textContent    = gl + ' · wall ball sessions';
-  document.getElementById('lbs-groundballs').textContent  = gl + ' · ground ball sessions';
-  document.getElementById('lbs-footwork').textContent     = gl + ' · footwork sessions';
-  document.getElementById('lbs-goaliedrills').textContent  = gl + ' · goalie drill sessions';
-  document.getElementById('lbs-faceoffdrills').textContent = gl + ' · faceoff drill sessions';
+  const totalEl = document.getElementById('lbs-total');
+  if (totalEl) totalEl.textContent = gl + ' · all sessions';
+  drills.forEach(d => {
+    const el = document.getElementById('lbs-' + d.cls);
+    if (el) el.textContent = gl + ' · ' + d.key.toLowerCase() + ' sessions';
+  });
 
   // Total time board
   const totalRanked = filtered.map(c=>({
     ...c,
-    value:    allSessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0),
-    sessions: allSessions.filter(s=>s.childId===c.id).length
+    value:    sportSessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0),
+    sessions: sportSessions.filter(s=>s.childId===c.id).length
   })).filter(c=>c.value>0).sort((a,b)=>b.value-a.value);
-  document.getElementById('lb-total').innerHTML = buildLbHTML(totalRanked,'var(--gold-dk)','minutes');
+  const lbTotalEl = document.getElementById('lb-total');
+  if (lbTotalEl) lbTotalEl.innerHTML = buildLbHTML(totalRanked,'var(--gold-dk)','minutes');
 
   // Per-drill boards
-  DRILLS.forEach(drill=>{
+  drills.forEach(drill=>{
     const ranked = filtered.map(c=>{
-      const ds = allSessions.filter(s=>s.childId===c.id && s.drills && s.drills.includes(drill.key));
+      const ds = sportSessions.filter(s=>s.childId===c.id && s.drills && s.drills.includes(drill.key));
       return { ...c, value:ds.length, sessions:ds.length };
     }).filter(c=>c.value>0).sort((a,b)=>b.value-a.value);
-    document.getElementById('lb-'+drill.cls).innerHTML = buildLbHTML(ranked, drill.accent, 'sessions');
+    const el = document.getElementById('lb-'+drill.cls);
+    if (el) el.innerHTML = buildLbHTML(ranked, drill.accent, 'sessions');
   });
 }
 
 function renderManage() {
   const list=document.getElementById('mgr-list');
+
+  // Populate the "Add a Sport" child selector
+  const childSel = document.getElementById('add-sport-child-select');
+  if (childSel) {
+    childSel.innerHTML = myChildren.length
+      ? `<option value="" disabled selected>Select player…</option>` +
+        myChildren.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')
+      : `<option value="" disabled selected>No players yet</option>`;
+  }
+
+  // Display current school
+  const schoolDisplay = document.getElementById('current-school-display');
+  if (currentSchoolCode) {
+    const schoolData = allSchoolCodes.find(s => s.id === currentSchoolCode);
+    schoolDisplay.textContent = `${schoolData ? schoolData.name : 'Unknown'} (${currentSchoolCode})`;
+  } else {
+    schoolDisplay.textContent = 'Not set';
+    schoolDisplay.style.color = 'var(--red)';
+  }
+
   if (!myChildren.length){list.innerHTML=`<div class="empty"><span class="ei">👤</span>No players yet.</div>`;return;}
   list.innerHTML=myChildren.map(c=>{
     const total=mySessions.filter(s=>s.childId===c.id).reduce((a,s)=>a+s.minutes,0);
     const count=mySessions.filter(s=>s.childId===c.id).length;
-    return `<div class="mgr-row">
-      <div class="mgr-info">
+    const sports = c.sports && c.sports.length ? c.sports : [c.sport||currentSport];
+    const positions = c.sportPositions || { [c.sport||currentSport]: c.position };
+    const sportPills = sports.map(s => {
+      const sp  = SPORTS_CONFIG[s];
+      const pos = positions[s] || c.position || '';
+      return sp
+        ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px 2px 6px;border-radius:50px;background:var(--field);border:1.5px solid var(--border);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--grass-dk)">
+            ${sp.emoji} ${sp.label}${pos ? ' · ' + pos : ''}
+            ${sports.length > 1
+              ? `<button onclick="window.removeSportFromChild('${c.id}','${s}')"
+                  style="background:none;border:none;cursor:pointer;font-size:.8rem;color:var(--text-lt);padding:0 0 0 2px;line-height:1" title="Remove ${sp.label}">✕</button>`
+              : ''}
+           </span>`
+        : '';
+    }).join('');
+    return `<div class="mgr-row" style="flex-wrap:wrap;gap:10px">
+      <div class="mgr-info" style="flex:1;min-width:0">
         <div class="lax-av la${c.colorIdx}" style="width:38px;height:38px;font-size:.9rem;border-radius:8px">${c.name.slice(0,2).toUpperCase()}</div>
-        <div>
+        <div style="min-width:0">
           <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
             <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;text-transform:uppercase;letter-spacing:.04em">${c.name}</span>
             <span class="pos-badge pos-${c.position||'Attack'}">${c.position||''}</span>
             ${c.grade?`<span class="grade-badge grade-${({'HS':'HS','7/8':'78','5/6':'56','3/4':'34','1/2':'12'}[c.grade]||'78')}">${c.grade}</span>`:''}
           </div>
-          <div class="mgr-sub">${total} mins · ${count} session${count!==1?'s':''}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">${sportPills}</div>
+          <div class="mgr-sub" style="margin-top:4px">${total} mins · ${count} session${count!==1?'s':''}</div>
         </div>
       </div>
       <button class="btn-sm" onclick="window.guardedAction('removeChild','${c.id}')">✕ Remove</button>
     </div>`;
   }).join('');
+  renderSchoolCodesDisplay();
 }
 
+async function renderSchoolCodesDisplay() {
+  try {
+    const snap = await getDocs(collection(db, 'schoolCodes'));
+    const codes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const listEl = document.getElementById('school-codes-list');
+    if (codes.length === 0) {
+      listEl.innerHTML = `<span style="color:var(--text-lt)">No school codes yet</span>`;
+    } else {
+      listEl.innerHTML = codes.map(c => `
+        <div style="margin-bottom:8px;padding:8px;background:var(--chalk);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">${c.name}</div>
+            <div style="font-size:.8rem;color:var(--text-lt);font-family:monospace">${c.id}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    console.error('Error loading school codes:', e);
+  }
+}
+
+// ── Add / remove sport on a child ────────────────────────
+window.addSportToChild = async () => {
+  const childId = document.getElementById('add-sport-child-select').value;
+  const code    = document.getElementById('add-sport-code').value.trim().toUpperCase();
+  const errEl   = document.getElementById('add-sport-err');
+  errEl.textContent = '';
+
+  if (!childId) { errEl.textContent = 'Please select a player.'; return; }
+  if (!code)    { errEl.textContent = 'Please enter a school code.'; return; }
+
+  // Validate the code exists in Firestore
+  let codeDoc;
+  try {
+    codeDoc = await getDoc(doc(db, 'schoolCodes', code));
+  } catch(e) {
+    errEl.textContent = 'Error checking code. Please try again.'; return;
+  }
+  if (!codeDoc.exists()) {
+    errEl.textContent = 'Invalid school code. Ask your coach for the correct code.'; return;
+  }
+
+  // Enforce same-school rule: the base school name must match
+  const newSchoolBase  = extractSchoolBase(code);
+  const currSchoolBase = extractSchoolBase(currentSchoolCode);
+  if (newSchoolBase !== currSchoolBase) {
+    errEl.textContent = `That code belongs to a different school. You can only add sports from ${currSchoolBase || 'your school'}.`;
+    return;
+  }
+
+  // Detect sport from the new code
+  const newSport = detectSportFromCode(code);
+  const child    = myChildren.find(c => c.id === childId);
+  if (!child) { errEl.textContent = 'Player not found.'; return; }
+
+  const existingSports = child.sports && child.sports.length ? child.sports : [child.sport || currentSport];
+  if (existingSports.includes(newSport)) {
+    errEl.textContent = `${child.name} is already enrolled in ${SPORTS_CONFIG[newSport]?.label || newSport}.`;
+    return;
+  }
+
+  // Require a position for the new sport
+  const newPosition = document.getElementById('add-sport-position').value;
+  if (!newPosition) { errEl.textContent = 'Please select a position for this sport.'; return; }
+
+  const updatedSports = [...existingSports, newSport];
+  const existingPositions = child.sportPositions || { [child.sport || currentSport]: child.position };
+  const updatedPositions = { ...existingPositions, [newSport]: newPosition };
+
+  try {
+    await setDoc(doc(db, 'children', childId), {
+      ...child,
+      sports: updatedSports,
+      sportPositions: updatedPositions,
+    });
+    document.getElementById('add-sport-code').value = '';
+    document.getElementById('add-sport-position').innerHTML = '<option value="" disabled selected>Enter code above first…</option>';
+    toast(`${SPORTS_CONFIG[newSport]?.emoji || ''} ${SPORTS_CONFIG[newSport]?.label || newSport} added for ${child.name}!`);
+  } catch(e) {
+    errEl.textContent = 'Error saving. Please try again.';
+  }
+};
+
+window.removeSportFromChild = async (childId, sport) => {
+  const child = myChildren.find(c => c.id === childId);
+  if (!child) return;
+  const existingSports = child.sports && child.sports.length ? child.sports : [child.sport || currentSport];
+  if (existingSports.length <= 1) {
+    toast('A player must have at least one sport.', true); return;
+  }
+  const sp = SPORTS_CONFIG[sport];
+  if (!confirm(`Remove ${sp?.label || sport} from ${child.name}?`)) return;
+  const updatedSports = existingSports.filter(s => s !== sport);
+  await setDoc(doc(db, 'children', childId), { ...child, sports: updatedSports });
+  toast(`${sp?.label || sport} removed from ${child.name}.`);
+};
+
+// Populate position dropdown when a sport code is typed
+window.onAddSportCodeChange = function() {
+  const code = document.getElementById('add-sport-code').value.trim().toUpperCase();
+  const sel  = document.getElementById('add-sport-position');
+  const wrap = document.getElementById('add-sport-position-wrap');
+  const sport = detectSportFromCode(code);
+  const positions = SPORTS_CONFIG[sport]?.positions || [];
+  if (code.length >= 3 && positions.length) {
+    sel.innerHTML = `<option value="" disabled selected>Select position…</option>` +
+      positions.map(p => `<option value="${p}">${p}</option>`).join('');
+    wrap.style.display = 'block';
+  } else {
+    sel.innerHTML = '<option value="" disabled selected>Enter code above first…</option>';
+    wrap.style.display = 'none';
+  }
+};
+
+// Extract the school-name portion of a code (everything before the sport keyword)
+function extractSchoolBase(code) {
+  if (!code) return '';
+  const upper = code.toUpperCase();
+  // Strip any known sport keyword suffix
+  const allKeywords = Object.values(SPORT_KEYWORDS).flat();
+  for (const kw of allKeywords.sort((a,b) => b.length - a.length)) {
+    const idx = upper.lastIndexOf(kw);
+    if (idx !== -1) {
+      // Remove the keyword and any separator before it
+      return upper.slice(0, idx).replace(/[-_\s]+$/, '');
+    }
+  }
+  return upper; // no sport keyword found — treat whole code as school base
+}
+
+window.createSchoolCode = async () => {
+  const name = document.getElementById('new-school-name').value.trim();
+  const code = document.getElementById('new-school-code').value.trim().toUpperCase();
+  if (!name || !code) {
+    toast('Please fill in school name and code', true);
+    return;
+  }
+  if (code.length < 3) {
+    toast('School code must be at least 3 characters', true);
+    return;
+  }
+  try {
+    await setDoc(doc(db, 'schoolCodes', code), {
+      name: name,
+      createdAt: new Date().toISOString()
+    });
+    document.getElementById('new-school-name').value = '';
+    document.getElementById('new-school-code').value = '';
+    toast(`School code "${code}" created!`);
+    renderSchoolCodesDisplay();
+  } catch(e) {
+    toast('Error creating school code: ' + e.message, true);
+  }
+};
+
+window.bulkAddParentsToUsersCollection = async () => {
+  const input = document.getElementById('bulk-uids-input').value.trim();
+  if (!input) {
+    toast('Please paste User IDs', true);
+    return;
+  }
+  
+  const uids = input.split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0);
+  
+  if (uids.length === 0) {
+    toast('No valid User IDs found', true);
+    return;
+  }
+  
+  if (!confirm(`Create ${uids.length} user document(s)?`)) return;
+  
+  try {
+    let created = 0;
+    for (const uid of uids) {
+      try {
+        await setDoc(doc(db, 'users', uid), {
+          uid: uid,
+          createdAt: new Date().toISOString(),
+          schoolCode: 'BOERNELACROSSE2026',
+          schoolName: 'Boerne'
+        });
+        created++;
+      } catch(e) {
+        console.error(`Failed to create user ${uid}:`, e.message);
+      }
+    }
+    document.getElementById('bulk-uids-input').value = '';
+    toast(`Created ${created}/${uids.length} user document(s)`);
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  }
+};
+
+window.addParentToUsersCollection = async () => {
+  const uid = document.getElementById('add-uid-input').value.trim();
+  if (!uid) {
+    toast('Please enter a Firebase User ID', true);
+    return;
+  }
+  try {
+    await setDoc(doc(db, 'users', uid), {
+      uid: uid,
+      createdAt: new Date().toISOString(),
+      schoolCode: 'BOERNELACROSSE2026',
+      schoolName: 'Boerne'
+    });
+    document.getElementById('add-uid-input').value = '';
+    toast(`User ${uid} added with schoolCode BOERNELACROSSE2026`);
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  }
+};
+
+window.bulkCreateUserDocuments = async () => {
+  const output = document.getElementById('verify-output');
+  output.style.display = 'block';
+  output.textContent = 'Scanning database...';
+
+  try {
+    // Get all players
+    const childSnap = await getDocs(collection(db, 'children'));
+    const players = childSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Get all sessions
+    const sessSnap = await getDocs(collection(db, 'sessions'));
+    const sessions = sessSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Count by schoolCode
+    const playersByCode = {};
+    const sessionsByCode = {};
+
+    players.forEach(p => {
+      const code = p.schoolCode || '(no schoolCode)';
+      playersByCode[code] = (playersByCode[code] || 0) + 1;
+    });
+
+    sessions.forEach(s => {
+      const code = s.schoolCode || '(no schoolCode)';
+      sessionsByCode[code] = (sessionsByCode[code] || 0) + 1;
+    });
+
+    // Build output
+    let report = `═══════════════════════════════════\nDATABASE VERIFICATION REPORT\n═══════════════════════════════════\n\n`;
+
+    report += `PLAYERS (Total: ${players.length})\n`;
+    report += `───────────────────────────────────\n`;
+    Object.entries(playersByCode).forEach(([code, count]) => {
+      report += `  ${code}: ${count}\n`;
+    });
+
+    report += `\nSESSIONS (Total: ${sessions.length})\n`;
+    report += `───────────────────────────────────\n`;
+    Object.entries(sessionsByCode).forEach(([code, count]) => {
+      report += `  ${code}: ${count}\n`;
+    });
+
+    report += `\nYOUR SCHOOL CODE\n`;
+    report += `───────────────────────────────────\n`;
+    report += `  ${currentSchoolCode}\n`;
+
+    report += `\nMATCH STATUS\n`;
+    report += `───────────────────────────────────\n`;
+    const playersInYourSchool = playersByCode[currentSchoolCode] || 0;
+    const sessionsInYourSchool = sessionsByCode[currentSchoolCode] || 0;
+    report += `  Players: ${playersInYourSchool}\n`;
+    report += `  Sessions: ${sessionsInYourSchool}\n`;
+
+    if (playersInYourSchool === 0) {
+      report += `\n⚠️ NO PLAYERS with your schoolCode!\n`;
+      if (playersByCode['(no schoolCode)']) {
+        report += `💡 Found ${playersByCode['(no schoolCode)']} players with NO schoolCode\n`;
+        report += `   → Try "Update ALL Players" button\n`;
+      }
+    }
+    if (sessionsInYourSchool === 0) {
+      report += `\n⚠️ NO SESSIONS with your schoolCode!\n`;
+      if (sessionsByCode['(no schoolCode)']) {
+        report += `💡 Found ${sessionsByCode['(no schoolCode)']} sessions with NO schoolCode\n`;
+        report += `   → Try "Update ALL Sessions" button\n`;
+      }
+    }
+
+    output.textContent = report;
+  } catch(e) {
+    output.textContent = `ERROR: ${e.message}`;
+  }
+};
+
+window.bulkUpdateAllPlayersInDatabase = async () => {
+  const schoolCode = 'BOERNELACROSSE2026';
+  if (!confirm(`Update ALL players in the database with schoolCode "${schoolCode}"?`)) return;
+  try {
+    setSync('busy', 'Updating all players...');
+    const childSnap = await getDocs(collection(db, 'children'));
+    let updated = 0;
+
+    for (const childDoc of childSnap.docs) {
+      const child = childDoc.data();
+      await setDoc(doc(db, 'children', childDoc.id), { 
+        ...child, 
+        schoolCode: schoolCode 
+      });
+      updated++;
+    }
+    setSync('ok', 'Live · Field Ready');
+    toast(`Updated ${updated} player(s) with schoolCode "${schoolCode}"`);
+  } catch(e) {
+    setSync('bad', 'Error');
+    toast('Error updating players: ' + e.message, true);
+  }
+};
+
+window.bulkUpdateAllSessionsInDatabase = async () => {
+  const schoolCode = 'BOERNELACROSSE2026';
+  if (!confirm(`Update ALL sessions in the database with schoolCode "${schoolCode}"?`)) return;
+  try {
+    setSync('busy', 'Updating all sessions...');
+    const sessSnap = await getDocs(collection(db, 'sessions'));
+    let updated = 0;
+
+    for (const sessDoc of sessSnap.docs) {
+      const sess = sessDoc.data();
+      await setDoc(doc(db, 'sessions', sessDoc.id), { 
+        ...sess, 
+        schoolCode: schoolCode 
+      });
+      updated++;
+    }
+    setSync('ok', 'Live · Field Ready');
+    toast(`Updated ${updated} session(s) with schoolCode "${schoolCode}"`);
+  } catch(e) {
+    setSync('bad', 'Error');
+    toast('Error updating sessions: ' + e.message, true);
+  }
+};
+
 // ── Actions ───────────────────────────────────────────────
-window._sel = id => { selId=id; renderChips(); renderSessions(); renderStats(); };
+window._sel = id => { selId=id; renderChips(); renderSessions(); renderStats(); renderSportSelectorForChild(id); };
 
 window.addChild = async () => {
   if (!currentUser) return;
@@ -860,6 +1782,10 @@ window.addChild = async () => {
   await addDoc(collection(db,'children'),{
     name, position, grade,
     uid: currentUser.uid,
+    schoolCode: currentSchoolCode,
+    sport: currentSport,
+    sports: [currentSport],
+    sportPositions: { [currentSport]: position }, // positions keyed by sport
     ownerName: currentUser.displayName || currentUser.email,
     colorIdx: allChildren.length % 6,
     createdAt: new Date().toISOString()
@@ -874,16 +1800,20 @@ window.logSession = async () => {
   if (!currentUser||!selId){toast('Select a player first!',true);return;}
   const mins  = parseInt(document.getElementById('log-mins').value);
   const date  = document.getElementById('log-date').value||new Date().toISOString().slice(0,10);
-  const drills = DRILLS.filter(d=>document.getElementById(d.id)?.checked).map(d=>d.key);
+  const activeSport = logSport || currentSport;
+  const sportDrills = SPORTS_CONFIG[activeSport]?.drills || DRILLS;
+  const drills = sportDrills.filter(d=>document.getElementById(d.id)?.checked).map(d=>d.key);
   if (!mins||mins<1){toast('Enter valid minutes!',true);return;}
   await addDoc(collection(db,'sessions'),{
     childId: selId,
     uid: currentUser.uid,
+    schoolCode: currentSchoolCode,
+    sport: activeSport,
     minutes: mins, date, drills,
     loggedAt: new Date().toISOString()
   });
   document.getElementById('log-mins').value='';
-  DRILLS.forEach(d=>{ const el=document.getElementById(d.id); if(el)el.checked=false; });
+  (SPORTS_CONFIG[logSport||currentSport]?.drills||DRILLS).forEach(d=>{ const el=document.getElementById(d.id); if(el)el.checked=false; });
   const child=myChildren.find(c=>c.id===selId);
   toast(`${mins} mins logged for ${child?.name}!`);
 };
@@ -903,10 +1833,10 @@ async function doRemoveChild(id) {
 }
 
 async function doResetAll() {
-  if (!confirm('Delete EVERY player and session across all accounts? This cannot be undone.')) return;
+  if (!confirm('Delete all players and sessions for your school? This cannot be undone.')) return;
   await Promise.all(allSessions.map(s=>deleteDoc(doc(db,'sessions',s.id))));
   await Promise.all(allChildren.map(c=>deleteDoc(doc(db,'children',c.id))));
-  selId=null; toast('All data cleared');
+  selId=null; toast('All school data cleared');
 }
 
 // ── Tabs ──────────────────────────────────────────────────
@@ -915,7 +1845,7 @@ window.goTab = (name, btn) => {
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('tab-'+name).classList.add('on');
   btn.classList.add('on');
-  if (name==='board')  renderAllLeaderboards();
+  if (name==='board')  { renderLbSportSelect(); renderLbDrillTabs(activeLbSport||currentSport); renderAllLeaderboards(); }
   if (name==='manage') renderManage();
 };
 
